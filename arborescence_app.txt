@@ -1,0 +1,43 @@
+Arborescence simplifiée du dossier src/app/ à recréer :
+
+src/app/
+├── actions.ts
+├── favicon.ico
+├── globals.css
+├── layout.tsx
+├── page.tsx
+├── account/
+├── agenda/
+├── brand-identity/
+├── chat/
+├── checkout/
+├── cloud/
+├── community/
+├── deck/
+├── download/
+├── editor/
+├── flux/
+├── format/
+├── forum/
+├── fusion/
+├── hardware/
+├── image/
+├── login/
+├── maestro/
+├── motion/
+├── muse/
+├── nexus/
+├── palette/
+├── persona/
+├── privacy/
+├── promptor/
+├── sound/
+├── store/
+├── subscribe/
+├── terminal/
+├── terms/
+├── tone/
+├── tools/
+├── voice/
+├── welcome/
+└── xos/

@@ -1,0 +1,176 @@
+# Export du dossier components (partie 3)
+# À donner à Gemini ou une IA pour reconstituer le dossier src/components/ et ses dépendances.
+# Chaque bloc de code doit être placé dans le dossier :
+# src/components/
+#
+# Exemple :
+# Le code du bloc "loading-state.tsx" doit être copié dans src/components/loading-state.tsx
+#
+# Assurez-vous de respecter l'arborescence pour que tout fonctionne correctement.
+
+---
+# loading-state.tsx
+
+[Début du code]
+
+'use client';
+
+import { Sparkles } from 'lucide-react';
+
+export function LoadingState({ text = "L'IA travaille pour vous...", isCompact = false }: { text?: string, isCompact?: boolean }) {
+    if (isCompact) {
+        return (
+            <div className="flex items-center justify-center gap-2">
+                <Sparkles className="h-5 w-5 animate-pulse text-primary" />
+                <span>{text}</span>
+            </div>
+        )
+    }
+    
+    return (
+        <div className="flex flex-col items-center justify-center gap-6 text-center p-8 h-full">
+            <div className="relative w-32 h-32 md:w-40 md:h-40 flex items-center justify-center">
+                 <Sparkles className="h-12 w-12 animate-pulse text-primary" />
+            </div>
+            <p className="text-muted-foreground">{text}</p>
+        </div>
+    );
+}
+
+[Fin du code]
+
+---
+# maestro-generator.tsx
+
+[Début du code]
+
+'use client';
+
+import { useState, useEffect, useRef, useActionState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useFormStatus } from 'react-dom';
+import { generateScheduleAction, generateMoodboardAction, uploadDocumentAction, parseEventAction } from '@/app/actions';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { BrainCircuit, Sparkles, Image as ImageIconLucide, BookOpen, Clock, CheckSquare, Download, ZoomIn, Save, Calendar, CalendarPlus, RefreshCcw } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { ProjectPlan } from '@/ai/types';
+import Image from 'next/image';
+import { LoadingState } from './loading-state';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogTrigger,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
+import AiLoadingAnimation from './ui/ai-loading-animation';
+import { motion } from 'framer-motion';
+import { useNotifications } from '@/hooks/use-notifications';
+
+// ...le code complet du fichier maestro-generator.tsx suit ici, voir l'original pour tout le contenu
+
+[Fin du code]
+
+---
+# motion-generator.tsx
+
+[Début du code]
+
+'use client';
+
+import { useEffect, useState, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useFormState, useFormStatus } from 'react-dom';
+import { generateMotionAction, generateImageAction } from '@/app/actions';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Sparkles, Download, ZoomIn, RefreshCcw, Film } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import type { VideoScript } from '@/ai/types';
+import Image from 'next/image';
+import { LoadingState } from './loading-state';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogTrigger,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+} from "@/components/ui/alert-dialog";
+import AiLoadingAnimation from './ui/ai-loading-animation';
+import { Skeleton } from './ui/skeleton';
+
+// ...le code complet du fichier motion-generator.tsx suit ici, voir l'original pour tout le contenu
+
+[Fin du code]
+
+---
+# muse-generator.tsx
+
+[Début du code]
+
+'use client';
+
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
+import { generateMuseAction, copilotLyricsAction, uploadMuseDocumentAction } from '@/app/actions';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Sparkles, Guitar, Music, Disc, Mic, User, ListMusic, Youtube, FilePenLine, Download, Save, Loader, Wand2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import type { GenerateMuseOutput } from '@/ai/types';
+import { LoadingState } from './loading-state';
+import AiLoadingAnimation from './ui/ai-loading-animation';
+import { Label } from './ui/label';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel } from './ui/alert-dialog';
+import { ScrollArea } from './ui/scroll-area';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { cn } from '@/lib/utils';
+
+// ...le code complet du fichier muse-generator.tsx suit ici, voir l'original pour tout le contenu
+
+[Fin du code]
+
+---
+# nexus-generator.tsx
+
+[Début du code]
+
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useFormState, useFormStatus } from 'react-dom';
+import { generateNexusAction } from '@/app/actions';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Network, Sparkles, ChevronRight, RefreshCcw } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import type { GenerateNexusOutput, NexusNode } from '@/ai/types';
+import { LoadingState } from './loading-state';
+import { cn } from '@/lib/utils';
+import AiLoadingAnimation from './ui/ai-loading-animation';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// ...le code complet du fichier nexus-generator.tsx suit ici, voir l'original pour tout le contenu
+
+[Fin du code]

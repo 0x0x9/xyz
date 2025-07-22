@@ -1,0 +1,27 @@
+import { config } from 'dotenv';
+config();
+
+import '@/ai/flows/generate-text.ts';
+import '@/ai/flows/generate-image.ts';
+import '@/ai/flows/generate-schedule.ts';
+import '@/ai/flows/generate-moodboard.ts';
+import '@/ai/flows/generate-motion.ts';
+import '@/ai/flows/generate-voice.ts';
+import '@/ai/flows/generate-ideas.ts';
+import '@/ai/flows/generate-palette.ts';
+import '@/ai/flows/generate-persona.ts';
+import '@/ai/flows/generate-tone.ts';
+import '@/ai/flows/generate-code.ts';
+import '@/ai/flows/oria.ts';
+import '@/ai/flows/generate-deck.ts';
+import '@/ai/flows/generate-frame.ts';
+import '@/ai/flows/generate-sound.ts';
+import '@/ai/flows/parse-event.ts';
+import '@/ai/flows/generate-nexus.ts';
+import '@/ai/flows/generate-flux.ts';
+import '@/ai/flows/generate-muse.ts';
+import '@/ai/flows/copilot-lyrics.ts';
+import '@/ai/flows/debug-code.ts';
+import '@/ai/flows/explain-code.ts';
+import '@/ai/flows/refactor-code.ts';
+import '@/ai/flows/code-actions.ts';

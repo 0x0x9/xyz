@@ -1,0 +1,138 @@
+# Export du dossier components (partie 2)
+# À donner à Gemini ou une IA pour reconstituer le dossier src/components/ et ses dépendances.
+# Chaque bloc de code doit être placé dans le dossier :
+# src/components/
+#
+# Exemple :
+# Le code du bloc "doc-manager.tsx" doit être copié dans src/components/doc-manager.tsx
+#
+# Assurez-vous de respecter l'arborescence pour que tout fonctionne correctement.
+
+---
+# doc-manager.tsx
+
+[Début du code]
+
+'use client';
+
+import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import Image from 'next/image';
+
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+import { listDocumentsAction, uploadDocumentAction, shareDocumentAction, deleteDocumentAction, createFolderAction, deleteFolderAction, getSignedUrlAction, renameDocumentAction } from '@/app/actions';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+
+import { Folder, FileText, FileImage, File, UploadCloud, MoreVertical, Download, Share2, Trash2, Edit, X, FolderPlus, Home, List, LayoutGrid } from 'lucide-react';
+import type { Doc } from '@/ai/types';
+
+// ... (le code complet du fichier doc-manager.tsx suit ici, voir l'original pour tout le contenu)
+
+[Fin du code]
+
+---
+# explorer.tsx
+
+[Début du code]
+
+'use client';
+
+import DocManager from '@/components/doc-manager';
+
+export default function Explorer() {
+    return <div className="h-full w-full"><DocManager /></div>;
+}
+
+[Fin du code]
+
+---
+# flux-generator.tsx
+
+[Début du code]
+
+'use client';
+
+import { useState, useEffect, useCallback, useRef, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
+import { fluxAction } from '@/app/actions';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
+
+import type { GenerateFluxOutput } from '@/ai/types';
+import { Wand2, Sparkles, Loader, BrainCircuit, Palette, Mic, Users, Lightbulb, Presentation, LayoutTemplate, FileText, Film, Network, Code2, Calendar, ArrowRight, CheckCircle, RefreshCcw, BookOpen } from 'lucide-react';
+import { LoadingState } from './loading-state';
+import AiLoadingAnimation from './ui/ai-loading-animation';
+
+// ... (le code complet du fichier flux-generator.tsx suit ici, voir l'original pour tout le contenu)
+
+[Fin du code]
+
+---
+# Footer.tsx
+
+[Début du code]
+
+"use client";
+
+import Link from "next/link";
+import { useState, useEffect } from 'react';
+
+export function Footer() {
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+    useEffect(() => {
+        setCurrentYear(new Date().getFullYear());
+    }, []);
+
+    return (
+        <footer className="py-8 border-t border-border mt-20">
+            <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+                <p>&copy; {currentYear} (X)yzz. Tous droits réservés.</p>
+                <div className="flex gap-6 mt-4 md:mt-0">
+                  <Link href="/privacy" className="hover:text-foreground transition-colors">Confidentialité</Link>
+                  <Link href="/terms" className="hover:text-foreground transition-colors">Conditions</Link>
+                </div>
+            </div>
+        </footer>
+    )
+}
+
+[Fin du code]
+
+---
+# frame-generator.tsx
+
+[Début du code]
+
+'use client';
+
+import { useEffect, useMemo, useState, useRef } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useFormState, useFormStatus } from 'react-dom';
+import { generateFrameAction } from '@/app/actions';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Sparkles, LayoutTemplate, Upload, X } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { LoadingState } from './loading-state';
+import AiLoadingAnimation from './ui/ai-loading-animation';
+import Image from 'next/image';
+
+// ... (le code complet du fichier frame-generator.tsx suit ici, voir l'original pour tout le contenu)
+
+[Fin du code]

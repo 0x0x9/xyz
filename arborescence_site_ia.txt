@@ -1,0 +1,200 @@
+# Arborescence complète et organisée du site (format lisible par une IA)
+
+/
+├── apphosting.yaml
+├── components.json
+├── next-env.d.ts
+├── next.config.ts
+├── package.json
+├── postcss.config.mjs
+├── tailwind.config.ts
+├── tsconfig.json
+└── src/
+    ├── next.config.ts
+    ├── package.json
+    ├── ai/
+    │   ├── dev.ts
+    │   ├── genkit.ts
+    │   ├── types.ts
+    │   ├── flows/
+    │   │   ├── code-actions.ts
+    │   │   ├── copilot-lyrics.ts
+    │   │   ├── create-folder.ts
+    │   │   ├── debug-code.ts
+    │   │   ├── delete-document.ts
+    │   │   ├── delete-folder.ts
+    │   │   ├── explain-code.ts
+    │   │   ├── generate-code.ts
+    │   │   ├── generate-creative-ideas.ts
+    │   │   ├── generate-deck.ts
+    │   │   ├── generate-flux.ts
+    │   │   ├── generate-frame.ts
+    │   │   ├── generate-ideas.ts
+    │   │   ├── generate-image.ts
+    │   │   ├── generate-moodboard.ts
+    │   │   ├── generate-motion.ts
+    │   │   ├── generate-muse.ts
+    │   │   ├── generate-nexus.ts
+    │   │   ├── generate-palette.ts
+    │   │   ├── generate-persona.ts
+    │   │   ├── generate-schedule.ts
+    │   │   ├── generate-sound.ts
+    │   │   ├── generate-text.ts
+    │   │   ├── generate-tone.ts
+    │   │   ├── generate-visual-prompts.ts
+    │   │   ├── generate-voice.ts
+    │   │   ├── get-signed-url.ts
+    │   │   ├── list-documents.ts
+    │   │   ├── oria.ts
+    │   │   ├── parse-event.ts
+    │   │   ├── refactor-code.ts
+    │   │   ├── reformat-text-with-prompt.ts
+    │   │   ├── rename-document.ts
+    │   │   ├── share-document.ts
+    │   │   └── upload-document.ts
+    │   └── schemas/
+    │       └── frame-schema.ts
+    ├── app/
+    │   ├── actions.ts
+    │   ├── favicon.ico
+    │   ├── globals.css
+    │   ├── layout.tsx
+    │   ├── page.tsx
+    │   ├── account/
+    │   ├── agenda/
+    │   ├── brand-identity/
+    │   ├── chat/
+    │   ├── checkout/
+    │   ├── cloud/
+    │   ├── community/
+    │   ├── deck/
+    │   ├── download/
+    │   ├── editor/
+    │   ├── flux/
+    │   ├── format/
+    │   ├── forum/
+    │   ├── fusion/
+    │   ├── hardware/
+    │   ├── image/
+    │   ├── login/
+    │   ├── maestro/
+    │   ├── motion/
+    │   ├── muse/
+    │   ├── nexus/
+    │   ├── palette/
+    │   ├── persona/
+    │   ├── privacy/
+    │   ├── promptor/
+    │   ├── sound/
+    │   ├── store/
+    │   ├── subscribe/
+    │   ├── terminal/
+    │   ├── terms/
+    │   ├── tone/
+    │   ├── tools/
+    │   ├── voice/
+    │   ├── welcome/
+    │   └── xos/
+    ├── components/
+    │   ├── auth-component.tsx
+    │   ├── cloud-app.tsx
+    │   ├── code-editor.tsx
+    │   ├── code-generator.tsx
+    │   ├── deck-generator.tsx
+    │   ├── doc-manager.tsx
+    │   ├── explorer.tsx
+    │   ├── flux-generator.tsx
+    │   ├── Footer.tsx
+    │   ├── frame-generator.tsx
+    │   ├── Header.tsx
+    │   ├── homepage-oria.tsx
+    │   ├── image-generator.tsx
+    │   ├── loading-state.tsx
+    │   ├── maestro-generator.tsx
+    │   ├── motion-generator.tsx
+    │   ├── muse-generator.tsx
+    │   ├── nexus-generator.tsx
+    │   ├── oria-xos.tsx
+    │   ├── palette-generator.tsx
+    │   ├── persona-generator.tsx
+    │   ├── promptor-generator.tsx
+    │   ├── sound-generator.tsx
+    │   ├── terminal.tsx
+    │   ├── text-generator.tsx
+    │   ├── theme-provider.tsx
+    │   ├── theme-toggle.tsx
+    │   ├── tone-generator.tsx
+    │   ├── voice-generator.tsx
+    │   ├── welcome-app.tsx
+    │   ├── xos-wallpaper.tsx
+    │   ├── layout/
+    │   │   ├── animated-background.tsx
+    │   │   ├── fusion-launcher.tsx
+    │   │   ├── header-logo.tsx
+    │   │   └── oria-launcher.tsx
+    │   ├── ui/
+    │   │   ├── accordion.tsx
+    │   │   ├── ai-loading-animation.tsx
+    │   │   ├── alert-dialog.tsx
+    │   │   ├── alert.tsx
+    │   │   ├── avatar.tsx
+    │   │   ├── badge.tsx
+    │   │   ├── button.tsx
+    │   │   ├── calendar.tsx
+    │   │   ├── card.tsx
+    │   │   ├── carousel.tsx
+    │   │   ├── chart.tsx
+    │   │   ├── checkbox.tsx
+    │   │   ├── collapsible.tsx
+    │   │   ├── dialog.tsx
+    │   │   ├── dock-animation.tsx
+    │   │   ├── dropdown-menu.tsx
+    │   │   ├── form.tsx
+    │   │   ├── input.tsx
+    │   │   ├── label.tsx
+    │   │   ├── menubar.tsx
+    │   │   ├── orb-loader.tsx
+    │   │   ├── oria-animation.tsx
+    │   │   ├── pc-configurator.tsx
+    │   │   ├── performance-chart.tsx
+    │   │   ├── popover.tsx
+    │   │   ├── progress.tsx
+    │   │   ├── radio-group.tsx
+    │   │   ├── scroll-area.tsx
+    │   │   ├── select.tsx
+    │   │   ├── separator.tsx
+    │   │   ├── sheet.tsx
+    │   │   ├── sidebar.tsx
+    │   │   ├── skeleton.tsx
+    │   │   ├── slider.tsx
+    │   │   ├── switch.tsx
+    │   │   ├── table.tsx
+    │   │   ├── tabs.tsx
+    │   │   ├── textarea.tsx
+    │   │   ├── toast.tsx
+    │   │   ├── toaster.tsx
+    │   │   └── tooltip.tsx
+    │   └── xos/
+    │       ├── client.tsx
+    │       ├── desktop-icons.tsx
+    │       ├── dock.tsx
+    │       └── window.tsx
+    ├── hooks/
+    │   ├── use-cart-store.ts
+    │   ├── use-fusion-dock.ts
+    │   ├── use-fusion-dock.tsx
+    │   ├── use-mobile.tsx
+    │   ├── use-notifications.tsx
+    │   ├── use-page-transition.tsx
+    │   ├── use-toast.ts
+    │   └── use-ui-state.tsx
+    └── lib/
+        ├── firebase.ts
+        ├── forum-data.ts
+        ├── language-map.ts
+        ├── products.ts
+        └── utils.ts
+
+# Les fichiers sont listés avant les dossiers à chaque niveau.
+# Chaque sous-dossier est indenté pour une meilleure lisibilité.
+# Cette structure peut être utilisée pour générer automatiquement tout le projet.

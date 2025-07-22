@@ -1,0 +1,98 @@
+# Structure du site exportée depuis VS Code
+
+- apphosting.yaml
+- components.json
+- next-env.d.ts
+- next.config.ts
+- package.json
+- postcss.config.mjs
+- tailwind.config.ts
+- tsconfig.json
+- src/
+  - next.config.ts
+  - package.json
+  - ai/
+    - dev.ts
+    - genkit.ts
+    - types.ts
+    - flows/
+      - code-actions.ts
+      - copilot-lyrics.ts
+      - create-folder.ts
+      - debug-code.ts
+      - delete-document.ts
+      - delete-folder.ts
+      - explain-code.ts
+      - generate-code.ts
+      - generate-creative-ideas.ts
+      - generate-deck.ts
+      - generate-flux.ts
+      - generate-frame.ts
+      - generate-ideas.ts
+      - generate-image.ts
+      - generate-moodboard.ts
+      - generate-motion.ts
+      - generate-muse.ts
+      - generate-nexus.ts
+      - generate-palette.ts
+      - generate-persona.ts
+      ...
+    - schemas/
+      ...
+  - app/
+    - actions.ts
+    - favicon.ico
+    - globals.css
+    - layout.tsx
+    - page.tsx
+    - [plusieurs sous-dossiers: account, agenda, brand-identity, chat, ...]
+  - components/
+    - auth-component.tsx
+    - cloud-app.tsx
+    - code-editor.tsx
+    - code-generator.tsx
+    - deck-generator.tsx
+    - doc-manager.tsx
+    - explorer.tsx
+    - flux-generator.tsx
+    - Footer.tsx
+    - frame-generator.tsx
+    - Header.tsx
+    - homepage-oria.tsx
+    - image-generator.tsx
+    - loading-state.tsx
+    - maestro-generator.tsx
+    - motion-generator.tsx
+    - muse-generator.tsx
+    - nexus-generator.tsx
+    - oria-xos.tsx
+    - palette-generator.tsx
+    - persona-generator.tsx
+    - promptor-generator.tsx
+    - sound-generator.tsx
+    - terminal.tsx
+    - text-generator.tsx
+    - theme-provider.tsx
+    - theme-toggle.tsx
+    - tone-generator.tsx
+    - voice-generator.tsx
+    - welcome-app.tsx
+    - xos-wallpaper.tsx
+    - layout/
+    - ui/
+    - xos/
+  - hooks/
+    - use-cart-store.ts
+    - use-fusion-dock.ts
+    - use-fusion-dock.tsx
+    - use-mobile.tsx
+    - use-notifications.tsx
+    - use-page-transition.tsx
+    - use-toast.ts
+    - use-ui-state.tsx
+  - lib/
+    - firebase.ts
+    - forum-data.ts
+    - language-map.ts
+    - products.ts
+    - utils.ts
