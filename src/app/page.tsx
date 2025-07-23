@@ -1,7 +1,6 @@
-
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Suspense } from 'react';
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { 

@@ -1,0 +1,15 @@
+# Ignore node_modules (géré par Vercel)
+node_modules
+# Ignore logs
+*.log
+# Ignore local env files (jamais push sur GitHub)
+.env.local
+.env
+# Ignore build output
+.next
+out
+# Ignore test output
+coverage
+# Ignore system files
+.DS_Store
+Thumbs.db
