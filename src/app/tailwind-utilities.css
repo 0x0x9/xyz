@@ -1,0 +1,7 @@
+.border-border { @apply border border-[hsl(var(--border))]; }
+.bg-background { @apply bg-[hsl(var(--background))]; }
+.text-muted-foreground { @apply text-[hsl(var(--muted-foreground))]; }
+.bg-card { @apply bg-[hsl(var(--card))]; }
+.text-foreground { @apply text-[hsl(var(--foreground))]; }
+.bg-muted\/50 { @apply bg-[hsl(var(--muted)/0.5)]; }
+.text-primary { @apply text-[hsl(var(--primary))]; }
