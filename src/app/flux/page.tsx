@@ -1,4 +1,7 @@
 
+
+export const dynamic = "force-dynamic";
+import { Suspense } from 'react';
 import FluxClient from './client';
 import { Wand2 } from 'lucide-react';
 
@@ -19,7 +22,9 @@ export default function FluxPage() {
                 </p>
             </section>
             
-            <FluxClient />
+            <Suspense fallback={<div>Chargement...</div>}>
+                <FluxClient />
+            </Suspense>
         </>
     );
 }
