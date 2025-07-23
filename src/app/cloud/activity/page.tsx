@@ -1,5 +1,11 @@
-// This page is not rendered directly, but it's good practice
-// to have it for routing structure. The content is shown in a tab on /cloud.
+
+import { Suspense } from "react";
+import ActivityClient from "./client";
+
 export default function CloudActivityPage() {
-    return null;
+  return (
+    <Suspense>
+      <ActivityClient docs={[]} loading={false} />
+    </Suspense>
+  );
 }
