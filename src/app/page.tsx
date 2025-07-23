@@ -244,7 +244,7 @@ export default function Home() {
                 description="Ce n'est pas un système d'exploitation. C'est une extension de votre imagination, un environnement unifié où tous vos outils et idées convergent. Disponible sur notre matériel dédié et en ligne, partout."
                 buttonText="Découvrir (X)OS"
                 buttonHref="/welcome"
-                imageUrl="https://placehold.co/800x800.png"
+                imageUrl="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80"
                 imageHint="futuristic operating system"
                 imagePosition="left"
             />
@@ -253,7 +253,7 @@ export default function Home() {
                 description="La performance n'est que le début. La Station X-1 est conçue pour une synergie parfaite avec (X)OS, libérant une puissance de calcul et une fluidité sans précédent pour les workflows les plus exigeants."
                 buttonText="Explorer le matériel"
                 buttonHref="/hardware"
-                imageUrl="https://placehold.co/800x800.png"
+                imageUrl="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80"
                 imageHint="powerful desktop computer"
                 imagePosition="right"
             />
