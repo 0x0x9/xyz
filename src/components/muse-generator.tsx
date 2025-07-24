@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useFormStatus } from 'react-dom';
 import { generateMuseAction, copilotLyricsAction, uploadMuseDocumentAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -254,9 +254,9 @@ function SuggestionDialog({ open, title, suggestions, onSelect, onOpenChange }: 
 
 export default function MuseGenerator() {
     const initialState = { message: '', result: null, error: '', id: 0, theme: '', mood: 'Mélancolique', tempo: 'Modéré', references: '' };
-    const [state, formAction] = useFormState(generateMuseAction, initialState);
+    const [state, formAction] = React.useActionState(generateMuseAction, initialState);
 
-    const [copilotState, copilotAction] = useFormState(copilotLyricsAction, { success: false, suggestions: [], error: null, action: undefined as ('ENHANCE' | 'RHYMES' | undefined) });
+    const [copilotState, copilotAction] = React.useActionState(copilotLyricsAction, { success: false, suggestions: [], error: null, action: undefined as ('ENHANCE' | 'RHYMES' | undefined) });
     const [isCopilotLoading, setIsCopilotLoading] = useState(false);
     const [suggestionDialog, setSuggestionDialog] = useState<{ open: boolean, title: string, suggestions: string[] }>({ open: false, title: '', suggestions: [] });
     const [selection, setSelection] = useState<{ text: string; start: number; end: number} | null>(null);
