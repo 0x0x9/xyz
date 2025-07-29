@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useActionState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
 import { generateVoiceAction } from '@/app/actions';
@@ -14,11 +14,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Sparkles, Mic, Volume2, Save, AudioLines } from 'lucide-react';
 import { LoadingState } from './loading-state';
 import AiLoadingAnimation from './ui/ai-loading-animation';
-import { httpsCallable } from 'firebase/functions';
-import { functions } from '@/lib/firebase';
+import { uploadDocumentAction } from '@/app/actions';
 import { useNotifications } from '@/hooks/use-notifications';
-
-const uploadDocument = httpsCallable(functions, 'uploadDocument');
 
 const voices = [
   { id: 'Algenib', name: 'Algenib', description: 'Voix masculine, calme et posée' },
@@ -44,19 +41,18 @@ function SubmitButton() {
   );
 }
 
-function VoiceGeneratorFormBody({ state }: { state: { message: string, audioDataUri: string | null, error: string, id: number, text: string, voice: string } }) {
+function VoiceGeneratorFormBody({ state }: { state: { message: string, result: { audioDataUri: string | null }, error: string, id: number, text: string, voice: string } }) {
   const { pending } = useFormStatus();
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   
   const handleSaveToDrive = async () => {
-    if (!state.audioDataUri) return;
+    if (!state.result?.audioDataUri) return;
     setIsSaving(true);
     try {
-        const base64 = state.audioDataUri.split(',')[1];
         const fileName = `voice-${Date.now()}.wav`;
-        await uploadDocument({ name: fileName, content: base64, mimeType: 'audio/wav' });
-        toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)drive.` });
+        await uploadDocumentAction({ name: fileName, content: state.result.audioDataUri, mimeType: 'audio/wav' });
+        toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)cloud.` });
     } catch (error: any) {
         toast({ variant: 'destructive', title: "Erreur d'enregistrement", description: error.message });
     } finally {
@@ -128,7 +124,7 @@ function VoiceGeneratorFormBody({ state }: { state: { message: string, audioData
                         <h3 className="text-lg font-semibold">Résultat Audio</h3>
                       </div>
                     </div>
-                     {state.audioDataUri && (
+                     {state.result?.audioDataUri && (
                         <Button onClick={handleSaveToDrive} disabled={isSaving} variant="outline" size="sm">
                             <Save className="mr-2 h-4 w-4" />
                             {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
@@ -141,8 +137,8 @@ function VoiceGeneratorFormBody({ state }: { state: { message: string, audioData
                   </div>
                   {pending ? (
                     <LoadingState text="Synthèse vocale en cours..." />
-                  ) : state.audioDataUri ? (
-                    <audio controls src={state.audioDataUri} className="relative z-10 w-full">
+                  ) : state.result?.audioDataUri ? (
+                    <audio controls src={state.result.audioDataUri} className="relative z-10 w-full">
                       Votre navigateur ne supporte pas l'élément audio.
                     </audio>
                   ) : (
@@ -165,13 +161,24 @@ export default function VoiceGenerator({ initialText, initialAudioDataUri, promp
   const promptFromUrl = searchParams.get('prompt');
   const initialState = {
       message: initialAudioDataUri ? 'success' : '',
-      audioDataUri: initialAudioDataUri || null,
+      result: { audioDataUri: initialAudioDataUri || null },
       error: '',
       id: 0,
       text: initialText || prompt || promptFromUrl || '',
       voice: 'Algenib'
   };
-  const [state, formAction] = useFormState(generateVoiceAction, initialState);
+  
+  const formAction = async (prevState: any, formData: FormData) => {
+    try {
+        const result = await generateVoiceAction(prevState, formData);
+        if (result.error) throw new Error(result.error);
+        return { ...result, message: 'success' };
+    } catch (e: any) {
+        return { ...prevState, message: 'error', error: e.message };
+    }
+  }
+
+  const [state, dispatch] = useActionState(formAction, initialState);
   const { toast } = useToast();
   const { addNotification } = useNotifications();
 
@@ -183,7 +190,7 @@ export default function VoiceGenerator({ initialText, initialAudioDataUri, promp
         description: state.error,
       });
     }
-     if (state.message === 'success' && state.audioDataUri) {
+     if (state.message === 'success' && state.result?.audioDataUri) {
         const resultId = `voice-result-${state.id}`;
         const handleClick = () => {
             localStorage.setItem(resultId, JSON.stringify(state));
@@ -199,7 +206,7 @@ export default function VoiceGenerator({ initialText, initialAudioDataUri, promp
   }, [state, toast, addNotification, router]);
 
   return (
-      <form action={formAction} key={state.id}>
+      <form action={dispatch} key={state.id}>
         <VoiceGeneratorFormBody state={state} />
       </form>
   );

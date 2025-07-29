@@ -193,7 +193,7 @@ const fluxTool = ai.defineTool(
     name: 'flux',
     description:
       "Génère un projet complexe complet à partir d'une simple idée. À utiliser lorsque l'utilisateur veut 'lancer', 'créer', 'organiser' un projet entier comme une marque, une campagne, etc. Cet outil retourne plusieurs livrables.",
-    inputSchema: z.object({ prompt: z.string() }),
+    inputSchema: z.object({ prompt: z.string(), job: z.string().optional() }),
     outputSchema: GenerateFluxOutputSchema,
   },
   async (input) => generateFlux(input)

@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
 import { generateCodeAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -15,12 +15,9 @@ import { Sparkles, Code2, Copy, FileText, TerminalSquare, Save, X } from 'lucide
 import type { GenerateCodeOutput } from '@/ai/types';
 import Link from 'next/link';
 import { LoadingState } from './loading-state';
-import { httpsCallable } from 'firebase/functions';
-import { functions } from '@/lib/firebase';
+import { uploadDocumentAction } from '@/app/actions';
 import AiLoadingAnimation from './ui/ai-loading-animation';
 import { useNotifications } from '@/hooks/use-notifications';
-
-const uploadDocument = httpsCallable(functions, 'uploadDocument');
 
 const languages = [
     { id: 'typescript', name: 'TypeScript' },
@@ -87,9 +84,9 @@ function ResultsDisplay({ result, language }: { result: GenerateCodeOutput, lang
         try {
             const fileExtension = langToFileExtension[language] || 'txt';
             const fileName = `code-snippet-${Date.now()}.${fileExtension}`;
-            const base64Content = btoa(unescape(encodeURIComponent(cleanCode)));
+            const dataUri = `data:text/plain;base64,${btoa(unescape(encodeURIComponent(cleanCode)))}`;
             
-            await uploadDocument({ name: fileName, content: base64Content, mimeType: 'text/plain' });
+            await uploadDocumentAction({ name: fileName, content: dataUri, mimeType: 'text/plain' });
             toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)drive.` });
         } catch (error: any) {
             toast({ variant: 'destructive', title: "Erreur d'enregistrement", description: error.message });
@@ -228,6 +225,7 @@ function CodeGeneratorFormBody({ state }: {
 
 export default function CodeGenerator({ initialResult, prompt, language }: { initialResult?: GenerateCodeOutput; prompt?: string, language?: string }) {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const promptFromUrl = searchParams.get('prompt');
     const langFromUrl = searchParams.get('language');
 
@@ -239,10 +237,23 @@ export default function CodeGenerator({ initialResult, prompt, language }: { ini
         prompt: prompt || promptFromUrl || '',
         language: language || langFromUrl || 'typescript'
     };
-    const [state, formAction] = useFormState(generateCodeAction, initialState);
+    
+    const formAction = async (prevState: any, formData: FormData) => {
+        const lang = formData.get('language') as string;
+        const promptText = formData.get('prompt') as string;
+        
+        try {
+            const result = await generateCodeAction(prevState, formData);
+            if (result.error) throw new Error(result.error);
+            return { ...result, message: 'success', prompt: promptText, language: lang };
+        } catch (e: any) {
+            return { ...prevState, message: 'error', error: e.message, prompt: promptText, language: lang };
+        }
+    }
+
+    const [state, dispatch] = useActionState(formAction, initialState);
     const { toast } = useToast();
     const { addNotification } = useNotifications();
-    const router = useRouter();
 
     useEffect(() => {
         if (state.message === 'error' && state.error) {
@@ -269,7 +280,7 @@ export default function CodeGenerator({ initialResult, prompt, language }: { ini
     }, [state, toast, addNotification, router]);
 
     return (
-        <form action={formAction} key={state.id}>
+        <form action={dispatch} key={state.id}>
             <CodeGeneratorFormBody state={state} />
         </form>
     );

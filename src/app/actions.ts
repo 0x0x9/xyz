@@ -235,16 +235,8 @@ export async function generateToneAction(prevState: any, formData: FormData): Pr
     }
 }
 
-export async function generateCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null, prompt: string, language: string }> {
-    const prompt = formData.get('prompt') as string;
-    const language = formData.get('language') as string;
-    const baseState = { ...prevState, prompt, language };
-    try {
-        const result = await codeActions.generateCode({ prompt, language });
-        return { ...baseState, result, error: null };
-    } catch (e: any) {
-        return { ...baseState, result: null, error: e.message };
-    }
+export async function generateCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null }> {
+    return codeActions.generateCodeAction(prevState, formData);
 }
 export async function explainCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: ExplainCodeOutput | null, error: string | null }> {
     return codeActions.explainCodeAction(prevState, formData);

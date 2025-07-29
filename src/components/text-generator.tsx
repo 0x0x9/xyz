@@ -1,9 +1,8 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useActionState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useFormState, useFormStatus } from 'react-dom';
 import { generateTextAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,12 +10,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Bot, Copy, Send, Save, FileText as FileTextIcon } from 'lucide-react';
 import { LoadingState } from './loading-state';
 import AiLoadingAnimation from './ui/ai-loading-animation';
-import { httpsCallable } from 'firebase/functions';
-import { functions } from '@/lib/firebase';
+import { uploadDocumentAction } from '@/app/actions';
 import { useNotifications } from '@/hooks/use-notifications';
-
-const uploadDocument = httpsCallable(functions, 'uploadDocument');
-
+import { useFormStatus } from 'react-dom';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -62,9 +58,9 @@ function TextGeneratorFormBody({ state }: {
         setIsSaving(true);
         try {
             const fileName = `texte-${state.prompt.substring(0, 25).replace(/[^\w\s]/gi, '').replace(/\s+/g, '_') || 'ia'}-${Date.now()}.txt`;
-            const base64Content = btoa(unescape(encodeURIComponent(state.text)));
+            const dataUri = `data:text/plain;base64,${btoa(unescape(encodeURIComponent(state.text)))}`;
             
-            await uploadDocument({ name: fileName, content: base64Content, mimeType: 'text/plain' });
+            await uploadDocumentAction({ name: fileName, content: dataUri, mimeType: 'text/plain' });
             toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)drive.` });
         } catch (error: any) {
             toast({ variant: 'destructive', title: "Erreur d'enregistrement", description: error.message });
@@ -159,7 +155,19 @@ export default function TextGenerator({ initialText, prompt }: { initialText?: s
       id: 0,
       prompt: prompt || promptFromUrl || ''
   };
-  const [state, formAction] = useFormState(generateTextAction, initialState);
+  
+  const formAction = async (prevState: any, formData: FormData) => {
+    const promptText = formData.get('prompt') as string;
+    try {
+        const result = await generateTextAction(prevState, formData);
+        if (result.error) throw new Error(result.error);
+        return { ...result, message: 'success', prompt: promptText };
+    } catch (e: any) {
+        return { ...prevState, message: 'error', error: e.message, prompt: promptText };
+    }
+  }
+
+  const [state, dispatch] = useActionState(formAction, initialState);
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   const { addNotification } = useNotifications();
@@ -189,7 +197,7 @@ export default function TextGenerator({ initialText, prompt }: { initialText?: s
   }, [state, toast, addNotification, router]);
 
   return (
-      <form ref={formRef} action={formAction} key={state.id}>
+      <form ref={formRef} action={dispatch} key={state.id}>
         <TextGeneratorFormBody state={state} />
       </form>
   );

@@ -11,6 +11,7 @@ import { explainCode } from './explain-code';
 import { debugCode } from './debug-code';
 import { refactorCode } from './refactor-code';
 import type { GenerateCodeOutput, ExplainCodeOutput, DebugCodeOutput, GenerateCodeInput } from '@/ai/types';
+import { useFormState } from 'react-dom';
 
 // Helper function to handle form state for client components
 async function handleFormAction<T_Input, T_Output>(
@@ -30,8 +31,15 @@ async function handleFormAction<T_Input, T_Output>(
 
 // Re-exporting flows wrapped in server actions compatible with useFormState
 
-export async function generateCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null }> {
-    return handleFormAction(generateCode, prevState, formData);
+export async function generateCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null, prompt: string, language: string }> {
+    const prompt = formData.get('prompt') as string;
+    const language = formData.get('language') as string;
+    try {
+        const result = await generateCode({ prompt, language });
+        return { ...prevState, result, error: null, prompt, language };
+    } catch (e: any) {
+        return { ...prevState, result: null, error: e.message, prompt, language };
+    }
 }
 
 export async function explainCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: ExplainCodeOutput | null, error: string | null }> {
