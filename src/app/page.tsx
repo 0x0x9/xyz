@@ -1,7 +1,12 @@
 import HomePageClient from '@/components/homepage-client';
+import { Suspense } from 'react';
 
 const Home = () => {
-  return <HomePageClient />;
+  return (
+    <Suspense>
+      <HomePageClient />
+    </Suspense>
+  );
 };
 
 export default Home;
