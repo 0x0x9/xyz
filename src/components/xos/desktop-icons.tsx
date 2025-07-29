@@ -11,7 +11,7 @@ const OriaIconAnimation = ({ className }: { className?: string }) => (
     </div>
 );
 
-const ALL_APPS_CONFIG = [
+const getAppsConfig = () => [
     { id: 'oria', name: 'Oria', icon: OriaIconAnimation },
     { id: 'cloud', name: '(X)cloud', icon: Cloud },
     { id: 'explorer', name: '(X)plorer', icon: Folder },
@@ -45,7 +45,6 @@ const DESKTOP_APP_IDS = [
     'muse', 'sound',
     'editor', 'frame', 'terminal'
 ];
-const desktopApps = DESKTOP_APP_IDS.map(id => ALL_APPS_CONFIG.find(app => app.id === id)).filter(Boolean) as (typeof ALL_APPS_CONFIG[0])[];
 
 interface DesktopIconsProps {
     isBooting: boolean;
@@ -53,6 +52,9 @@ interface DesktopIconsProps {
 }
 
 export default function DesktopIcons({ isBooting, onOpenApp }: DesktopIconsProps) {
+    const ALL_APPS_CONFIG = getAppsConfig();
+    const desktopApps = DESKTOP_APP_IDS.map(id => ALL_APPS_CONFIG.find(app => app.id === id)).filter(Boolean) as (typeof ALL_APPS_CONFIG[0])[];
+
     return (
         <div className="p-8 z-1 relative">
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4">
