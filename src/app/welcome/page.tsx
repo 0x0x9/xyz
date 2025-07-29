@@ -2,7 +2,7 @@ import WelcomeClient from './client';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
-export default function WelcomePage() {
+const WelcomePage = () => {
     return (
         <>
             <Header />
@@ -13,3 +13,5 @@ export default function WelcomePage() {
         </>
     );
 }
+
+export default WelcomePage;

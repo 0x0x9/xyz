@@ -1,7 +1,7 @@
 import ToneClient from './client';
 import { Mic } from 'lucide-react';
 
-export default function TonePage() {
+const TonePage = () => {
     return (
         <>
             <section className="text-center mb-12">
@@ -23,3 +23,5 @@ export default function TonePage() {
         </>
     );
 }
+
+export default TonePage;

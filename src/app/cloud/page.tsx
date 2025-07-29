@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
@@ -73,10 +72,12 @@ function CloudPageContent() {
     );
 }
 
-export default function CloudPage() {
+const CloudPage = () => {
     return (
         <Suspense>
             <CloudPageContent />
         </Suspense>
     );
 }
+
+export default CloudPage;

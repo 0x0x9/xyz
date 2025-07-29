@@ -1,4 +1,3 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -24,7 +23,7 @@ const features = [
   }
 ];
 
-export default function CommunityPage() {
+const CommunityPage = () => {
   return (
     <>
       <Header />
@@ -67,3 +66,5 @@ export default function CommunityPage() {
     </>
   );
 }
+
+export default CommunityPage;

@@ -1,7 +1,7 @@
 import AgendaClient from './client';
 import { Calendar } from 'lucide-react';
 
-export default function AgendaPage() {
+const AgendaPage = () => {
     return (
         <>
             <section className="text-center mb-12">
@@ -22,3 +22,4 @@ export default function AgendaPage() {
         </>
     );
 }
+export default AgendaPage;

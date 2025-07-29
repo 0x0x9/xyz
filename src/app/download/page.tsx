@@ -1,8 +1,9 @@
-
 import DownloadClient from './client';
 
-export default function DownloadPage() {
+const DownloadPage = () => {
     return (
         <DownloadClient />
     );
 }
+
+export default DownloadPage;

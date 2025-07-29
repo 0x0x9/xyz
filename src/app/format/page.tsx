@@ -3,7 +3,7 @@ import { Footer } from "@/components/Footer";
 import FormatClient from "./client";
 import { FileText } from "lucide-react";
 
-export default function FormatPage() {
+const FormatPage = () => {
   return (
     <>
       <Header />
@@ -27,3 +27,4 @@ export default function FormatPage() {
     </>
   );
 }
+export default FormatPage;

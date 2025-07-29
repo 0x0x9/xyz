@@ -1,4 +1,3 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Check } from "lucide-react";
 
-export default function SubscribePage() {
+const SubscribePage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -68,3 +67,4 @@ export default function SubscribePage() {
     </div>
   );
 }
+export default SubscribePage;

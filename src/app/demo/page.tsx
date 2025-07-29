@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar, Video, Clock } from "lucide-react";
 
-export default function DemoPage() {
+const DemoPage = () => {
   return (
     <>
       <Header />
@@ -66,3 +66,5 @@ export default function DemoPage() {
     </>
   );
 }
+
+export default DemoPage;

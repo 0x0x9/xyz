@@ -1,4 +1,3 @@
-
 'use client';
 
 import dynamic from 'next/dynamic';
@@ -10,11 +9,11 @@ const XosClient = dynamic(() => import('@/components/xos/client'), {
     loading: () => <div className="w-full h-full" />,
 });
 
-function XOSLoader() {
+const XOSLoader = () => {
     return <XosClient />;
 }
 
-export default function XosPage() {
+const XosPage = () => {
     return (
        <>
         <XosWallpaper />
@@ -24,3 +23,5 @@ export default function XosPage() {
        </>
     );
 }
+
+export default XosPage;

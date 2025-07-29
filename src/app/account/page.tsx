@@ -1,7 +1,9 @@
 import AccountClient from './client';
 
-export default function AccountPage() {
+const AccountPage = () => {
     return (
         <AccountClient />
     );
 }
+
+export default AccountPage;

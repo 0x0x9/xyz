@@ -1,7 +1,7 @@
 import AlphaClient from './client';
 import { TerminalSquare } from 'lucide-react';
 
-export default function AlphaPage() {
+const AlphaPage = () => {
     return (
         <>
             <section className="text-center mb-12">
@@ -23,3 +23,5 @@ export default function AlphaPage() {
         </>
     );
 }
+
+export default AlphaPage;

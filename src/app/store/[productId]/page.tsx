@@ -1,4 +1,3 @@
-
 import { notFound } from 'next/navigation';
 import { products, type Product } from '@/lib/products';
 import { Header } from "@/components/Header";
@@ -15,7 +14,7 @@ function getProduct(id: string): Product | undefined {
   return products.find(p => p.id.toString() === id);
 }
 
-export default async function ProductPage({ params: { productId } }: { params: { productId: string } }) {
+const ProductPage = async ({ params: { productId } }: { params: { productId: string } }) => {
   const product = getProduct(productId);
 
   if (!product) {
@@ -36,3 +35,5 @@ export default async function ProductPage({ params: { productId } }: { params: {
     </>
   );
 }
+
+export default ProductPage;

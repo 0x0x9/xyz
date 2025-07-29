@@ -1,7 +1,7 @@
 import DeckClient from './client';
 import { Presentation } from 'lucide-react';
 
-export default function DeckPage() {
+const DeckPage = () => {
     return (
         <>
             <section className="text-center mb-12">
@@ -22,3 +22,5 @@ export default function DeckPage() {
         </>
     );
 }
+
+export default DeckPage;

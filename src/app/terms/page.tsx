@@ -1,8 +1,7 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
-export default function TermsOfServicePage() {
+const TermsOfServicePage = () => {
   return (
     <>
       <Header />
@@ -64,3 +63,5 @@ export default function TermsOfServicePage() {
     </>
   );
 }
+
+export default TermsOfServicePage;

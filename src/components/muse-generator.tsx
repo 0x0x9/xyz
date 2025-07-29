@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
@@ -311,7 +312,7 @@ export default function MuseGenerator() {
         copilotFormData.append('mood', formData.get('mood') as string || 'neutre');
         copilotFormData.append('action', action);
         
-        (copilotAction as (payload: FormData) => void)(copilotFormData);
+        copilotAction(copilotFormData);
     };
 
     const handleSuggestionSelect = (suggestion: string) => {

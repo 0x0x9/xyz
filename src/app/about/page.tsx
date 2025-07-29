@@ -5,6 +5,7 @@ export const metadata = {
   description: 'Découvrez notre mission, nos valeurs et l\'équipe derrière l\'écosystème créatif (X)yzz.ai.',
 };
 
-export default function AboutPage() {
+const AboutPage = () => {
   return <AboutClient />;
 }
+export default AboutPage;

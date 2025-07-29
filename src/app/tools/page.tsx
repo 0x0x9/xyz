@@ -1,4 +1,3 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -32,7 +31,7 @@ const tools = [
   },
 ];
 
-export default function ToolsPage() {
+const ToolsPage = () => {
   return (
     <>
       <Header />
@@ -71,3 +70,5 @@ export default function ToolsPage() {
     </>
   );
 }
+
+export default ToolsPage;

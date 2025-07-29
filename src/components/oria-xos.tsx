@@ -81,7 +81,7 @@ const OriaResultDisplay = ({ result, openApp }: { result: OriaChatOutput, openAp
             const fluxData = data as GenerateFluxOutput;
             const appMapping: { [key in keyof GenerateFluxOutput]?: string } = {
                 projectPlan: 'maestro', personas: 'persona', ideas: 'promptor', deck: 'deck',
-                frame: 'editor', text: 'editor', motion: 'motion', nexus: 'nexus',
+                frame: 'editor', text: 'text', motion: 'motion', nexus: 'nexus',
                 code: 'editor', agenda: 'agenda',
             };
 

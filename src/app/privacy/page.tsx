@@ -1,8 +1,7 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
-export default function PrivacyPolicyPage() {
+const PrivacyPolicyPage = () => {
   return (
     <>
       <Header />
@@ -69,3 +68,4 @@ export default function PrivacyPolicyPage() {
     </>
   );
 }
+export default PrivacyPolicyPage;

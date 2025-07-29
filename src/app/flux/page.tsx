@@ -1,11 +1,9 @@
-
-
 export const dynamic = "force-dynamic";
 import { Suspense } from 'react';
 import FluxClient from './client';
 import { Wand2 } from 'lucide-react';
 
-export default function FluxPage() {
+const FluxPage = () => {
     return (
         <>
             <section className="text-center mb-12">
@@ -28,3 +26,5 @@ export default function FluxPage() {
         </>
     );
 }
+
+export default FluxPage;

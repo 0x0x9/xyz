@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Building, Mail, Phone } from "lucide-react";
 
-export default function ContactPage() {
+const ContactPage = () => {
   return (
     <>
       <Header />
@@ -85,3 +85,4 @@ export default function ContactPage() {
     </>
   );
 }
+export default ContactPage;

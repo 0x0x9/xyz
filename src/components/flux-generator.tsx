@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useState, useEffect, useCallback, useRef, useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { fluxAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
@@ -227,7 +227,7 @@ export default function FluxGenerator({ prompt: promptProp, job: jobProp, initia
         prompt: promptProp || '',
         job: jobProp || ''
     };
-    const [state, formAction] = useActionState(fluxAction, initialState);
+    const [state, formAction] = useFormState(fluxAction, initialState);
     const { pending } = useFormStatus();
 
     useEffect(() => {

@@ -1,7 +1,7 @@
 import ImageClient from './client';
 import { Image as ImageIcon } from 'lucide-react';
 
-export default function ImagePage() {
+const ImagePage = () => {
   return (
     <>
       <section className="text-center mb-12">
@@ -21,3 +21,4 @@ export default function ImagePage() {
     </>
   );
 }
+export default ImagePage;

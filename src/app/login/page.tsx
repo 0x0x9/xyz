@@ -1,4 +1,3 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
-export default function LoginPage() {
+const LoginPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -51,3 +50,4 @@ export default function LoginPage() {
     </div>
   );
 }
+export default LoginPage;

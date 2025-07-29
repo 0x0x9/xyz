@@ -1,9 +1,8 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import ForumClient from "./client";
 
-export default function ForumPage() {
+const ForumPage = () => {
   return (
     <>
       <Header />
@@ -24,3 +23,5 @@ export default function ForumPage() {
     </>
   );
 }
+
+export default ForumPage;

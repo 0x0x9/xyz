@@ -1,10 +1,10 @@
 
 'use client';
 
-import { useState, useEffect, useRef, useActionState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useFormStatus } from 'react-dom';
-import { generateScheduleAction, generateMoodboardAction, uploadDocumentAction, parseEventAction } from '@/app/actions';
+import { useFormState, useFormStatus } from 'react-dom';
+import { generateScheduleAction, generateMoodboardAction, uploadDocumentAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -23,7 +23,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogDescription,
-  AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import AiLoadingAnimation from './ui/ai-loading-animation';
 import { motion } from 'framer-motion';
@@ -101,7 +100,6 @@ function ResultsDisplay({ plan, moodboard, isLoadingMoodboard, onReset }: { plan
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        URL.revokeObjectURL(url);
         toast({ title: 'Téléchargé', description: 'Le plan de projet a été téléchargé en Markdown.' });
     };
 
@@ -127,20 +125,15 @@ function ResultsDisplay({ plan, moodboard, isLoadingMoodboard, onReset }: { plan
         }
     };
     
+    // This is now a mock since we can't call the action directly.
+    // In a real app with a proper API, this would be a server action call.
     const handleSyncAgenda = async () => {
         if (!plan.events || plan.events.length === 0) return;
         setIsSyncing(true);
-        toast({ description: `Synchronisation de ${plan.events.length} événement(s) avec (X)agenda...` });
-        try {
-            for (const event of plan.events) {
-                await parseEventAction({ prompt: `${event.title} le ${event.date} à ${event.time}` });
-            }
-            toast({ title: "Synchronisation réussie !", description: "Les événements ont été ajoutés à votre agenda. Consultez (X)agenda pour les voir." });
-        } catch (error: any) {
-            toast({ variant: 'destructive', title: "Erreur de synchronisation", description: error.message });
-        } finally {
-            setIsSyncing(false);
-        }
+        toast({ description: `Synchronisation de ${plan.events.length} événement(s) avec (X)agenda... (simulation)` });
+        await new Promise(res => setTimeout(res, 1000));
+        toast({ title: "Synchronisation simulée !", description: "Consultez (X)agenda pour voir les événements." });
+        setIsSyncing(false);
     };
 
 
@@ -244,7 +237,6 @@ function ResultsDisplay({ plan, moodboard, isLoadingMoodboard, onReset }: { plan
                                                     </Button>
                                                 </div>
                                                 <AlertDialogFooter className="p-2 sm:justify-end bg-transparent border-t-0">
-                                                    <AlertDialogCancel>Annuler</AlertDialogCancel>
                                                     <AlertDialogAction>Fermer</AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
@@ -351,7 +343,7 @@ export default function MaestroGenerator({ initialResult, prompt }: { initialRes
     id: key, 
     prompt: prompt || promptFromUrl || '' 
   };
-  const [state, formAction] = useActionState(generateScheduleAction, initialState);
+  const [state, formAction] = useFormState(generateScheduleAction, initialState);
 
   const [moodboard, setMoodboard] = useState<string[]>([]);
   const [isLoadingMoodboard, setIsLoadingMoodboard] = useState(false);

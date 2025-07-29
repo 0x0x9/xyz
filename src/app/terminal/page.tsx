@@ -1,7 +1,7 @@
 import TerminalClient from './client';
 import { Terminal } from 'lucide-react';
 
-export default function TerminalPage() {
+const TerminalPage = () => {
     return (
         <>
             <section className="text-center mb-12">
@@ -22,3 +22,5 @@ export default function TerminalPage() {
         </>
     );
 }
+
+export default TerminalPage;

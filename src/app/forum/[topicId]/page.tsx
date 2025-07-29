@@ -1,4 +1,3 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import TopicClient from "./client";
@@ -11,7 +10,7 @@ export function generateStaticParams() {
   }));
 }
 
-export default function TopicPage({ params }: { params: { topicId: string } }) {
+const TopicPage = ({ params }: { params: { topicId: string } }) => {
   const topicId = parseInt(params.topicId, 10);
   const topic = mockPosts.find(p => p.id === topicId);
 
@@ -31,3 +30,5 @@ export default function TopicPage({ params }: { params: { topicId: string } }) {
     </>
   );
 }
+
+export default TopicPage;

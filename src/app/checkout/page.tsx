@@ -1,9 +1,8 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import CheckoutClient from "./client";
 
-export default function CheckoutPage() {
+const CheckoutPage = () => {
   return (
     <>
       <Header />
@@ -24,3 +23,4 @@ export default function CheckoutPage() {
     </>
   );
 }
+export default CheckoutPage;

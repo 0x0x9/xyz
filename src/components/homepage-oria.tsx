@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useEffect, useState, useRef, useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useEffect, useState, useRef } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -412,13 +412,25 @@ export default function HomepageOriaChat() {
     setMessages([]);
   };
 
-  const clientAction = async (prevState: any, formData: FormData) => {
+  const clientAction = async (formData: FormData) => {
     const prompt = formData.get('prompt') as string;
-    if (!prompt.trim()) return initialState;
+    if (!prompt.trim()) return;
     
     setMessages(prev => [...prev, { id: nextId.current++, type: 'user', text: prompt }]);
-    const result = await oriaChatAction(prevState, formData);
 
+    const history: OriaHistoryMessage[] = [
+        ...messages,
+        { id: nextId.current -1, type: 'user', text: prompt }
+    ].slice(-10).map(msg => ({
+        role: msg.type === 'user' ? 'user' : 'model',
+        content: msg.type === 'user' ? msg.text! : JSON.stringify(msg.result!)
+    }));
+
+    const actionFormData = new FormData(formRef.current!);
+    actionFormData.set('history', JSON.stringify(history));
+    
+    const result = await oriaChatAction(initialState, actionFormData);
+    
     if (result.message === 'success' && result.result) {
         setMessages(prev => [...prev, {
             id: nextId.current++,
@@ -433,62 +445,11 @@ export default function HomepageOriaChat() {
         setMessages(prev => [...prev, { id: nextId.current++, type: 'oria', text: errorMessage }]);
     }
     formRef.current?.reset();
-    return result;
   }
 
-  const [state, formAction] = useActionState(clientAction, initialState);
-  const { toast } = useToast();
-
-  const historyForForm = JSON.stringify(
-    messages.slice(-10).map((msg) => {
-      // Keep user messages as is
-      if (msg.type === 'user') {
-        return { role: 'user', content: msg.text || '' };
-      }
-
-      // Handle Oria's messages
-      let content = msg.text || '';
-      if (msg.result) {
-        // Create a summary of the result to avoid sending large data in history
-        const summarizedResult = JSON.parse(JSON.stringify(msg.result)); // Deep copy to avoid mutating state
-        if (summarizedResult.type === 'tool_result' && summarizedResult.data) {
-          const data = summarizedResult.data as any;
-          // Replace large data fields with placeholders
-          if (data.imageDataUri) data.imageDataUri = '[Image Data]';
-          if (data.audioDataUri) data.audioDataUri = '[Audio Data]';
-          if (data.imageDataUris) data.imageDataUris = data.imageDataUris.map(() => '[Image Data]');
-          if (data.scenes) {
-            data.scenes = data.scenes.map((scene: any) =>
-              scene.imageDataUri ? { ...scene, imageDataUri: '[Image Data]' } : scene
-            );
-          }
-          // Truncate long text fields
-          if (data.text && data.text.length > 500) data.text = data.text.substring(0, 500) + '...';
-          if (data.html && data.html.length > 1000) data.html = data.html.substring(0, 1000) + '...';
-          if (data.code && data.code.length > 1000) data.code = data.code.substring(0, 1000) + '...';
-        }
-        content = JSON.stringify(summarizedResult);
-      }
-
-      return {
-        role: 'model',
-        content: content,
-      };
-    })
-  );
-
-  useEffect(() => {
-    if (state.message === 'error' && state.error && state.id > 0) {
-        if (!state.error.includes('quota') && !state.error.includes('rate-limit')) {
-            toast({ variant: 'destructive', title: 'Erreur Oria', description: state.error });
-        }
-    }
-  }, [state, toast]);
-
   return (
-    <form ref={formRef} action={formAction}>
+    <form ref={formRef} action={clientAction}>
         <input type="hidden" name="context" value="homepage" />
-        <input type="hidden" name="history" value={historyForForm} />
         <OriaChatUI messages={messages} handleReset={handleReset} formRef={formRef} />
     </form>
   );
