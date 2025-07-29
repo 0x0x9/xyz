@@ -1,6 +1,9 @@
 
 'use server';
 
+// This must be the first import to ensure all flows are registered.
+import '@/ai';
+
 import { redirect } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import type { Doc, GenerateFluxOutput, GenerateMuseOutput, ProjectPlan, GenerateIdeasOutput, VideoScript, Nexus, GeneratePaletteOutput, GeneratePersonaOutput, GenerateSoundOutput, Frame, GenerateToneOutput, GenerateCodeOutput, GenerateDeckOutput, GenerateTextOutput, GenerateVoiceOutput, OriaChatOutput, ExplainCodeOutput, DebugCodeOutput, AgendaEvent } from '@/ai/types';
