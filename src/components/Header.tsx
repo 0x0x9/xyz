@@ -59,6 +59,7 @@ import {
 
 const navLinks = [
   { href: "/store", label: "Boutique" },
+  { href: "/cloud", label: "(X)cloud" },
   { href: "/community", label: "Communauté" },
 ];
 
