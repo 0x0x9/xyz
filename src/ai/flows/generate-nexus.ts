@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -7,7 +8,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import type { GenerateNexusInput, GenerateNexusOutput } from '@/ai/types';
+import { GenerateNexusInputSchema, GenerateNexusOutputSchema, type GenerateNexusInput, type GenerateNexusOutput } from '@/ai/types';
 
 export async function generateNexus(input: GenerateNexusInput): Promise<GenerateNexusOutput> {
   return generateNexusFlow(input);
@@ -15,8 +16,8 @@ export async function generateNexus(input: GenerateNexusInput): Promise<Generate
 
 const nexusPrompt = ai.definePrompt({
     name: 'nexusPrompt',
-    input: { schema: GenerateNexusInput },
-    output: { schema: GenerateNexusOutput },
+    input: { schema: GenerateNexusInputSchema },
+    output: { schema: GenerateNexusOutputSchema },
     model: 'googleai/gemini-1.5-pro-latest',
     prompt: `Vous êtes (X)nexus, un spécialiste de la visualisation d'idées et du brainstorming structuré. Votre mission est de transformer une idée centrale en une carte mentale hiérarchique et cohérente.
 
@@ -35,8 +36,8 @@ Idée de l'utilisateur : {{{prompt}}}`,
 const generateNexusFlow = ai.defineFlow(
   {
     name: 'generateNexusFlow',
-    inputSchema: GenerateNexusInput,
-    outputSchema: GenerateNexusOutput,
+    inputSchema: GenerateNexusInputSchema,
+    outputSchema: GenerateNexusOutputSchema,
   },
   async (input) => {
     const { output } = await nexusPrompt(input);
