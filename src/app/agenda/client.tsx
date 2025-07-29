@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { format, isSameDay, parse, isValid } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Calendar as CalendarIcon, Plus, Sparkles, Trash2, Loader, Send } from 'lucide-react';
@@ -119,7 +119,7 @@ export default function AgendaClient() {
     const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
 
     // AI "Smart Add" form state
-    const [smartAddState, smartAddAction] = useActionState(parseEventAction, { success: false, error: null, event: null, id: 0 });
+    const [smartAddState, smartAddAction] = useFormState(parseEventAction, { success: false, error: null, event: null, id: 0 });
     const smartAddFormRef = useRef<HTMLFormElement>(null);
     
     // Manual Add form state
