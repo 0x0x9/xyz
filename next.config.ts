@@ -24,13 +24,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  allowedDevOrigins: [
-    'https://*.cloudworkstations.dev',
-    'http://localhost:9002',
-    'http://0.0.0.0:9002',
-    'http://localhost:3000',
-    'http://0.0.0.0:3000',
-  ],
 };
 
 export default nextConfig;
