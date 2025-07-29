@@ -8,13 +8,14 @@ import { getFunctions, type Functions } from "firebase/functions";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  "projectId": "oria-ai-assistant",
-  "appId": "1:161385582711:web:bed5e98b880afb1d903672",
-  "storageBucket": "oria-ai-assistant.firebasestorage.app",
-  "apiKey": "AIzaSyBLQiu9wjVCH5fPL0cfXUb5eEt-cjk74_4",
-  "authDomain": "oria-ai-assistant.firebaseapp.com",
-  "measurementId": "",
-  "messagingSenderId": "161385582711"
+  apiKey: "AIzaSyD81xiaLYEzWZlbdHzL-BdKuj_NPUINKsE",
+  authDomain: "xyzzai.firebaseapp.com",
+  databaseURL: "https://xyzzai-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "xyzzai",
+  storageBucket: "xyzzai.firebasestorage.app",
+  messagingSenderId: "424780446122",
+  appId: "1:424780446122:web:584566b21e5f6d8cd053d3",
+  measurementId: "G-SC8W810MLQ"
 };
 
 let app: FirebaseApp;
