@@ -101,7 +101,7 @@ export default function WelcomeClient() {
                             (X)OS
                         </h1>
                         <p className="text-xl md:text-2xl lg:text-3xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
-                            Ce n’est pas un système d’exploitation. <br/> C’est une extension de votre créativité.
+                            Plus qu'un système d'exploitation. <br/> Une extension de votre créativité.
                         </p>
                          <div className="pt-4 flex flex-wrap justify-center gap-4">
                             <Button size="lg" asChild className="rounded-full text-lg">
