@@ -4,28 +4,36 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 210 40% 98%; /* Light grey-blue */
-    --foreground: 222 84% 4.9%; /* Dark blue */
-    --card: 210 40% 98%; /* Same as background */
-    --card-foreground: 222 84% 4.9%;
-    --popover: 210 40% 98%;
-    --popover-foreground: 222 84% 4.9%;
-    --primary: 210 100% 50%; /* Blue */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 91%; /* Lighter grey-blue */
-    --secondary-foreground: 222 84% 4.9%;
-    --muted: 210 40% 91%;
-    --muted-foreground: 215 20.2% 45.1%; /* Grey */
-    --accent: 210 100% 50%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 210 40% 82%;
-    --input: 210 40% 89%;
-    --ring: 222 84% 4.9%;
-    --radius: 1rem;
+  body {
+    @apply bg-background text-foreground border-border;
   }
+}
+
+@theme {
+  --background: 210 40% 98%; /* Light grey-blue */
+  --foreground: 222 84% 4.9%; /* Dark blue */
+  --card: 210 40% 98%; /* Same as background */
+  --card-foreground: 222 84% 4.9%;
+  --popover: 210 40% 98%;
+  --popover-foreground: 222 84% 4.9%;
+  --primary: 210 100% 50%; /* Blue */
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 91%; /* Lighter grey-blue */
+  --secondary-foreground: 222 84% 4.9%;
+  --muted: 210 40% 91%;
+  --muted-foreground: 215 20.2% 45.1%; /* Grey */
+  --accent: 210 100% 50%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 210 40% 82%;
+  --input: 210 40% 89%;
+  --ring: 222 84% 4.9%;
+  --radius: 1rem;
+
+  --spacing-lg: var(--radius);
+  --spacing-md: calc(var(--radius) - 2px);
+  --spacing-sm: calc(var(--radius) - 4px);
 
   .dark {
     --background: 222 84% 4.9%;
@@ -47,13 +55,6 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 210 100% 50%;
-    --radius: 1rem;
-  }
-}
-
-@layer base {
-  body {
-    @apply bg-background text-foreground border-border;
   }
 }
 
