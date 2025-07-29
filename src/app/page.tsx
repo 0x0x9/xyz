@@ -61,22 +61,34 @@ function FeatureShowcase({ title, description, buttonText, buttonHref, imageUrl,
         <AnimatedSection>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div className={cn("relative aspect-video lg:aspect-square", imagePosition === 'right' && 'lg:order-2')}>
-                     <Image
-                        src={imageUrl}
-                        alt={title}
-                        fill
-                        className="object-contain rounded-2xl"
-                        data-ai-hint={imageHint}
-                    />
+                    {/* Remplacement de l'image par une vidéo YouTube pour la section welcome */}
+                    {buttonHref === '/welcome' ? (
+                        <iframe
+                            src="https://www.youtube.com/embed/-JAjrFVGCgw?autoplay=1&mute=1&loop=1&playlist=-JAjrFVGCgw"
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="w-full h-full rounded-2xl"
+                        ></iframe>
+                    ) : (
+                        <Image
+                            src={imageUrl}
+                            alt={title}
+                            fill
+                            className="object-contain rounded-2xl"
+                            data-ai-hint={imageHint}
+                        />
+                    )}
                 </div>
-                 <div className="space-y-6">
-                     <h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                       {title}
+                <div className="space-y-6">
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+                        {title}
                     </h2>
                     <p className="text-lg md:text-xl text-muted-foreground">
                         {description}
                     </p>
-                     <div className="pt-2">
+                    <div className="pt-2">
                         <Button size="lg" asChild className="rounded-full text-lg">
                             <Link href={buttonHref}>
                                 {buttonText} <Icon className="ml-2 h-5 w-5" />

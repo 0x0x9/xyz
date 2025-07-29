@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRef, useState } from 'react';
@@ -81,16 +80,25 @@ export default function WelcomeClient() {
             <div className="h-[200vh] relative">
                 <div className="sticky top-0 h-screen flex flex-col items-center justify-center text-center overflow-hidden">
                     <motion.div style={{ scale: imageScale, opacity: imageOpacity }} className="absolute inset-0">
-                         <Image
-                            src="https://placehold.co/1920x1080.png"
-                            alt="Interface de XOS"
-                            fill
-                            className="object-cover"
-                            quality={100}
-                            priority
-                            data-ai-hint="futuristic operating system"
+                        <iframe
+                            src="https://www.youtube.com/embed/-JAjrFVGCgw?autoplay=1&mute=1&loop=1&playlist=-JAjrFVGCgw&controls=0&showinfo=0"
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="object-cover w-full h-full"
+                            style={{
+                                position: 'absolute',
+                                height: '100%',
+                                width: '100%',
+                                left: 0,
+                                top: 0,
+                                right: 0,
+                                bottom: 0,
+                                color: 'transparent'
+                            }}
                         />
-                         <div className="absolute inset-0 bg-black/30"></div>
+                        <div className="absolute inset-0 bg-black/30"></div>
                     </motion.div>
                    
                     <motion.div 
@@ -98,10 +106,10 @@ export default function WelcomeClient() {
                          className="relative z-10 px-4 space-y-6"
                     >
                         <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white [text-shadow:0_4px_20px_rgba(0,0,0,0.5)]">
-                            (X)OS
+                           L’élégance d’un outil, <br/>la puissance d’un studio.
                         </h1>
                         <p className="text-xl md:text-2xl lg:text-3xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
-                            Ce n’est pas un système d’exploitation. <br/> C’est une extension de votre créativité.
+                           Plongez dans l'ère de la polyvalence et de la performance sans compromis. (X)OS est une révolution pour décupler votre créativité.
                         </p>
                          <div className="pt-4 flex flex-wrap justify-center gap-4">
                             <Button size="lg" asChild className="rounded-full text-lg">
@@ -155,10 +163,10 @@ export default function WelcomeClient() {
             <Section className="text-center">
                 <AnimatedText>
                     <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                        Un OS. Tous les OS.
+                        L'harmonie entre Windows et macOS.
                     </h2>
                     <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                        (X)OS est le premier système d'exploitation qui vous permet d'exécuter macOS, Windows et Linux simultanément, sans compromis. Passez d'un environnement à l'autre instantanément, et combinez la puissance de chaque univers.
+                        (X)OS est le premier système d'exploitation qui vous permet d'exécuter macOS, Windows et Linux simultanément, sans compromis. Travaillez sans contrainte : vos projets et outils s’ouvrent sur votre machine, avec synchronisation de vos espaces via le cloud.
                     </p>
                 </AnimatedText>
                 <AnimatedText className="mt-16">
