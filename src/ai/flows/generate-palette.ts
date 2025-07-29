@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -9,8 +10,8 @@
 import { ai } from '@/ai/genkit';
 import {
   GeneratePaletteInputSchema,
-  type GeneratePaletteInput,
   GeneratePaletteOutputSchema,
+  type GeneratePaletteInput,
   type GeneratePaletteOutput,
 } from '@/ai/types';
 

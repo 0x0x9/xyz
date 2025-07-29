@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -7,11 +8,10 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
 import {
-  GenerateCodeInputSchema as RefactorCodeInputSchema, // Re-using the same schema
-  type GenerateCodeInput as RefactorCodeInput,
+  GenerateCodeInputSchema as RefactorCodeInputSchema,
   GenerateCodeOutputSchema as RefactorCodeOutputSchema,
+  type GenerateCodeInput as RefactorCodeInput,
   type GenerateCodeOutput as RefactorCodeOutput,
 } from '@/ai/types';
 

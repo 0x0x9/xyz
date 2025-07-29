@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -12,9 +13,8 @@ import { generateImage } from './generate-image';
 
 
 export async function generateMoodboard(input: GenerateMoodboardInput): Promise<GenerateMoodboardOutput> {
-  const imagePromises = input.prompts.map(prompt => generateImage({ prompt }));
+  const imagePromises = input.prompts.map(prompt => generateImage({ prompt, style: 'photorealistic' }));
   const imageResults = await Promise.all(imagePromises);
   const imageDataUris = imageResults.map(result => result.imageDataUri);
   return { imageDataUris };
 }
-

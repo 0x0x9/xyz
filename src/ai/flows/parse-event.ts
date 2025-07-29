@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -10,8 +11,8 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import {
   ParseEventInputSchema,
-  type ParseEventInput,
   AgendaEventSchema as ParseEventOutputSchema,
+  type ParseEventInput,
   type AgendaEvent as ParseEventOutput,
 } from '@/ai/types';
 

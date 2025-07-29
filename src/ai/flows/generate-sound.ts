@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Un agent IA qui génère du son, (X)sound.
@@ -11,8 +12,8 @@ import { ai } from '@/ai/genkit';
 import wav from 'wav';
 import {
   GenerateSoundInputSchema,
-  type GenerateSoundInput,
   GenerateSoundOutputSchema,
+  type GenerateSoundInput,
   type GenerateSoundOutput,
 } from '@/ai/types';
 import { z } from 'zod';

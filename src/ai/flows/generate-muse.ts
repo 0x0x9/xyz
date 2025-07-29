@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -9,8 +10,8 @@
 import { ai } from '@/ai/genkit';
 import {
   GenerateMuseInputSchema,
-  type GenerateMuseInput,
   GenerateMuseOutputSchema,
+  type GenerateMuseInput,
   type GenerateMuseOutput,
 } from '@/ai/types';
 

@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Un agent IA qui transforme du texte en parole (TTS), (X)voice.
@@ -9,8 +10,8 @@ import { ai } from '@/ai/genkit';
 import wav from 'wav';
 import {
   GenerateVoiceInputSchema,
-  type GenerateVoiceInput,
   GenerateVoiceOutputSchema,
+  type GenerateVoiceInput,
   type GenerateVoiceOutput,
 } from '@/ai/types';
 
