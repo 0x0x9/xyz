@@ -8,12 +8,13 @@ import { getFunctions, type Functions } from "firebase/functions";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+  "projectId": "oria-ai-assistant",
+  "appId": "1:161385582711:web:bed5e98b880afb1d903672",
+  "storageBucket": "oria-ai-assistant.firebasestorage.app",
+  "apiKey": "AIzaSyBLQiu9wjVCH5fPL0cfXUb5eEt-cjk74_4",
+  "authDomain": "oria-ai-assistant.firebaseapp.com",
+  "measurementId": "",
+  "messagingSenderId": "161385582711"
 };
 
 let app: FirebaseApp;
