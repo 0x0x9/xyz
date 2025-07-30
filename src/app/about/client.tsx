@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 const teamMembers = [
-  { name: 'Alexandre Dubois', role: 'Fondateur & CEO', avatar: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80', hint: 'man portrait, professional, apple style' },
+  { name: 'Démon François', role: 'Fondateur & CEO', avatar: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80', hint: 'man portrait, professional, apple style' },
   { name: 'Juliette Moreau', role: 'Directrice de la Technologie (CTO)', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80', hint: 'woman portrait, professional, apple style' },
   { name: 'Léo Garnier', role: 'Chef du Design (CDO)', avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80', hint: 'man portrait, creative, apple style' },
   { name: 'Chloé Martin', role: 'Responsable Communauté', avatar: 'https://images.unsplash.com/photo-1519340333755-c6e2a6a1b49a?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80', hint: 'woman portrait, friendly, apple style' },
