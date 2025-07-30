@@ -3,12 +3,13 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Cpu, Zap, Thermometer, MemoryStick, HardDrive, Layers, Wrench } from 'lucide-react';
+import { ArrowRight, Cpu, Zap, Layers } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import PerformanceChart from '@/components/ui/performance-chart';
+import { MemoryStick } from 'lucide-react';
 
 function Section({ children, className }: { children: React.ReactNode, className?: string }) {
     const ref = useRef<HTMLDivElement>(null);
@@ -131,11 +132,11 @@ export default function HardwareClient() {
                     <div className="relative aspect-square">
                          <AnimatedText>
                              <Image
-                                src="https://placehold.co/800x800.png"
+                                src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80"
                                 alt="Vue éclatée des composants de la Station X-1"
                                 fill
                                 className="object-contain"
-                                data-ai-hint="computer components exploded view"
+                                data-ai-hint="computer components"
                             />
                          </AnimatedText>
                     </div>
@@ -174,11 +175,11 @@ export default function HardwareClient() {
                     <div className="relative aspect-square lg:order-1">
                          <AnimatedText>
                              <Image
-                                src="https://placehold.co/800x800.png"
+                                src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80"
                                 alt="Système de refroidissement liquide de la Station X-1"
                                 fill
                                 className="object-contain"
-                                data-ai-hint="liquid cooling computer"
+                                data-ai-hint="liquid cooling"
                             />
                          </AnimatedText>
                     </div>
@@ -191,11 +192,11 @@ export default function HardwareClient() {
                     <div className="relative aspect-square">
                          <AnimatedText>
                              <Image
-                                src="https://placehold.co/800x800.png"
+                                src="https://images.unsplash.com/photo-1587593665183-a773cb21f845?auto=format&fit=crop&w=800&q=80"
                                 alt="Châssis ouvert de la Station X-1 montrant l'accès aux composants"
                                 fill
                                 className="object-contain"
-                                data-ai-hint="open computer case modular"
+                                data-ai-hint="open computer"
                             />
                          </AnimatedText>
                     </div>
