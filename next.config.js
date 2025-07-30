@@ -23,6 +23,9 @@ const nextConfig = {
       },
     ],
   },
+  devIndicators: {
+    allowedDevOrigins: ['*'],
+  },
 };
 
 module.exports = nextConfig;
