@@ -83,7 +83,7 @@ export default function WelcomeClient() {
                     <motion.div style={{ scale: imageScale, opacity: imageOpacity }} className="absolute inset-0">
                         <div className="absolute inset-0 w-full h-full">
                             <iframe
-                                src="https://www.youtube.com/embed/0uba_mPLoM0?autoplay=1&mute=1&loop=1&playlist=0uba_mPLoM0&controls=0&showinfo=0&autohide=1"
+                                src="https://www.youtube.com/embed/9Ks_dCYhX4o?autoplay=1&mute=1&loop=1&playlist=9Ks_dCYhX4o&controls=0&showinfo=0&autohide=1"
                                 title="YouTube video player"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
