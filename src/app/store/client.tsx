@@ -23,7 +23,7 @@ function ProductCard({ product }: { product: Product }) {
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault(); // Prevent link navigation
         e.stopPropagation(); // Stop event bubbling
-        addItem(product);
+        addItem({ ...product, image: product.images[0] });
         toast({
             title: "Ajouté au panier",
             description: `"${product.name}" a été ajouté à votre panier.`,
@@ -36,7 +36,7 @@ function ProductCard({ product }: { product: Product }) {
           <CardContent className="relative flex-1 p-0">
             <div className="relative aspect-square">
                 <Image
-                    src={product.image}
+                    src={product.images[0]}
                     alt={product.name}
                     fill
                     className="object-cover transition-transform duration-500"

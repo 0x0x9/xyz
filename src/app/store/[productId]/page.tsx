@@ -1,3 +1,4 @@
+
 import { notFound } from 'next/navigation';
 import { products, type Product } from '@/lib/products';
 import { Header } from "@/components/Header";

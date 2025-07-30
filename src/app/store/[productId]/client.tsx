@@ -12,16 +12,19 @@ import { type Product } from '@/lib/products';
 import { Card, CardContent } from '@/components/ui/card';
 import { PCConfigurator, type Configuration } from '@/components/ui/pc-configurator';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export default function ProductClient({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
     const { addItem } = useCart();
     const { toast } = useToast();
     const [configuration, setConfiguration] = useState<Configuration | null>(null);
     const [totalPrice, setTotalPrice] = useState(product.price);
+    const [activeImage, setActiveImage] = useState(product.images[0]);
 
     const handleAddToCart = () => {
         const productToAdd = {
             ...product,
+            image: activeImage, // Use the active image for the cart
             price: totalPrice, // Use the configured price
             name: configuration ? `${product.name} (Configuré)` : product.name,
             configuration: configuration ?? undefined,
@@ -41,15 +44,40 @@ export default function ProductClient({ product, relatedProducts }: { product: P
     return (
         <div className="container mx-auto px-4 md:px-6 py-28 md:py-36">
             <div className="grid md:grid-cols-2 gap-12 items-start">
-                <div className="relative aspect-square w-full rounded-2xl overflow-hidden glass-card p-4">
-                    <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-contain"
-                        data-ai-hint={product.hint}
-                    />
+                <div className="space-y-4">
+                    <div className="relative aspect-square w-full rounded-2xl overflow-hidden glass-card p-4">
+                        <Image
+                            src={activeImage}
+                            alt={product.name}
+                            fill
+                            className="object-contain transition-opacity duration-300"
+                            data-ai-hint={product.hint}
+                            key={activeImage}
+                        />
+                    </div>
+                    {product.images.length > 1 && (
+                        <div className="grid grid-cols-5 gap-2">
+                            {product.images.map((img, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setActiveImage(img)}
+                                    className={cn(
+                                        "relative aspect-square w-full rounded-lg overflow-hidden border-2 transition-all",
+                                        activeImage === img ? "border-primary" : "border-transparent hover:border-primary/50"
+                                    )}
+                                >
+                                    <Image
+                                        src={img}
+                                        alt={`${product.name} - vue ${idx + 1}`}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
+
 
                 <div className="space-y-6">
                     <div className="space-y-3">
@@ -97,7 +125,7 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                                   <CardContent className="relative flex-1 p-0">
                                     <div className="relative aspect-square">
                                         <Image
-                                            src={related.image}
+                                            src={related.images[0]}
                                             alt={related.name}
                                             fill
                                             className="object-cover transition-transform duration-500"

@@ -6,8 +6,9 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import type { Product } from '@/lib/products';
 import type { Configuration } from '@/components/ui/pc-configurator';
 
-// Add a unique identifier for each cart item instance
-type CartItem = Product & {
+// We add `image` to the cart item to store which variant was added
+type CartItem = Omit<Product, 'images'> & {
+    image: string;
     cartItemId: string; 
     quantity: number;
     configuration?: Configuration;
