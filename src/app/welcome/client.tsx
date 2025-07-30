@@ -81,16 +81,17 @@ export default function WelcomeClient() {
             <div className="h-[200vh] relative">
                 <div className="sticky top-0 h-screen flex flex-col items-center justify-center text-center overflow-hidden">
                     <motion.div style={{ scale: imageScale, opacity: imageOpacity }} className="absolute inset-0">
-                         <Image
-                            src="https://placehold.co/1920x1080.png"
-                            alt="Interface de XOS"
-                            fill
-                            className="object-cover"
-                            quality={100}
-                            priority
-                            data-ai-hint="futuristic operating system"
-                        />
-                         <div className="absolute inset-0 bg-black/30"></div>
+                        <div className="absolute inset-0 w-full h-full">
+                            <iframe
+                                src="https://www.youtube.com/embed/0uba_mPLoM0?autoplay=1&mute=1&loop=1&playlist=0uba_mPLoM0&controls=0&showinfo=0&autohide=1"
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="w-full h-full scale-[1.5]"
+                            ></iframe>
+                        </div>
+                         <div className="absolute inset-0 bg-black/40"></div>
                     </motion.div>
                    
                     <motion.div 
