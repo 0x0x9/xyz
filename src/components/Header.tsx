@@ -277,14 +277,14 @@ export function Header() {
               <DropdownMenuPrimitive.Content
                 align="center"
                 sideOffset={10}
-                className="w-[680px] glass-card p-4 z-50 outline-none"
+                className="w-[700px] glass-card p-4 z-50 outline-none"
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: -10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: -10 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="grid grid-cols-1 md:grid-cols-12 gap-4"
+                  className="grid grid-cols-1 md:grid-cols-12 gap-6"
                 >
                   <div className="md:col-span-5 space-y-2">
                      <h3 className="px-2 text-sm font-semibold text-muted-foreground">Écosystème</h3>
@@ -294,18 +294,16 @@ export function Header() {
                        ))}
                      </div>
                   </div>
-                  <Separator orientation="vertical" className="h-auto hidden md:block mx-2" />
+                  <Separator orientation="vertical" className="h-auto hidden md:block" />
                   <div className="md:col-span-6 space-y-3">
                      <h3 className="px-2 text-sm font-semibold text-muted-foreground">Générateurs IA</h3>
-                     <div className="flex flex-col flex-wrap gap-x-4 gap-y-1 max-h-64">
-                        {generatorTools.map((category) => (
-                            <div key={category.category} className="space-y-1 mb-2 break-inside-avoid">
-                                <h4 className="font-medium text-sm text-foreground/80 px-2">{category.category}</h4>
-                                 {category.tools.map((tool) => (
-                                    <DropdownMenuLinkItem key={tool.href} {...tool} />
-                                 ))}
-                            </div>
-                        ))}
+                     <div className="grid grid-flow-col grid-rows-7 gap-x-6 gap-y-1">
+                        {generatorTools.flatMap(category => [
+                            <h4 key={category.category} className="font-medium text-sm text-foreground/80 px-2 mt-2 first:mt-0 col-span-full">{category.category}</h4>,
+                            ...category.tools.map(tool => (
+                                <DropdownMenuLinkItem key={tool.href} {...tool} />
+                            ))
+                        ])}
                      </div>
                   </div>
                 </motion.div>
