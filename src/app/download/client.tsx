@@ -4,8 +4,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Cpu, Sparkles, Layers, Cloud, Apple, AppWindow, Terminal, Download } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -21,23 +19,6 @@ function getOS(): OS {
     if (userAgent.includes("Win")) return "Windows";
     if (userAgent.includes("Linux")) return "Linux";
     return 'Inconnu';
-}
-
-function Section({ children, className }: { children: React.ReactNode, className?: string }) {
-    const ref = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start end", "end start"]
-    });
-    const y = useTransform(scrollYProgress, [0, 1], ['-5%', '5%']);
-
-    return (
-        <section ref={ref} className={cn("relative container mx-auto px-4 md:px-6 py-24 md:py-36 min-h-[80vh] flex flex-col justify-center", className)}>
-             <motion.div style={{ y }}>
-                {children}
-            </motion.div>
-        </section>
-    );
 }
 
 function AnimatedText({ text, el: Wrapper = 'p', className, stagger = 0.02 }: { text: string, el?: React.ElementType, className?: string, stagger?: number }) {
@@ -141,68 +122,58 @@ function DownloadModal({ os, icon: Icon, type, children }: { os: OS | 'Serveur',
     );
 }
 
-export default function DownloadClient() {
-    const [detectedOS, setDetectedOS] = useState<OS>('Inconnu');
-
-    useEffect(() => {
-        setDetectedOS(getOS());
-    }, []);
-
-    const downloadOptions: { os: OS | 'Serveur'; icon: React.ElementType, type: string, compatible: string }[] = [
-        { os: 'Windows', icon: AppWindow, type: '(EXE)', compatible: 'Compatible Win 11' },
-        { os: 'macOS', icon: Apple, type: '(DMG)', compatible: 'Support ARM & Intel' },
-        { os: 'Serveur', icon: Terminal, type: '(CLI)', compatible: 'Version headless & orchestrateur IA' },
-    ];
-    
-    return (
-        <>
-            {/* Hero Section */}
-            <section className="relative h-screen flex flex-col items-center justify-center text-center overflow-hidden">
-                <div className="absolute inset-0">
-                    <iframe
-                        src="https://www.youtube.com/embed/YUEb23FQVhA?autoplay=1&mute=1&loop=1&playlist=YUEb23FQVhA&controls=0&showinfo=0&autohide=1&wmode=transparent"
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full scale-[1.5]"
-                    ></iframe>
-                    <div className="absolute inset-0 bg-black/30"></div>
-                </div>
-                <div className="relative z-10 px-4 space-y-6">
-                    <AnimatedText text="Design. Intelligence. Fluidité." el="h1" className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white [text-shadow:0_4px_20px_rgba(0,0,0,0.5)]" />
-                    <AnimatedText text="L’expérience créative ultime sur votre machine. (X)OS vous connecte au cœur de l’écosystème IA : design, dev, production." el="p" className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]" stagger={0.01} />
-                </div>
-            </section>
-
-            {/* Features Section */}
-            <Section className="text-center">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {features.map((feature, i) => (
-                        <motion.div
-                            key={feature.title}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.5 }}
-                            transition={{ duration: 0.5, delay: i * 0.1 }}
-                        >
-                            <div className="glass-card p-6 md:p-8 flex flex-col items-center text-center h-full">
-                                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 mb-6">
-                                    <feature.icon className="h-8 w-8 text-primary" />
-                                </div>
-                                <h3 className="text-xl md:text-2xl font-bold mb-2">{feature.title}</h3>
-                                <p className="text-muted-foreground text-base flex-grow">{feature.description}</p>
+const scenes = [
+    { 
+      id: 'hero',
+      videoId: 'YUEb23FQVhA',
+      content: (
+        <div className="relative z-10 px-4 space-y-6 text-center">
+            <AnimatedText text="Design. Intelligence. Fluidité." el="h1" className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white [text-shadow:0_4px_20px_rgba(0,0,0,0.5)]" />
+            <AnimatedText text="L’expérience créative ultime sur votre machine. (X)OS vous connecte au cœur de l’écosystème IA : design, dev, production." el="p" className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]" stagger={0.01} />
+        </div>
+      )
+    },
+    {
+      id: 'features',
+      videoId: 'wLiwRGYaVnw',
+      content: (
+        <div className="container mx-auto px-4 md:px-6 text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {features.map((feature, i) => (
+                    <motion.div
+                        key={feature.title}
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.5 }}
+                        transition={{ duration: 0.5, delay: i * 0.1 }}
+                    >
+                        <div className="glass-card p-6 md:p-8 flex flex-col items-center text-center h-full">
+                            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 mb-6">
+                                <feature.icon className="h-8 w-8 text-primary" />
                             </div>
-                        </motion.div>
-                    ))}
-                </div>
-            </Section>
-
-            {/* Download Section */}
-            <Section id="download" className="text-center">
+                            <h3 className="text-xl md:text-2xl font-bold mb-2">{feature.title}</h3>
+                            <p className="text-muted-foreground text-base flex-grow">{feature.description}</p>
+                        </div>
+                    </motion.div>
+                ))}
+            </div>
+        </div>
+      )
+    },
+    { 
+      id: 'download',
+      videoId: '9Ks_dCYhX4o',
+      content: ({ detectedOS }: { detectedOS: OS }) => {
+        const downloadOptions: { os: OS | 'Serveur'; icon: React.ElementType, type: string, compatible: string }[] = [
+            { os: 'Windows', icon: AppWindow, type: '(EXE)', compatible: 'Compatible Win 11' },
+            { os: 'macOS', icon: Apple, type: '(DMG)', compatible: 'Support ARM & Intel' },
+            { os: 'Serveur', icon: Terminal, type: '(CLI)', compatible: 'Version headless & orchestrateur IA' },
+        ];
+        return (
+            <div className="text-center container mx-auto px-4 md:px-6">
                 <AnimatedText text="Prêt à transformer votre machine ?" el="h2" className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70" />
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                     {downloadOptions.map((opt) => (
+                    {downloadOptions.map((opt) => (
                         <DownloadModal key={opt.os} os={opt.os} icon={opt.icon} type={opt.type}>
                             <motion.div 
                                 className="glass-card p-8 text-center flex flex-col items-center cursor-pointer group"
@@ -221,31 +192,92 @@ export default function DownloadClient() {
                         </DownloadModal>
                     ))}
                 </div>
-            </Section>
+            </div>
+        );
+      }
+    },
+    { 
+      id: 'testimonials',
+      videoId: 'SqJGQ25sc8Q',
+      content: (
+        <div className="container mx-auto px-4 md:px-6">
+            <AnimatedText text="Ce que les créateurs disent de (X)OS" el="h2" className="text-center text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 mb-16" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {testimonials.map((testimonial, i) => (
+                    <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.5 }}
+                        transition={{ duration: 0.5, delay: i * 0.15 }}
+                    >
+                        <div className="glass-card p-8 h-full flex flex-col">
+                            <p className="text-muted-foreground italic flex-grow">"{testimonial.quote}"</p>
+                            <div className="mt-6">
+                                <p className="font-semibold">{testimonial.author}</p>
+                                <p className="text-sm text-primary">{testimonial.role}</p>
+                            </div>
+                        </div>
+                    </motion.div>
+                ))}
+            </div>
+        </div>
+      )
+    },
+];
 
-            {/* Testimonials Section */}
-            <Section>
-                 <AnimatedText text="Ce que les créateurs disent de (X)OS" el="h2" className="text-center text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 mb-16" />
-                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {testimonials.map((testimonial, i) => (
-                         <motion.div
-                            key={i}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.5 }}
-                            transition={{ duration: 0.5, delay: i * 0.15 }}
-                         >
-                            <div className="glass-card p-8 h-full flex flex-col">
-                                <p className="text-muted-foreground italic flex-grow">"{testimonial.quote}"</p>
-                                <div className="mt-6">
-                                    <p className="font-semibold">{testimonial.author}</p>
-                                    <p className="text-sm text-primary">{testimonial.role}</p>
-                                </div>
+export default function DownloadClient() {
+    const [detectedOS, setDetectedOS] = useState<OS>('Inconnu');
+    const targetRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: targetRef,
+        offset: ['start start', 'end end'],
+    });
+
+    const activeSceneIndex = useTransform(
+        scrollYProgress,
+        scenes.map((_, i) => i / (scenes.length -1)),
+        scenes.map((_, i) => i)
+    );
+    
+    useEffect(() => {
+        setDetectedOS(getOS());
+    }, []);
+
+    return (
+        <div ref={targetRef} className="relative h-[400vh]">
+            <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
+                {scenes.map((scene, i) => {
+                    const opacity = useTransform(
+                        activeSceneIndex,
+                        [i - 0.5, i, i + 0.5],
+                        [0, 1, 0]
+                    );
+
+                    return (
+                        <motion.div
+                            key={scene.id}
+                            style={{ opacity }}
+                            className="absolute inset-0 flex flex-col items-center justify-center"
+                        >
+                            <div className="absolute inset-0">
+                                <iframe
+                                    src={`https://www.youtube.com/embed/${scene.videoId}?autoplay=1&mute=1&loop=1&playlist=${scene.videoId}&controls=0&showinfo=0&autohide=1&wmode=transparent`}
+                                    title={scene.id}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    className="w-full h-full object-cover scale-[1.5]"
+                                ></iframe>
+                                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+                            </div>
+                            <div className="relative z-10 w-full">
+                                {typeof scene.content === 'function' ? scene.content({ detectedOS }) : scene.content}
                             </div>
                         </motion.div>
-                    ))}
-                 </div>
-            </Section>
-        </>
+                    );
+                })}
+            </div>
+        </div>
     );
 }
