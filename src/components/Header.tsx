@@ -58,6 +58,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Separator } from "./ui/separator";
 
 const navLinks = [
   { href: "/store", label: "Boutique" },
@@ -72,38 +73,45 @@ const communityLinks = [
     { href: "/blog", label: "Blog (X)press", icon: BookOpen, description: "Tutoriels, analyses et inspiration." },
 ]
 
-const toolCategories = [
-  {
-    label: "Écosystème",
-    tools: [
-      { href: "/welcome", label: "Bienvenue", icon: Star, description: "Découvrez l'écosystème (X)yzz." },
-      { href: "/xos", label: "(X)OS", icon: AppWindow, description: "Votre bureau créatif unifié." },
-      { href: "/cloud", label: "(X)cloud", icon: Cloud, description: "Gérez vos fichiers et projets." },
-      { href: "/fusion", label: "(X)fusion", icon: Zap, description: "Combinez les outils sur une toile." },
-    ],
-  },
-  {
-    label: "Stratégie & Création",
-    tools: [
-      { href: "/flux", label: "(X)flux", icon: Wand2, description: "D'une idée à un projet complet." },
-      { href: "/maestro", label: "Maestro", icon: BrainCircuit, description: "Orchestrez vos plans de A à Z." },
-      { href: "/brand-identity", label: "(X)brand", icon: Layers, description: "Définissez votre identité de marque." },
-      { href: "/promptor", label: "(X)promptor", icon: Lightbulb, description: "Transformez vos concepts en prompts." },
-      { href: "/motion", label: "(X)motion", icon: Film, description: "Générez des scripts et vidéos." },
-      { href: "/image", label: "Image", icon: ImageIcon, description: "Créez des visuels uniques." },
-      { href: "/muse", label: "(X)muse", icon: Guitar, description: "Trouvez l'inspiration musicale." },
-    ],
-  },
-  {
-    label: "Développement",
-    tools: [
-      { href: "/editor", label: "(X).alpha", icon: SquareTerminal, description: "Éditeur de code intelligent." },
-      { href: "/frame", label: "(X)frame", icon: LayoutTemplate, description: "Générez des maquettes UI." },
-      { href: "/code", label: '(X)code', icon: Code2, description: "Générez des snippets de code." },
-      { href: "/terminal", label: '(X)term', icon: Terminal, description: "Le terminal assisté par Oria." },
-    ],
-  },
-];
+const ecosystemTools = [
+    { href: "/welcome", label: "Découvrir (X)yzz", icon: Star, description: "Une introduction à l'écosystème." },
+    { href: "/xos", label: "(X)OS", icon: AppWindow, description: "Votre bureau créatif unifié." },
+    { href: "/cloud", label: "(X)cloud", icon: Cloud, description: "Gérez vos fichiers et projets." },
+    { href: "/fusion", label: "(X)fusion", icon: Zap, description: "Combinez les outils sur une toile." },
+]
+
+const generatorTools = [
+    { 
+        category: "Stratégie",
+        tools: [
+            { href: "/flux", label: "(X)flux", icon: Wand2 },
+            { href: "/maestro", label: "Maestro", icon: BrainCircuit },
+            { href: "/brand-identity", label: "(X)brand", icon: Layers },
+            { href: "/promptor", label: "(X)promptor", icon: Lightbulb },
+            { href: "/nexus", label: "(X)nexus", icon: Network },
+        ]
+    },
+    {
+        category: "Contenu",
+        tools: [
+            { href: "/motion", label: "(X)motion", icon: Film },
+            { href: "/image", label: "Image", icon: ImageIcon },
+            { href: "/muse", label: "(X)muse", icon: Guitar },
+            { href: "/text", label: "Texte", icon: FileText },
+            { href: "/sound", label: "(X)sound", icon: Music },
+            { href: "/voice", label: "(X)voice", icon: AudioLines },
+        ]
+    },
+    {
+        category: "Dev",
+        tools: [
+            { href: "/editor", label: "(X).alpha", icon: SquareTerminal },
+            { href: "/frame", label: "(X)frame", icon: LayoutTemplate },
+            { href: "/terminal", label: "(X)term", icon: Terminal },
+        ]
+    }
+]
+
 
 function CartSheet() {
   const { items, removeItem, total, itemCount, addItem, decreaseItem } =
@@ -211,23 +219,22 @@ function CartSheet() {
   );
 }
 
-const DropdownMenuLinkItem = ({ href, label, description, icon: Icon }: { href: string; label: string; description: string; icon: React.ElementType }) => (
+const DropdownMenuLinkItem = ({ href, label, description, icon: Icon, isEcosystem = false }: { href: string; label: string; description?: string; icon: React.ElementType, isEcosystem?: boolean }) => (
     <DropdownMenuPrimitive.Item asChild>
         <Link
         href={href}
         className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none"
         >
-        <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
-            <Icon className="h-5 w-5 text-accent" />
+        <div className={cn("p-1.5 rounded-md border", isEcosystem ? "bg-primary/10 border-primary/20" : "bg-accent/10 border-accent/20")}>
+            <Icon className={cn("h-5 w-5", isEcosystem ? "text-primary" : "text-accent")} />
         </div>
         <div>
             <p className="font-semibold text-foreground text-sm">{label}</p>
-            <p className="text-xs text-muted-foreground">{description}</p>
+            {description && <p className="text-xs text-muted-foreground">{description}</p>}
         </div>
         </Link>
     </DropdownMenuPrimitive.Item>
 );
-
 
 export function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -270,25 +277,37 @@ export function Header() {
               <DropdownMenuPrimitive.Content
                 align="center"
                 sideOffset={10}
-                className="w-[clamp(500px,80vw,850px)] glass-card p-4 z-50 outline-none"
+                className="w-[clamp(600px,60vw,750px)] glass-card p-4 z-50 outline-none"
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: -10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: -10 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                  className="grid grid-cols-1 md:grid-cols-12 gap-6"
                 >
-                  {toolCategories.map((category) => (
-                    <div key={category.label} className="flex flex-col gap-2">
-                      <h3 className="px-2 text-sm font-semibold text-muted-foreground mb-1">
-                        {category.label}
-                      </h3>
-                      {category.tools.map((tool) => (
-                        <DropdownMenuLinkItem key={tool.href} {...tool} />
-                      ))}
-                    </div>
-                  ))}
+                  <div className="md:col-span-5 space-y-3">
+                     <h3 className="px-2 text-sm font-semibold text-muted-foreground">Écosystème</h3>
+                     <div className="flex flex-col gap-1">
+                       {ecosystemTools.map((tool) => (
+                          <DropdownMenuLinkItem key={tool.href} {...tool} isEcosystem />
+                       ))}
+                     </div>
+                  </div>
+                  <Separator orientation="vertical" className="h-auto hidden md:block" />
+                  <div className="md:col-span-6 space-y-4">
+                     <h3 className="px-2 text-sm font-semibold text-muted-foreground">Générateurs IA</h3>
+                     <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                        {generatorTools.map((category) => (
+                            <div key={category.category} className="space-y-1 mb-3 break-inside-avoid">
+                                <h4 className="font-medium text-sm text-foreground/80 px-2">{category.category}</h4>
+                                 {category.tools.map((tool) => (
+                                    <DropdownMenuLinkItem key={tool.href} {...tool} />
+                                 ))}
+                            </div>
+                        ))}
+                     </div>
+                  </div>
                 </motion.div>
               </DropdownMenuPrimitive.Content>
             </DropdownMenuPrimitive.Portal>
@@ -378,13 +397,6 @@ export function Header() {
               </div>
               <ScrollArea className="flex-1">
                 <nav className="flex flex-col gap-2 p-6 text-left">
-                  <Link
-                    href="/"
-                    onClick={() => setIsSheetOpen(false)}
-                    className="text-2xl font-medium hover:text-accent transition-colors py-2"
-                  >
-                    Accueil
-                  </Link>
                   {navLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -418,41 +430,28 @@ export function Header() {
                         Outils
                       </AccordionTrigger>
                       <AccordionContent className="pl-4">
-                        {toolCategories.map((category) => (
-                          <Accordion
-                            key={category.label}
-                            type="multiple"
-                            className="w-full"
-                          >
-                            <AccordionItem
-                              value={category.label}
-                              className="border-b-0"
-                            >
-                              <AccordionTrigger className="text-xl font-semibold text-muted-foreground hover:no-underline">
-                                {category.label}
-                              </AccordionTrigger>
-                              <AccordionContent className="pl-4">
-                                <div className="flex flex-col gap-1">
-                                  {category.tools.map((tool) => (
-                                    <Link
-                                      key={tool.href}
-                                      href={tool.href}
-                                      onClick={() => setIsSheetOpen(false)}
-                                      className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors"
-                                    >
-                                      <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
+                         <div className="flex flex-col gap-1 mt-2">
+                             <h4 className="font-semibold text-muted-foreground mb-2">Écosystème</h4>
+                            {ecosystemTools.map((tool) => (
+                                <Link key={tool.href} href={tool.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
+                                    <div className="p-1.5 bg-primary/10 rounded-md border border-primary/20">
+                                    <tool.icon className="h-5 w-5 text-primary" />
+                                    </div>
+                                    <span className="text-lg font-medium">{tool.label}</span>
+                                </Link>
+                            ))}
+                        </div>
+                        <div className="flex flex-col gap-1 mt-4">
+                             <h4 className="font-semibold text-muted-foreground mb-2">Générateurs IA</h4>
+                            {generatorTools.flatMap(cat => cat.tools).map((tool) => (
+                                <Link key={tool.href} href={tool.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
+                                    <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
                                         <tool.icon className="h-5 w-5 text-accent" />
-                                      </div>
-                                      <span className="text-lg font-medium">
-                                        {tool.label}
-                                      </span>
-                                    </Link>
-                                  ))}
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        ))}
+                                    </div>
+                                    <span className="text-lg font-medium">{tool.label}</span>
+                                </Link>
+                            ))}
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
