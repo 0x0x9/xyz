@@ -424,6 +424,16 @@
     z-index: 1;
     pointer-events: none;
   }
+
+  /* Specific styles for Features page */
+  .text-clamp-6xl { font-size: clamp(3rem, 8vw, 6rem); }
+  .bg-radial-gradient-hero { background: radial-gradient(ellipse at center, rgba(102, 126, 234, 0.3) 0%, transparent 70%); }
+  .bg-radial-gradient-premium { background: radial-gradient(circle at 30% 70%, rgba(102, 126, 234, 0.2) 0%, transparent 40%), radial-gradient(circle at 70% 30%, rgba(118, 75, 162, 0.2) 0%, transparent 40%); }
+  @keyframes pulse-hero { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+  .animate-pulse-hero { animation: pulse-hero 4s ease-in-out infinite alternate; }
+
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-on-scroll { opacity: 0; animation: fadeInUp 0.8s ease forwards; animation-delay: 0.2s; }
 }
 
 @layer components {
@@ -449,5 +459,19 @@
     @keyframes tool-progress-animation {
         from { width: 0%; }
         to { width: 100%; }
+    }
+    
+    .btn-primary {
+        @apply inline-block bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-medium transition-all duration-300;
+    }
+    .btn-primary:hover {
+        @apply bg-blue-700 scale-105;
+    }
+
+    .btn-secondary {
+        @apply inline-block bg-transparent text-blue-500 border border-blue-500 px-6 py-3 rounded-full text-lg font-medium transition-all duration-300;
+    }
+    .btn-secondary:hover {
+        @apply bg-blue-500 text-white;
     }
 }
