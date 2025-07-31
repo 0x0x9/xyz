@@ -36,13 +36,11 @@ import {
   Star,
   Plus,
   Minus,
-  FileType,
   Download,
-  Apple,
-  Terminal,
   MessageSquare,
   BookOpen,
   Users,
+  Paintbrush,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -63,121 +61,45 @@ import {
 const navLinks = [
   { href: "/store", label: "Boutique" },
   { href: "/features", label: "Fonctionnalités" },
-  { href: "/community", label: "Communauté" },
-  { href: "/gallery", label: "Galerie" },
   { href: "/careers", label: "Carrières" },
 ];
 
 const communityLinks = [
     { href: "/forum", label: "Forum d'entraide", icon: MessageSquare, description: "Discutez avec la communauté et partagez vos idées." },
     { href: "/collaborations", label: "Collaborations", icon: Users, description: "Trouvez des partenaires et des projets." },
+    { href: "/gallery", label: "Galerie (X)hibit", icon: Paintbrush, description: "Explorez les créations de la communauté." },
     { href: "/blog", label: "Blog (X)press", icon: BookOpen, description: "Tutoriels, analyses et inspiration." },
 ]
 
 const toolCategories = [
   {
-    label: "Environnements",
+    label: "Écosystème",
     tools: [
-      {
-        href: "/xos",
-        label: "(X)OS",
-        icon: AppWindow,
-        description: "Votre bureau créatif unifié.",
-      },
-      {
-        href: "/cloud",
-        label: "(X)cloud",
-        icon: Cloud,
-        description: "Gérez vos fichiers et projets.",
-      },
-      {
-        href: "/fusion",
-        label: "(X)fusion",
-        icon: Zap,
-        description: "Combinez les outils sur une toile.",
-      },
-      {
-        href: "/welcome",
-        label: "Bienvenue",
-        icon: Star,
-        description: "Découvrez l'écosystème (X)yzz.",
-      },
+      { href: "/welcome", label: "Bienvenue", icon: Star, description: "Découvrez l'écosystème (X)yzz." },
+      { href: "/xos", label: "(X)OS", icon: AppWindow, description: "Votre bureau créatif unifié." },
+      { href: "/cloud", label: "(X)cloud", icon: Cloud, description: "Gérez vos fichiers et projets." },
+      { href: "/fusion", label: "(X)fusion", icon: Zap, description: "Combinez les outils sur une toile." },
     ],
   },
   {
-    label: "Stratégie & Idéation",
+    label: "Stratégie & Création",
     tools: [
-      {
-        href: "/flux",
-        label: "(X)flux",
-        icon: Wand2,
-        description: "D'une idée à un projet complet.",
-      },
-      {
-        href: "/maestro",
-        label: "Maestro",
-        icon: BrainCircuit,
-        description: "Orchestrez vos plans de A à Z.",
-      },
-      {
-        href: "/brand-identity",
-        label: "(X)brand",
-        icon: Layers,
-        description: "Définissez votre identité de marque.",
-      },
-      {
-        href: "/promptor",
-        label: "(X)promptor",
-        icon: Lightbulb,
-        description: "Transformez vos concepts en prompts.",
-      },
-      {
-        href: "/agenda",
-        label: "(X)agenda",
-        icon: Calendar,
-        description: "Planifiez vos événements avec l'IA.",
-      },
-      {
-        href: "/nexus",
-        label: "(X)nexus",
-        icon: Network,
-        description: "Déployez vos idées en cartes mentales visuelles.",
-      },
+      { href: "/flux", label: "(X)flux", icon: Wand2, description: "D'une idée à un projet complet." },
+      { href: "/maestro", label: "Maestro", icon: BrainCircuit, description: "Orchestrez vos plans de A à Z." },
+      { href: "/brand-identity", label: "(X)brand", icon: Layers, description: "Définissez votre identité de marque." },
+      { href: "/promptor", label: "(X)promptor", icon: Lightbulb, description: "Transformez vos concepts en prompts." },
+      { href: "/motion", label: "(X)motion", icon: Film, description: "Générez des scripts et vidéos." },
+      { href: "/image", label: "Image", icon: ImageIcon, description: "Créez des visuels uniques." },
+      { href: "/muse", label: "(X)muse", icon: Guitar, description: "Trouvez l'inspiration musicale." },
     ],
   },
   {
-    label: "Création & Développement",
+    label: "Développement",
     tools: [
-      {
-        href: "/image",
-        label: "Image",
-        icon: ImageIcon,
-        description: "Créez des visuels uniques.",
-      },
-      {
-        href: "/editor",
-        label: "(X).alpha",
-        icon: SquareTerminal,
-        description: "Éditeur de code intelligent.",
-      },
-      {
-        href: "/motion",
-        label: "(X)motion",
-        icon: Film,
-        description: "Générez des scripts et vidéos.",
-      },
-      {
-        href: "/sound",
-        label: "(X)sound",
-        icon: Music,
-        description: "Créez effets sonores et ambiances.",
-      },
-      {
-        href: "/format",
-        label: "(X)format",
-        icon: FileType,
-        description: "Réformatez vos textes avec l'IA.",
-      },
+      { href: "/editor", label: "(X).alpha", icon: SquareTerminal, description: "Éditeur de code intelligent." },
+      { href: "/frame", label: "(X)frame", icon: LayoutTemplate, description: "Générez des maquettes UI." },
+      { href: "/code", label: '(X)code', icon: Code2, description: "Générez des snippets de code." },
+      { href: "/terminal", label: '(X)term', icon: Terminal, description: "Le terminal assisté par Oria." },
     ],
   },
 ];
@@ -288,6 +210,24 @@ function CartSheet() {
   );
 }
 
+const DropdownMenuLinkItem = ({ href, label, description, icon: Icon }: { href: string; label: string; description: string; icon: React.ElementType }) => (
+    <DropdownMenuPrimitive.Item asChild>
+        <Link
+        href={href}
+        className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none"
+        >
+        <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
+            <Icon className="h-5 w-5 text-accent" />
+        </div>
+        <div>
+            <p className="font-semibold text-foreground text-sm">{label}</p>
+            <p className="text-xs text-muted-foreground">{description}</p>
+        </div>
+        </Link>
+    </DropdownMenuPrimitive.Item>
+);
+
+
 export function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   return (
@@ -303,13 +243,7 @@ export function Header() {
           </Link>
         </div>
         <nav className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1 bg-background/50 dark:bg-black/20 border border-border rounded-full p-1">
-          <Button
-            variant="ghost"
-            className="text-foreground bg-foreground/10 hover:bg-foreground/20 rounded-full h-9 px-4"
-            asChild
-          >
-            <Link href="/">Accueil</Link>
-          </Button>
+          
           {navLinks.map((link) => (
             <Button
               key={link.href}
@@ -320,6 +254,8 @@ export function Header() {
               <Link href={link.href}>{link.label}</Link>
             </Button>
           ))}
+          
+          {/* Outils Dropdown */}
           <DropdownMenuPrimitive.Root>
             <DropdownMenuPrimitive.Trigger asChild>
               <Button
@@ -348,24 +284,7 @@ export function Header() {
                         {category.label}
                       </h3>
                       {category.tools.map((tool) => (
-                        <DropdownMenuPrimitive.Item asChild key={tool.href}>
-                          <Link
-                            href={tool.href}
-                            className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none"
-                          >
-                            <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
-                              <tool.icon className="h-5 w-5 text-accent" />
-                            </div>
-                            <div>
-                              <p className="font-semibold text-foreground text-sm">
-                                {tool.label}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {tool.description}
-                              </p>
-                            </div>
-                          </Link>
-                        </DropdownMenuPrimitive.Item>
+                        <DropdownMenuLinkItem key={tool.href} {...tool} />
                       ))}
                     </div>
                   ))}
@@ -373,6 +292,38 @@ export function Header() {
               </DropdownMenuPrimitive.Content>
             </DropdownMenuPrimitive.Portal>
           </DropdownMenuPrimitive.Root>
+          
+          {/* Communauté Dropdown */}
+           <DropdownMenuPrimitive.Root>
+            <DropdownMenuPrimitive.Trigger asChild>
+              <Button
+                variant="ghost"
+                className="text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full h-9 px-4"
+              >
+                Communauté <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuPrimitive.Trigger>
+            <DropdownMenuPrimitive.Portal>
+              <DropdownMenuPrimitive.Content
+                align="center"
+                sideOffset={10}
+                className="w-80 glass-card p-2 z-50 outline-none"
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="flex flex-col gap-1"
+                >
+                  {communityLinks.map((link) => (
+                     <DropdownMenuLinkItem key={link.href} {...link} />
+                  ))}
+                </motion.div>
+              </DropdownMenuPrimitive.Content>
+            </DropdownMenuPrimitive.Portal>
+          </DropdownMenuPrimitive.Root>
+
         </nav>
         <div className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-2">
@@ -443,14 +394,24 @@ export function Header() {
                       {link.label}
                     </Link>
                   ))}
-                  <Link
-                    href="/download"
-                    onClick={() => setIsSheetOpen(false)}
-                    className="text-2xl font-medium hover:text-accent transition-colors py-2 flex items-center"
-                  >
-                    Télécharger <Download className="ml-2 h-6 w-6" />
-                  </Link>
-                  <Accordion type="multiple" className="w-full pt-4">
+                   <Accordion type="multiple" className="w-full pt-4">
+                     <AccordionItem value="community" className="border-b-0">
+                        <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
+                            Communauté
+                        </AccordionTrigger>
+                        <AccordionContent className="pl-4">
+                             <div className="flex flex-col gap-1">
+                                {communityLinks.map((link) => (
+                                    <Link key={link.href} href={link.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
+                                        <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
+                                            <link.icon className="h-5 w-5 text-accent" />
+                                        </div>
+                                        <span className="text-lg font-medium">{link.label}</span>
+                                    </Link>
+                                ))}
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
                     <AccordionItem value="tools" className="border-b-0">
                       <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
                         Outils
