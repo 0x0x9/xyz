@@ -41,6 +41,7 @@ import {
   BookOpen,
   Users,
   Paintbrush,
+  Terminal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
