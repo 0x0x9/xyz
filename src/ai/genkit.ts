@@ -16,7 +16,7 @@ if (!process.env.GOOGLE_API_KEY) {
 // Configuration globale et instance Genkit
 export const ai = genkit({
   plugins: [
-    firebase(),
+    firebase,
     googleAI({
       apiKey: process.env.GOOGLE_API_KEY,
     }),
