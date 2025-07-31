@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Briefcase, Search, PlusCircle, ExternalLink, Bot } from 'lucide-react';
+import { Briefcase, Search, PlusCircle, ExternalLink, Bot, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -128,4 +128,3 @@ export default function CollaborationsClient() {
         </div>
     );
 }
-
