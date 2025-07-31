@@ -62,6 +62,7 @@ import {
 
 const navLinks = [
   { href: "/store", label: "Boutique" },
+  { href: "/features", label: "Fonctionnalités" },
   { href: "/community", label: "Communauté" },
   { href: "/gallery", label: "Galerie" },
   { href: "/careers", label: "Carrières" },
