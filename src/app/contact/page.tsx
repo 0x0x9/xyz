@@ -1,13 +1,32 @@
+
+'use client';
+
+import { useState } from 'react';
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Building, Mail, Phone } from "lucide-react";
+import { Send, Building, Mail, Phone, MessageSquarePlus } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const ContactPage = () => {
+  const { toast } = useToast();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Simulate form submission
+    toast({
+        title: "Message envoyé !",
+        description: "Merci ! Nous reviendrons vers vous très prochainement.",
+    });
+    setIsFormOpen(false);
+  }
+
   return (
     <>
       <Header />
@@ -47,36 +66,54 @@ const ContactPage = () => {
                 </div>
             </div>
             <div className="lg:col-span-2">
-                <Card className="glass-card">
-                    <CardHeader>
-                        <CardTitle>Envoyez-nous un message</CardTitle>
-                        <CardDescription>Nous vous répondrons dans les plus brefs délais.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="name">Nom complet</Label>
-                                <Input id="name" placeholder="Jean Dupont"/>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="email">Email</Label>
-                                <Input id="email" type="email" placeholder="email@exemple.com"/>
-                            </div>
-                         </div>
-                         <div className="space-y-2">
-                            <Label htmlFor="subject">Sujet</Label>
-                            <Input id="subject" placeholder="Demande de partenariat"/>
-                         </div>
-                         <div className="space-y-2">
-                            <Label htmlFor="message">Message</Label>
-                            <Textarea id="message" placeholder="Votre message..." rows={6}/>
-                         </div>
-                         <Button size="lg" className="w-full">
-                            <Send className="mr-2 h-5 w-5"/>
-                            Envoyer
-                         </Button>
-                    </CardContent>
-                </Card>
+                <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                  <Card className="glass-card flex flex-col items-center justify-center text-center p-8 md:p-12 min-h-[300px]">
+                      <MessageSquarePlus className="h-16 w-16 text-primary mb-6" />
+                      <h3 className="text-2xl font-bold">Vous avez un projet en tête ?</h3>
+                      <p className="text-muted-foreground mt-2 mb-6">Laissez-nous un message et commençons la discussion.</p>
+                      <DialogTrigger asChild>
+                          <Button size="lg" className="rounded-full">
+                              Envoyer un message
+                          </Button>
+                      </DialogTrigger>
+                  </Card>
+
+                  <DialogContent className="glass-card">
+                      <form onSubmit={handleSubmit}>
+                          <DialogHeader>
+                              <DialogTitle>Envoyez-nous un message</DialogTitle>
+                              <DialogDescription>Nous vous répondrons dans les plus brefs délais.</DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-6 py-6">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                      <Label htmlFor="name">Nom complet</Label>
+                                      <Input id="name" placeholder="Jean Dupont" required />
+                                  </div>
+                                  <div className="space-y-2">
+                                      <Label htmlFor="email">Email</Label>
+                                      <Input id="email" type="email" placeholder="email@exemple.com" required />
+                                  </div>
+                              </div>
+                              <div className="space-y-2">
+                                  <Label htmlFor="subject">Sujet</Label>
+                                  <Input id="subject" placeholder="Demande de partenariat" required />
+                              </div>
+                              <div className="space-y-2">
+                                  <Label htmlFor="message">Message</Label>
+                                  <Textarea id="message" placeholder="Votre message..." rows={6} required />
+                              </div>
+                          </div>
+                          <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="ghost">Annuler</Button></DialogClose>
+                            <Button type="submit">
+                                <Send className="mr-2 h-5 w-5"/>
+                                Envoyer
+                            </Button>
+                          </DialogFooter>
+                      </form>
+                  </DialogContent>
+                </Dialog>
             </div>
           </div>
         </section>
