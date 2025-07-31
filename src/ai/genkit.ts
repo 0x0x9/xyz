@@ -1,16 +1,22 @@
-import { genkit, configureGenkit } from 'genkit';
+import { configureGenkit } from '@genkit-ai/core';
+import { genkit } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
 import { firebase } from '@genkit-ai/firebase';
 
+// Vérification de la clé API
 if (!process.env.GOOGLE_API_KEY) {
   throw new Error(
     "La variable d'environnement GOOGLE_API_KEY est manquante. " +
-    "Ajoutez-la à votre fichier .env ou dans les variables d'environnement de votre hébergeur."
+    "Ajoutez-la à votre fichier .env.local"
   );
 }
 
+// Configuration globale
 configureGenkit({
-  plugins: [firebase, googleAI()],
-});
-
-export { genkit as ai };
+  plugins: [
+    firebase,
+    googleAI({
+      apiKey: process.env.GOOGLE_API_KEY,
+    }),
+  ],
+  logLevel: 'debug
