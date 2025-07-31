@@ -5,12 +5,12 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Cpu, Zap, Layers, Folder, Code, Terminal, BrainCircuit, Lightbulb, Film, Check, Download, ArrowRight, Sparkles } from 'lucide-react';
+import { Cpu, Zap, Layers, Folder, Check, ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 const features = [
     { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw' },
-    { title: "IA au coeur du système", description: "Oria, notre assistant IA, est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: BrainCircuit, videoId: 'crtsXQdtqbw' },
+    { title: "IA au coeur du système", description: "Oria, notre assistant IA, est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: Sparkles, videoId: 'crtsXQdtqbw' },
     { title: "Performances sans précédent", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite pleinement la puissance de votre Station X-1 pour des rendus et des compilations ultra-rapides.", icon: Zap, videoId: 'YUEb23FQVhA' },
     { title: "Gestion de fichiers unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys' },
 ];
@@ -22,45 +22,49 @@ function StickyScrollSection() {
         offset: ['start start', 'end end'],
     });
 
-    const activeCardIndex = useTransform(scrollYProgress, [0, 1], [0, features.length]);
-    
+    const numFeatures = features.length;
+    const activeCardIndex = useTransform(scrollYProgress, (pos) => {
+        return Math.floor(pos * numFeatures);
+    });
+
     return (
         <div ref={targetRef} className="relative h-[400vh]">
             <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
-                 <AnimatePresence mode="wait">
+                <AnimatePresence mode="wait">
                     {features.map((feature, i) => {
-                         const isActive = Math.floor(activeCardIndex.get()) === i;
-                         if (!isActive) return null;
-
-                        return (
-                             <motion.div
-                                key={feature.title}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                transition={{ duration: 0.3, ease: 'easeInOut' }}
-                                className="absolute inset-0 w-full h-full"
-                            >
-                                <div className="absolute inset-0">
-                                    <iframe
-                                        src={`https://www.youtube.com/embed/${feature.videoId}?autoplay=1&mute=1&loop=1&playlist=${feature.videoId.split('?')[0]}&controls=0&showinfo=0&autohide=1&wmode=transparent`}
-                                        title={feature.title}
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        className="w-full h-full scale-[1.5]"
-                                    ></iframe>
-                                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-                                </div>
-                                <div className="relative h-full flex flex-col items-center justify-center text-center text-white p-8">
-                                    <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 mb-6">
-                                        <feature.icon className="w-8 h-8 text-white" />
+                        // Check if the current card is the active one
+                        if (i === activeCardIndex.get()) {
+                            return (
+                                <motion.div
+                                    key={feature.title + i}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+                                    className="absolute inset-0 w-full h-full"
+                                >
+                                    <div className="absolute inset-0">
+                                        <iframe
+                                            src={`https://www.youtube.com/embed/${feature.videoId}?autoplay=1&mute=1&loop=1&playlist=${feature.videoId.split('?')[0]}&controls=0&showinfo=0&autohide=1&wmode=transparent`}
+                                            title={feature.title}
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                            className="w-full h-full object-cover scale-[1.5]"
+                                        ></iframe>
+                                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
                                     </div>
-                                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{feature.title}</h2>
-                                    <p className="text-lg md:text-xl text-white/80 max-w-2xl">{feature.description}</p>
-                                </div>
-                            </motion.div>
-                        );
+                                    <div className="relative h-full flex flex-col items-center justify-center text-center text-white p-8">
+                                        <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 mb-6">
+                                            <feature.icon className="w-8 h-8 text-white" />
+                                        </div>
+                                        <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{feature.title}</h2>
+                                        <p className="text-lg md:text-xl text-white/80 max-w-2xl">{feature.description}</p>
+                                    </div>
+                                </motion.div>
+                            );
+                        }
+                        return null;
                     })}
                 </AnimatePresence>
             </div>
@@ -132,19 +136,19 @@ export default function FeaturesClient() {
         <AnimatedSection>
             <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 text-center container mx-auto px-6 lg:px-8">
                 <div>
-                    <Code className="h-12 w-12 text-primary mx-auto"/>
-                    <h3 className="mt-4 text-2xl font-bold">Pour les développeurs</h3>
-                    <p className="mt-2 text-muted-foreground">Un terminal unifié, des conteneurs natifs et un SDK puissant pour étendre l'écosystème. Créez des outils qui s'intègrent parfaitement à (X)OS.</p>
+                    <Sparkles className="h-12 w-12 text-primary mx-auto"/>
+                    <h3 className="mt-4 text-2xl font-bold">Pour les créatifs</h3>
+                    <p className="mt-2 text-muted-foreground">Une suite d'outils IA intégrés qui comprennent votre vision et vous aident à la réaliser plus rapidement que jamais.</p>
                 </div>
                 <div>
                     <Cpu className="h-12 w-12 text-primary mx-auto"/>
-                    <h3 className="mt-4 text-2xl font-bold">Pour les designers</h3>
-                    <p className="mt-2 text-muted-foreground">Une gestion des couleurs au niveau du système, une calibration d'écran parfaite et une suite d'outils de design qui communiquent entre eux sans effort.</p>
+                    <h3 className="mt-4 text-2xl font-bold">Pour les technophiles</h3>
+                    <p className="mt-2 text-muted-foreground">Une architecture matérielle et logicielle ouverte, conçue pour la performance et la personnalisation.</p>
                 </div>
                 <div>
-                    <Film className="h-12 w-12 text-primary mx-auto"/>
-                    <h3 className="mt-4 text-2xl font-bold">Pour les vidéastes</h3>
-                    <p className="mt-2 text-muted-foreground">Des codecs accélérés par le matériel, des rendus en tâche de fond qui ne ralentissent jamais votre travail et un pipeline de production assisté par IA.</p>
+                    <Users className="h-12 w-12 text-primary mx-auto"/>
+                    <h3 className="mt-4 text-2xl font-bold">Pour les équipes</h3>
+                    <p className="mt-2 text-muted-foreground">Des outils collaboratifs natifs et une gestion de projet unifiée pour travailler en parfaite synchronisation.</p>
                 </div>
             </div>
         </AnimatedSection>
@@ -215,3 +219,4 @@ const Section = ({ children, className }: { children: React.ReactNode, className
     </section>
   );
 
+```
