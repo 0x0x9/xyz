@@ -1,224 +1,227 @@
 
 'use client';
 
-import { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { cn } from '@/lib/utils'; // Assuming cn is a utility for combining class names
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Cpu, Zap, Layers, Sparkles, Download } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import PerformanceChart from '@/components/ui/performance-chart';
 
-function Section({ children, className, useMotion = true }: { children: React.ReactNode, className?: string, useMotion?: boolean }) {
-    const ref = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start end", "end start"]
-    });
-    const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
+const FeaturesClient = () => {
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
-    const content = useMotion ? <motion.div style={{ y }}>{children}</motion.div> : <>{children}</>;
+  useEffect(() => {
+    // IntersectionObserver for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
 
-    return (
-        <section ref={ref} className={cn("relative container mx-auto px-4 md:px-6 py-24 md:py-36 min-h-screen flex flex-col justify-center", className)}>
-             {content}
-        </section>
-    );
-}
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-on-scroll');
+        }
+      });
+    }, observerOptions);
 
-function AnimatedText({ children, className }: { children: React.ReactNode, className?: string }) {
-    const ref = useRef(null);
-     const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start 0.9", "start 0.5"]
-    });
-    
-    return (
-        <motion.div ref={ref} style={{ opacity: scrollYProgress, y: useTransform(scrollYProgress, [0, 1], [30, 0])}} className={className}>
-            {children}
-        </motion.div>
-    )
-}
-
-const features = [
-    { icon: Cpu, title: "Processeur Neural X-Core", description: "Une architecture révolutionnaire qui fusionne CPU, GPU et NPU pour une puissance de calcul inégalée, optimisée pour (X)OS." },
-    { icon: Layers, title: "Alliance Multi-OS", description: "Exécutez macOS, Windows et Linux simultanément, sans compromis et sans redémarrage." },
-    { icon: Zap, title: "Oria, l'IA d'Orchestration", description: "Un assistant intelligent au cœur du système, qui anticipe vos besoins et automatise vos workflows." },
-];
-
-const performanceData = [
-    { name: 'Station X-1', 'Rendu 3D': 95, 'Compilation de code': 98, 'Simulation IA': 92 },
-    { name: 'Mac Pro (équivalent)', 'Rendu 3D': 75, 'Compilation de code': 80, 'Simulation IA': 70 },
-    { name: 'PC Haut de Gamme', 'Rendu 3D': 85, 'Compilation de code': 88, 'Simulation IA': 78 },
-];
-
-export default function FeaturesClient() {
-    const targetRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: targetRef,
-        offset: ["start start", "end end"],
+    document.querySelectorAll('.ecosystem-card, .premium-item, .product-card').forEach(el => {
+      observer.observe(el);
     });
 
-    // Animate the hero text to fade out as the image scales up
-    const textOpacity = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 1, 0]);
-    const textY = useTransform(scrollYProgress, [0, 0.25], [0, -100]);
-    // Start scaling the image a bit later, and make it more pronounced
-    const imageScale = useTransform(scrollYProgress, [0.2, 1], [1, 2.5]);
-    const imageOpacity = useTransform(scrollYProgress, [0.2, 0.8, 1], [1, 1, 0]);
+    // Typing effect on hero title
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+      const text = heroTitle.textContent;
+      heroTitle.textContent = '';
+      let i = 0;
+      const typeWriter = () => {
+        if (i < text.length) {
+          heroTitle.textContent += text.charAt(i);
+          i++;
+          setTimeout(typeWriter, 100);
+        }
+      };
+      setTimeout(typeWriter, 1000);
+    }
 
-    return (
-        <div ref={targetRef}>
-             {/* Hero Section */}
-            <div className="h-[250vh] relative">
-                <div className="sticky top-0 h-screen flex flex-col items-center justify-center text-center overflow-hidden">
-                    <motion.div 
-                         style={{ opacity: textOpacity, y: textY }}
-                         className="relative z-10 px-4 space-y-6"
-                    >
-                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-foreground [text-shadow:0_4px_20px_rgba(0,0,0,0.1)]">
-                            L'Écosystème (X)yzz.
-                        </h1>
-                        <p className="text-xl md:text-2xl lg:text-3xl text-muted-foreground max-w-4xl mx-auto">
-                            Une synergie parfaite entre matériel, logiciel et intelligence artificielle pour décupler votre potentiel créatif.
-                        </p>
-                    </motion.div>
-                    <motion.div style={{ scale: imageScale, opacity: imageOpacity }} className="absolute inset-0">
-                         <div className="absolute inset-0 w-full h-full">
-                            <Image
-                                src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1600&q=80"
-                                alt="Station X-1 et X-Book"
-                                fill
-                                className="object-cover"
-                                data-ai-hint="powerful desktop computer sleek laptop"
-                                priority
-                            />
-                        </div>
-                         <div className="absolute inset-0 bg-background/20"></div>
-                    </motion.div>
-                </div>
-            </div>
+    return () => {
+      document.querySelectorAll('.ecosystem-card, .premium-item, .product-card').forEach(el => {
+        observer.unobserve(el);
+      });
+    };
+  }, []);
 
-             {/* Features Section */}
-            <Section className="text-center">
-                 <AnimatedText>
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                       Conçu pour la performance. Pensé pour les créateurs.
-                    </h2>
-                    <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                        Chaque élément de l'écosystème (X)yzz a été méticuleusement conçu pour fonctionner en harmonie, éliminant les frictions pour laisser place à la pure créativité.
-                    </p>
-                </AnimatedText>
-                <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {features.map((feature, i) => (
-                        <AnimatedText key={feature.title}>
-                            <div className="glass-card p-6 md:p-8 flex flex-col items-center text-center h-full">
-                                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 mb-6">
-                                    <feature.icon className="h-8 w-8 text-primary" />
-                                </div>
-                                <h3 className="text-xl md:text-2xl font-bold mb-2">{feature.title}</h3>
-                                <p className="text-muted-foreground text-base flex-grow">{feature.description}</p>
-                            </div>
-                        </AnimatedText>
-                    ))}
-                </div>
-            </Section>
-
-            {/* Performance Section */}
-            <Section className="text-center">
-                <AnimatedText>
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                        Des performances qui défient la réalité.
-                    </h2>
-                    <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                       La Station X-1 a été conçue pour les workflows les plus exigeants. Voyez par vous-même comment elle se mesure à la concurrence.
-                    </p>
-                </AnimatedText>
-                <AnimatedText className="mt-16">
-                   <PerformanceChart data={performanceData} />
-                </AnimatedText>
-            </Section>
-
-
-            {/* (X)OS Section */}
-            <Section>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <AnimatedText className="lg:order-2">
-                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                           (X)OS. Le chef d'orchestre.
-                        </h2>
-                        <p className="mt-6 text-lg md:text-xl text-muted-foreground">
-                            (X)OS est le premier système d'exploitation qui vous permet d'exécuter macOS, Windows et Linux simultanément, sans compromis. Passez d'un environnement à l'autre instantanément, et combinez la puissance de chaque univers au sein d'une interface unifiée et intelligente.
-                        </p>
-                         <div className="mt-8">
-                            <Button size="lg" asChild className="rounded-full text-lg">
-                                <Link href="/download">
-                                    Télécharger (X)OS <Download className="ml-2 h-5 w-5" />
-                                </Link>
-                            </Button>
-                        </div>
-                    </AnimatedText>
-                    <div className="relative aspect-square lg:order-1">
-                         <AnimatedText>
-                             <Image
-                                src="https://images.unsplash.com/photo-1618423484838-b7a4aa4d8523?auto=format&fit=crop&w=1200&q=80"
-                                alt="Interface de (X)OS"
-                                fill
-                                className="object-contain rounded-2xl"
-                                data-ai-hint="futuristic operating system interface"
-                            />
-                         </AnimatedText>
-                    </div>
-                </div>
-            </Section>
-
-            {/* Hardware Section */}
-             <Section>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <AnimatedText>
-                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                           La Station X-1. La puissance brute.
-                        </h2>
-                        <p className="mt-6 text-lg md:text-xl text-muted-foreground">
-                            Conçue pour une synergie parfaite avec (X)OS, la Station X-1 n'est pas un simple ordinateur. C'est une machine optimisée pour les workflows créatifs les plus exigeants, du rendu 3D à la simulation IA.
-                        </p>
-                         <div className="mt-8">
-                            <Button size="lg" variant="outline" asChild className="rounded-full text-lg">
-                                <Link href="/hardware">
-                                    Découvrir la Station X-1 <Cpu className="ml-2 h-5 w-5" />
-                                </Link>
-                            </Button>
-                        </div>
-                    </AnimatedText>
-                    <div className="relative aspect-square">
-                         <AnimatedText>
-                             <Image
-                                src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80"
-                                alt="Station de Création X-1"
-                                fill
-                                className="object-contain"
-                                data-ai-hint="powerful computer liquid cooling"
-                            />
-                         </AnimatedText>
-                    </div>
-                </div>
-            </Section>
-
-             {/* Final CTA Section */}
-             <Section className="text-center" useMotion={false}>
-                <AnimatedText>
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                        Prêt à réinventer votre workflow ?
-                    </h2>
-                     <div className="mt-8 flex flex-wrap justify-center gap-4">
-                        <Button size="lg" asChild className="rounded-full text-lg">
-                            <Link href="/store">
-                                Explorer la boutique <ArrowRight className="ml-2 h-5 w-5" />
-                            </Link>
-                        </Button>
-                    </div>
-                </AnimatedText>
-            </Section>
+  return (
+    <>
+      {/* Hero Section Premium */}
+      <section ref={heroRef} className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden bg-gradient-to-b from-black to-[#1a1a1a]">
+        <motion.div style={{ y }} className="absolute inset-0 bg-radial-gradient-hero animate-pulse-hero"></motion.div>
+        <div className="relative z-10">
+          <div className="bg-white/10 px-4 py-1.5 rounded-full text-xs font-medium mb-6 backdrop-blur-xl border border-white/20 inline-block">Nouveau</div>
+          <h1 className="hero-title text-clamp-6xl font-bold mb-4 tracking-[-0.022em] bg-gradient-to-r from-white via-[#667eea] to-[#764ba2] bg-clip-text text-transparent">
+            (X)OS
+          </h1>
+          <p className="text-xl font-normal mb-2 opacity-90">De l'Ωméga à l'αlpha.</p>
+          <h2 className="text-3xl font-semibold mb-8 max-w-3xl">L'harmonie entre l'univers Windows et macOS.<br />L'élégance d'un outil, la puissance d'un studio.</h2>
+          <div className="flex gap-5 mt-10">
+            <a href="#" className="btn-primary">Découvrir (X)OS</a>
+            <a href="#" className="btn-secondary">Regarder la présentation</a>
+          </div>
         </div>
-    );
-}
+      </section>
+
+      {/* Section Écosystème */}
+      <section className="py-24 px-5 bg-[#f5f5f7]">
+        <div className="max-w-[1024px] mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-bold mb-4 tracking-[-0.022em]">Un écosystème. Trois mondes.</h2>
+            <p className="text-xl text-[#6e6e73] max-w-2xl mx-auto">L'alliance parfaite entre Windows et macOS sur une seule machine, nous révolutionnons votre façon de travailler.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="ecosystem-card bg-white rounded-xl p-10 text-center shadow-lg transition-all duration-400 ease-cubic-bezier relative overflow-hidden group">
+                <div className="card-icon w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-2xl flex items-center justify-center text-white text-3xl">🖥️</div>
+                <h3 className="text-2xl font-semibold mb-3">
+                  <span className="dark:text-black">(X)OS</span>
+                </h3>
+                <p className="text-[#6e6e73] leading-relaxed">Une interface innovante et réactive. Conçue pour optimiser l'expérience utilisateur dans l'harmonie parfaite entre Windows et macOS.</p>
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            </div>
+            
+            <div className="ecosystem-card bg-white rounded-xl p-10 text-center shadow-lg transition-all duration-400 ease-cubic-bezier relative overflow-hidden group">
+                <div className="card-icon w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-2xl flex items-center justify-center text-white text-3xl">☁️</div>
+                <h3 className="text-2xl font-semibold mb-3">
+                  <span className="dark:text-black">(X)Cloud</span>
+                </h3>
+                <p className="text-[#6e6e73] leading-relaxed">Récupère instantanément votre environnement de travail, même après un crash. Avec (X)SYNC, sauvegarde et restauration automatique.</p>
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            </div>
+            
+            <div className="ecosystem-card bg-white rounded-xl p-10 text-center shadow-lg transition-all duration-400 ease-cubic-bezier relative overflow-hidden group">
+                <div className="card-icon w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-2xl flex items-center justify-center text-white text-3xl">🤖</div>
+                <h3 className="text-2xl font-semibold mb-3">
+                  <span className="dark:text-black">(X)AI</span>
+                </h3>
+                <p className="text-[#6e6e73] leading-relaxed">Poursuivez votre créativité avec un transfert intelligent de fichiers et presets sans perte de qualité. Collaboration en temps réel.</p>
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section Premium Performance */}
+      <section className="bg-black text-white py-32 px-5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-radial-gradient-premium"></div>
+        <div className="relative z-10 text-center max-w-[1024px] mx-auto">
+          <h2 className="text-6xl font-bold mb-6 bg-gradient-to-r from-white to-[#667eea] bg-clip-text text-transparent">Performance. Révolutionnée.</h2>
+          <p className="text-xl mb-10 opacity-90">Une interface pensée pour inspirer et fluidifier votre processus créatif</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-16">
+            <div className="premium-item text-center p-8 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1">
+                <div className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent">Multi-GPU</div>
+                <div className="text-lg opacity-80">Support avancé</div>
+            </div>
+            <div className="premium-item text-center p-8 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1">
+                <div className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent">1 Po</div>
+                <div className="text-lg opacity-80">Stockage cloud</div>
+            </div>
+            <div className="premium-item text-center p-8 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1">
+                <div className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent">0s</div>
+                <div className="text-lg opacity-80">Commutation OS</div>
+            </div>
+            <div className="premium-item text-center p-8 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1">
+                <div className="text-4xl font-bold mb-2 bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent">∞</div>
+                <div className="text-lg opacity-80">Possibilités créatives</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section Gamme Produits */}
+      <section className="py-24 px-5 bg-white">
+        <div className="max-w-[1024px] mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-bold mb-4 tracking-[-0.022em]">Explorez la gamme.</h2>
+            <p className="text-xl text-[#6e6e73] max-w-2xl mx-auto">Workstation (X)yzz. - L'ordinateur pensé par et pour les créatifs</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
+            <div className="product-card bg-[#f5f5f7] rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden group">
+                <div className="text-5xl font-light mb-4 text-[#6e6e73]">Ω</div>
+                <h3 className="text-2xl font-semibold mb-2">
+                  <span className="dark:text-black">oméga</span>
+                </h3>
+                <div className="text-xl font-semibold text-[#007aff] mb-6">À partir de 1 999 €</div>
+                <ul className="list-none mb-6 text-left">
+                    <li className="py-1 text-sm text-[#6e6e73]">• (X)OS complet</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• Dual-OS Windows/macOS</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• 32 Go RAM</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• 1 To SSD</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• (X)Cloud inclus</li>
+                </ul>
+                <a href="#" className="btn-primary">Choisir</a>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#667eea] to-[#764ba2] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+            </div>
+            
+            <div className="product-card bg-[#f5f5f7] rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden group">
+                <div className="text-5xl font-light mb-4 text-[#6e6e73]">α</div>
+                <h3 className="text-2xl font-semibold mb-2">
+                  <span className="dark:text-black">alpha</span>
+                </h3>
+                <div className="text-xl font-semibold text-[#007aff] mb-6">À partir de 2 999 €</div>
+                <ul className="list-none mb-6 text-left">
+                    <li className="py-1 text-sm text-[#6e6e73]">• (X)OS Pro</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• Triple-OS + Linux</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• 64 Go RAM</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• 2 To SSD</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• (X)AI intégré</li>
+                </ul>
+                <a href="#" className="btn-primary">Choisir</a>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#667eea] to-[#764ba2] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+            </div>
+            
+            <div className="product-card bg-[#f5f5f7] rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden group">
+                <div className="text-5xl font-light mb-4 text-[#6e6e73]">φ</div>
+                <h3 className="text-2xl font-semibold mb-2">
+                  <span className="dark:text-black">fi</span>
+                </h3>
+                <div className="text-xl font-semibold text-[#007aff] mb-6">À partir de 4 499 €</div>
+                <ul className="list-none mb-6 text-left">
+                    <li className="py-1 text-sm text-[#6e6e73]">• (X)OS Studio</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• Multi-GPU dédié</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• 128 Go RAM</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• 4 To SSD</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• Support prioritaire</li>
+                </ul>
+                <a href="#" className="btn-primary">Choisir</a>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#667eea] to-[#764ba2] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+            </div>
+            
+            <div className="product-card bg-[#f5f5f7] rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden group">
+                <div className="text-5xl font-light mb-4 text-[#6e6e73]">👁️</div>
+                <h3 className="text-2xl font-semibold mb-2">
+                  <span className="dark:text-black">(X)Vision</span>
+                </h3>
+                <div className="text-xl font-semibold text-[#007aff] mb-6">À partir de 1 899 €</div>
+                <ul className="list-none mb-6 text-left">
+                    <li className="py-1 text-sm text-[#6e6e73]">• Spécialisé création visuelle</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• Écrans 5K intégrés</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• GPU créatif optimisé</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• Calibration colorimétrique</li>
+                    <li className="py-1 text-sm text-[#6e6e73]">• (X)AI Vision</li>
+                </ul>
+                <a href="#" className="btn-primary">Choisir</a>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#667eea] to-[#764ba2] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+export default FeaturesClient;
