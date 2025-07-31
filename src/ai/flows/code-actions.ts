@@ -10,7 +10,7 @@ import { generateCode } from './generate-code';
 import { explainCode } from './explain-code';
 import { debugCode } from './debug-code';
 import { refactorCode } from './refactor-code';
-import type { GenerateCodeOutput, ExplainCodeOutput, DebugCodeOutput, GenerateCodeInput, RefactorCodeInput } from '@/ai/types';
+import type { GenerateCodeOutput, ExplainCodeOutput, DebugCodeOutput, RefactorCodeInput } from '@/ai/types';
 
 // Helper function to create a consistent response structure
 function createResponse<T>(data: T | null, error: string | null = null, idDelta = 1) {
@@ -29,9 +29,9 @@ export async function generateCodeAction(prevState: any, formData: FormData): Pr
             prompt: formData.get('prompt') as string,
             language: formData.get('language') as string,
         });
-        return createResponse(result)(prevState);
+        return { id: prevState.id + 1, result, error: null };
     } catch (e: any) {
-        return createResponse(null, e.message || "An unknown error occurred.")(prevState);
+        return { id: prevState.id + 1, result: null, error: e.message || "An unknown error occurred." };
     }
 }
 
@@ -41,9 +41,9 @@ export async function explainCodeAction(prevState: any, formData: FormData): Pro
             code: formData.get('code') as string,
             language: formData.get('language') as string,
         });
-        return createResponse(result)(prevState);
+        return { id: prevState.id + 1, result, error: null };
     } catch (e: any) {
-        return createResponse(null, e.message || "An unknown error occurred.")(prevState);
+        return { id: prevState.id + 1, result: null, error: e.message || "An unknown error occurred." };
     }
 }
 
@@ -53,9 +53,9 @@ export async function debugCodeAction(prevState: any, formData: FormData): Promi
             code: formData.get('code') as string,
             language: formData.get('language') as string,
         });
-        return createResponse(result)(prevState);
+        return { id: prevState.id + 1, result, error: null };
     } catch (e: any) {
-        return createResponse(null, e.message || "An unknown error occurred.")(prevState);
+        return { id: prevState.id + 1, result: null, error: e.message || "An unknown error occurred." };
     }
 }
 
@@ -65,10 +65,10 @@ export async function refactorCodeAction(prevState: any, formData: FormData): Pr
             prompt: formData.get('prompt') as string,
             code: formData.get('code') as string,
             language: formData.get('language') as string,
-        });
-        return createResponse(result)(prevState);
+        } as RefactorCodeInput);
+        return { id: prevState.id + 1, result, error: null };
     } catch (e: any) {
-        return createResponse(null, e.message || "An unknown error occurred.")(prevState);
+        return { id: prevState.id + 1, result: null, error: e.message || "An unknown error occurred." };
     }
 }
 
