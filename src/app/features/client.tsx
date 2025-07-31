@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle, CardDescription, CardHeader, CardFooter } from '@/components/ui/card';
-import { Cpu, Zap, Layers, Folder, Code, Terminal, BrainCircuit, Lightbulb, Film, Check } from 'lucide-react';
+import { Cpu, Zap, Layers, Folder, Code, Terminal, BrainCircuit, Lightbulb, Film, Check, Download, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -70,8 +70,15 @@ const StickyScrollSection = () => {
     <div ref={targetRef} className="h-[300vh] relative">
       <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
         <motion.div style={{ opacity, scale }} className="w-full h-full flex items-center justify-center">
-           <div className="relative w-[80%] h-[80%] max-w-6xl">
-                <Image src="https://images.unsplash.com/photo-1618423484838-b7a4aa4d8523?auto=format&fit=crop&w=1200&q=80" data-ai-hint="futuristic os interface" alt="(X)OS interface" fill className="object-contain" />
+           <div className="relative w-[80%] h-[80%] max-w-6xl aspect-video rounded-2xl overflow-hidden glass-card p-2">
+                <iframe
+                    src="https://www.youtube.com/embed/wLiwRGYaVnw?si=EGKoM3NroQ9G6NBL&autoplay=1&mute=1&loop=1&playlist=wLiwRGYaVnw&controls=0&showinfo=0&autohide=1&wmode=transparent"
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full rounded-lg"
+                ></iframe>
             </div>
         </motion.div>
         
@@ -129,7 +136,7 @@ const productRange = [
 
 export default function FeaturesClient() {
   return (
-    <div className="bg-background/80 text-foreground">
+    <>
       {/* Hero Section */}
       <div className="relative h-screen">
           <div className="absolute inset-0">
@@ -154,21 +161,21 @@ export default function FeaturesClient() {
           <AnimatedText text="Un écosystème conçu pour amplifier vos idées, pas pour les contraindre." el="p" className="section-subtitle" />
         </div>
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-            <div className="fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}>
                 <Code className="h-12 w-12 text-primary mx-auto"/>
                 <h3 className="mt-4 text-2xl font-bold">Pour les développeurs</h3>
                 <p className="mt-2 text-muted-foreground">Un terminal unifié, des conteneurs natifs et un SDK puissant pour étendre l'écosystème. Créez des outils qui s'intègrent parfaitement à (X)OS.</p>
-            </div>
-            <div className="fade-in-up" style={{ animationDelay: '0.2s' }}>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} viewport={{ once: true }}>
                 <Cpu className="h-12 w-12 text-primary mx-auto"/>
                 <h3 className="mt-4 text-2xl font-bold">Pour les designers</h3>
                 <p className="mt-2 text-muted-foreground">Une gestion des couleurs au niveau du système, une calibration d'écran parfaite et une suite d'outils de design qui communiquent entre eux sans effort.</p>
-            </div>
-            <div className="fade-in-up" style={{ animationDelay: '0.3s' }}>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }} viewport={{ once: true }}>
                 <Film className="h-12 w-12 text-primary mx-auto"/>
                 <h3 className="mt-4 text-2xl font-bold">Pour les vidéastes</h3>
                 <p className="mt-2 text-muted-foreground">Des codecs accélérés par le matériel, des rendus en tâche de fond qui ne ralentissent jamais votre travail et un pipeline de production assisté par IA.</p>
-            </div>
+            </motion.div>
         </div>
       </Section>
       
@@ -233,6 +240,6 @@ export default function FeaturesClient() {
               </Button>
           </motion.div>
       </Section>
-    </div>
+    </>
   );
 }

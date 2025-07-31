@@ -4,5 +4,5 @@ export default function FeaturesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <main className="bg-background/80">{children}</main>;
 }
