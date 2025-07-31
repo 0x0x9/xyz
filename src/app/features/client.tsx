@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Cpu, Zap, Layers, Folder, Code, Terminal, BrainCircuit, Lightbulb, Film, Check, Download, ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import PerformanceChart from '../ui/performance-chart';
 
 const features = [
     { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw' },
@@ -24,7 +23,7 @@ function StickyScrollSection() {
     });
 
     const activeCardIndex = useTransform(scrollYProgress, [0, 1], [0, features.length]);
-
+    
     return (
         <div ref={targetRef} className="relative h-[400vh]">
             <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
@@ -40,11 +39,7 @@ function StickyScrollSection() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.3, ease: 'easeInOut' }}
-                                style={{
-                                    position: 'absolute',
-                                    width: '100%',
-                                    height: '100%',
-                                }}
+                                className="absolute inset-0 w-full h-full"
                             >
                                 <div className="absolute inset-0">
                                     <iframe
@@ -219,3 +214,4 @@ const Section = ({ children, className }: { children: React.ReactNode, className
       {children}
     </section>
   );
+
