@@ -57,8 +57,8 @@ const StickyScrollSection = () => {
   });
 
   const features = [
-    { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw?si=EGKoM3NroQ9G6NBL' },
-    { title: "IA au coeur du système", description: "Oria, notre assistant IA, est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: BrainCircuit, videoId: 'GSN46K2O2G8?si=AWvUM1dYQGRTu9YU' },
+    { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw?playlist=wLiwRGYaVnw' },
+    { title: "IA au coeur du système", description: "Oria, notre assistant IA, est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: BrainCircuit, videoId: 'crtsXQdtqbw?playlist=crtsXQdtqbw' },
     { title: "Performances sans précédent", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite pleinement la puissance de votre Station X-1 pour des rendus et des compilations ultra-rapides.", icon: Zap, videoId: 'YUEb23FQVhA?playlist=YUEb23FQVhA' },
     { title: "Gestion de fichiers unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys?playlist=ozGQ2q4l4ys' },
   ];
@@ -152,7 +152,7 @@ export default function FeaturesClient() {
   return (
     <>
       <div className="relative h-screen">
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-background/80">
              <video autoPlay loop muted playsInline className="w-full h-full object-cover" poster="https://images.unsplash.com/photo-1618423484838-b7a4aa4d8523?auto=format&fit=crop&w=1600&q=80">
                  <source src="https://cdn.xyzz.ai/videos/xos_intro.mp4" type="video/mp4" />
              </video>
