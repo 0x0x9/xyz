@@ -15,8 +15,10 @@ export function Footer() {
         <footer className="py-8 border-t border-border mt-20">
             <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
                 <p>&copy; {currentYear} (X)yzz. Tous droits réservés.</p>
-                <div className="flex gap-6 mt-4 md:mt-0">
+                <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-4 md:mt-0">
                   <Link href="/about" className="hover:text-foreground transition-colors">À Propos</Link>
+                  <Link href="/blog" className="hover:text-foreground transition-colors">Blog</Link>
+                  <Link href="/careers" className="hover:text-foreground transition-colors">Carrières</Link>
                   <Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link>
                   <Link href="/privacy" className="hover:text-foreground transition-colors">Confidentialité</Link>
                   <Link href="/terms" className="hover:text-foreground transition-colors">Conditions</Link>

@@ -59,7 +59,10 @@ import {
 
 const navLinks = [
   { href: "/store", label: "Boutique" },
+  { href: "/blog", label: "Blog" },
+  { href: "/gallery", label: "Galerie" },
   { href: "/community", label: "Communauté" },
+  { href: "/careers", label: "Carrières" },
 ];
 
 const toolCategories = [

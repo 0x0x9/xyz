@@ -22,7 +22,10 @@ import {
   SquareTerminal, 
   LayoutTemplate,
   Cpu,
-  Sparkles
+  Sparkles,
+  BookOpen,
+  Paintbrush,
+  Users
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
@@ -217,6 +220,33 @@ const toolCategories = [
   },
 ];
 
+const ecosystemLinks = [
+    { 
+        title: "Blog (X)press", 
+        description: "Tutoriels, analyses et inspiration pour repousser vos limites.", 
+        href: "/blog",
+        icon: BookOpen,
+        image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=800&q=80",
+        imageHint: "reading book"
+    },
+    { 
+        title: "Galerie (X)hibit", 
+        description: "Explorez les créations de la communauté propulsées par l'IA.", 
+        href: "/gallery",
+        icon: Paintbrush,
+        image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=800&q=80",
+        imageHint: "art gallery"
+    },
+    { 
+        title: "Rejoignez l'équipe", 
+        description: "Nous recherchons des talents passionnés pour façonner le futur avec nous.", 
+        href: "/careers",
+        icon: Users,
+        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+        imageHint: "creative team meeting"
+    },
+];
+
 
 const HomePageClient = () => {
   const [activeCategory, setActiveCategory] = useState(toolCategories[0].id);
@@ -314,6 +344,40 @@ const HomePageClient = () => {
                   </motion.div>
               </AnimatePresence>
           </div>
+        </section>
+
+        <section id="community-hub" className="my-24 md:my-32">
+            <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold">Plus qu'une plateforme, une communauté.</h2>
+                <p className="max-w-2xl mx-auto text-md text-muted-foreground mt-2">
+                    Partagez, apprenez et grandissez avec des créatifs du monde entier.
+                </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                 {ecosystemLinks.map((item) => (
+                    <AnimatedSection key={item.href}>
+                        <Link href={item.href} className="block group">
+                           <div className="relative overflow-hidden rounded-2xl aspect-[4/3] glass-card">
+                               <Image 
+                                    src={item.image}
+                                    alt={item.title}
+                                    fill
+                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                    data-ai-hint={item.imageHint}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                                <div className="absolute bottom-0 left-0 p-6 text-white">
+                                    <div className="p-2 bg-white/10 rounded-lg border border-white/20 mb-3 w-fit backdrop-blur-sm">
+                                        <item.icon className="h-6 w-6" />
+                                    </div>
+                                    <h3 className="text-xl font-bold">{item.title}</h3>
+                                    <p className="text-white/80 text-sm mt-1">{item.description}</p>
+                                </div>
+                           </div>
+                        </Link>
+                    </AnimatedSection>
+                ))}
+            </div>
         </section>
 
         <section id="demo" className="mt-24">
