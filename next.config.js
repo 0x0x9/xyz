@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  experimental: {
+    serverComponentsExternalPackages: ['@genkit-ai/core', '@genkit-ai/firebase']
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -26,12 +28,16 @@ const nextConfig = {
   devIndicators: {
     allowedDevOrigins: ['*'],
   },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.externals = [...config.externals, 'handlebars'];
-    }
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+    config.externals = [...config.externals, 'handlebars'];
     return config;
-  },
+  }
 };
 
 module.exports = nextConfig;
