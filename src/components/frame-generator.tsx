@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, useRef } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
 import { generateFrameAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
@@ -33,29 +33,27 @@ function SubmitButton() {
 export default function FrameGenerator() {
     const router = useRouter();
     const { toast } = useToast();
-    const searchParams = useSearchParams();
-    const promptFromUrl = searchParams.get('prompt');
-
-    const initialState = {
-        message: '',
-        redirectUrl: null,
-        error: '',
-        id: 0,
-        prompt: promptFromUrl || '',
-    };
     
+    const initialState = { message: '', error: null, id: 0, result: null };
     const [state, formAction] = useFormState(generateFrameAction, initialState);
+    
     const [imageDataUri, setImageDataUri] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { pending } = useFormStatus();
 
     useEffect(() => {
-        // Redirection is now handled directly in the server action,
-        // so we only need to handle errors here.
         if (state.message === 'error' && state.error) {
             toast({ variant: 'destructive', title: 'Erreur (X)frame', description: state.error });
+        } else if (state.message === 'success' && state.result) {
+            const { htmlCode, cssCode, jsCode } = state.result;
+            const params = new URLSearchParams();
+            params.set('htmlCode', btoa(unescape(encodeURIComponent(htmlCode || ''))));
+            params.set('cssCode', btoa(unescape(encodeURIComponent(cssCode || ''))));
+            params.set('jsCode', btoa(unescape(encodeURIComponent(jsCode || ''))));
+            router.push(`/editor?${params.toString()}`);
         }
-    }, [state, toast]);
+    }, [state, toast, router]);
+
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -90,7 +88,6 @@ export default function FrameGenerator() {
                         minLength={10}
                         className="bg-transparent text-base"
                         disabled={pending}
-                        defaultValue={initialState.prompt ?? ''}
                     />
                     
                     <div className="space-y-2">
@@ -140,3 +137,5 @@ export default function FrameGenerator() {
         </form>
     );
 }
+
+    

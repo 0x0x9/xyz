@@ -1,7 +1,6 @@
 
 'use server';
 
-import { redirect } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import type { Doc, GenerateFluxOutput, GenerateMuseOutput, ProjectPlan, GenerateIdeasOutput, VideoScript, Nexus, GeneratePaletteOutput, GeneratePersonaOutput, GenerateSoundOutput, Frame, GenerateToneOutput, GenerateCodeOutput, GenerateDeckOutput, GenerateTextOutput, GenerateVoiceOutput, OriaChatOutput, ExplainCodeOutput, DebugCodeOutput, AgendaEvent } from '@/ai/types';
 
@@ -61,12 +60,6 @@ export async function generateFrameAction(prevState: any, formData: FormData): P
     const photoDataUri = formData.get('photoDataUri') as string;
     try {
         const result = await generateFrame({ prompt, photoDataUri: photoDataUri || undefined });
-        
-        if(result) {
-            const resultId = `frame-result-${uuidv4()}`;
-            resultsStore[resultId] = {result};
-            // Redirect logic was here, now handled by client
-        }
         return { ...prevState, message: 'success', result, error: null };
     } catch (e: any) {
         return { ...prevState, message: 'error', result: null, error: e.message };
@@ -362,3 +355,5 @@ export async function uploadMuseDocumentAction(data: { name: string; content: st
         return { success: false, error: error.message || "An unknown error occurred" };
     }
 }
+
+    

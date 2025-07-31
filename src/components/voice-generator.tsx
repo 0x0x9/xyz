@@ -2,9 +2,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
-import { generateVoiceAction } from '@/app/actions';
+import { generateVoiceAction, uploadDocumentAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,7 +14,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Sparkles, Mic, Volume2, Save, AudioLines } from 'lucide-react';
 import { LoadingState } from './loading-state';
 import AiLoadingAnimation from './ui/ai-loading-animation';
-import { uploadDocumentAction } from '@/app/actions';
 import { useNotifications } from '@/hooks/use-notifications';
 
 const voices = [
@@ -156,29 +155,17 @@ function VoiceGeneratorFormBody({ state }: { state: { message: string, result: {
 
 
 export default function VoiceGenerator({ initialText, initialAudioDataUri, prompt }: { initialText?: string, initialAudioDataUri?: string, prompt?: string }) {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const promptFromUrl = searchParams.get('prompt');
   const initialState = {
       message: initialAudioDataUri ? 'success' : '',
       result: { audioDataUri: initialAudioDataUri || null },
       error: '',
       id: 0,
-      text: initialText || prompt || promptFromUrl || '',
+      text: initialText || prompt || '',
       voice: 'Algenib'
   };
   
-  const formAction = async (prevState: any, formData: FormData) => {
-    try {
-        const result = await generateVoiceAction(prevState, formData);
-        if (result.error) throw new Error(result.error);
-        return { ...result, message: 'success' };
-    } catch (e: any) {
-        return { ...prevState, message: 'error', error: e.message };
-    }
-  }
-
-  const [state, dispatch] = useFormState(formAction, initialState);
+  const [state, dispatch] = useFormState(generateVoiceAction, initialState);
   const { toast } = useToast();
   const { addNotification } = useNotifications();
 
@@ -191,16 +178,10 @@ export default function VoiceGenerator({ initialText, initialAudioDataUri, promp
       });
     }
      if (state.message === 'success' && state.result?.audioDataUri) {
-        const resultId = `voice-result-${state.id}`;
-        const handleClick = () => {
-            localStorage.setItem(resultId, JSON.stringify(state));
-            router.push(`/voice?resultId=${resultId}`);
-        };
         addNotification({
             icon: AudioLines,
             title: "Voix générée !",
             description: `Votre audio pour "${state.text.substring(0, 30)}..." est prêt.`,
-            onClick: handleClick,
         });
     }
   }, [state, toast, addNotification, router]);
@@ -211,3 +192,5 @@ export default function VoiceGenerator({ initialText, initialAudioDataUri, promp
       </form>
   );
 }
+
+    

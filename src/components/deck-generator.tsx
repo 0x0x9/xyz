@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
 import { generateDeckAction, generateImageAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
@@ -18,8 +18,8 @@ import { httpsCallable } from 'firebase/functions';
 import { functions } from '@/lib/firebase';
 import { useNotifications } from '@/hooks/use-notifications';
 import { Skeleton } from './ui/skeleton';
+import { uploadDocumentAction } from '@/app/actions';
 
-const uploadDocument = httpsCallable(functions, 'uploadDocument');
 
 type SlideWithImage = DeckSlide & { imageUrl?: string; isLoadingImage: boolean };
 
@@ -95,10 +95,10 @@ function ResultsDisplay({ result, slidesWithImages, onReset }: { result: Generat
         try {
             const markdownContent = formatDeckAsMarkdown(result);
             const fileName = `deck-${result.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_') || 'presentation'}.md`;
-            const base64Content = btoa(unescape(encodeURIComponent(markdownContent)));
+            const dataUri = `data:text/markdown;base64,${btoa(unescape(encodeURIComponent(markdownContent)))}`;
             
-            await uploadDocument({ name: fileName, content: base64Content, mimeType: 'text/markdown' });
-            toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)drive.` });
+            await uploadDocumentAction({ name: fileName, content: dataUri, mimeType: 'text/markdown' });
+            toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)cloud.` });
         } catch (error: any) {
             toast({ variant: 'destructive', title: "Erreur d'enregistrement", description: error.message });
         } finally {
@@ -115,12 +115,12 @@ function ResultsDisplay({ result, slidesWithImages, onReset }: { result: Generat
                 </Button>
             </div>
             <Card className="glass-card overflow-hidden">
-                <CardHeader className="flex-row items-center justify-between">
+                <CardHeader className="flex-row items-center justify-between p-6">
                     <CardTitle className="text-2xl">{result.title}</CardTitle>
                     <div className="flex items-center gap-2">
                          <Button onClick={handleSaveToDrive} disabled={isSaving} variant="secondary" size="sm">
                             <Save className="mr-2 h-4 w-4" />
-                            {isSaving ? 'Sauvegarde...' : 'Sur (X)drive'}
+                            {isSaving ? 'Sauvegarde...' : 'Sur (X)cloud'}
                         </Button>
                         <Button onClick={handleDownload} variant="outline" size="sm">
                             <Download className="mr-2 h-4 w-4" />
@@ -128,7 +128,7 @@ function ResultsDisplay({ result, slidesWithImages, onReset }: { result: Generat
                         </Button>
                     </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                     <div className="aspect-[16/9] bg-black/20 rounded-lg flex relative p-8 text-white overflow-hidden">
                         {activeSlide.isLoadingImage && (
                              <Skeleton className="absolute inset-0" />
@@ -219,9 +219,6 @@ function DeckGeneratorForm({ state }: {
 }
 
 export default function DeckGenerator({ initialResult, prompt }: { initialResult?: GenerateDeckOutput, prompt?: string }) {
-    const searchParams = useSearchParams();
-    const router = useRouter();
-    const promptFromUrl = searchParams.get('prompt');
     const [key, setKey] = useState(0);
     const [showForm, setShowForm] = useState(!initialResult);
 
@@ -230,7 +227,7 @@ export default function DeckGenerator({ initialResult, prompt }: { initialResult
         result: initialResult || null,
         error: '',
         id: key,
-        prompt: prompt || promptFromUrl || ''
+        prompt: prompt || ''
     };
     const [state, formAction] = useFormState(generateDeckAction, initialState);
     const [slidesWithImages, setSlidesWithImages] = useState<SlideWithImage[]>([]);
@@ -249,16 +246,11 @@ export default function DeckGenerator({ initialResult, prompt }: { initialResult
         }
         if (state.message === 'success' && state.result?.slides) {
             setShowForm(false);
-            const resultId = `deck-result-${state.id}`;
-            const handleClick = () => {
-                localStorage.setItem(resultId, JSON.stringify(state));
-                router.push(`/deck?resultId=${resultId}`);
-            };
+            
             addNotification({
                 icon: Presentation,
                 title: 'Présentation générée !',
                 description: `Votre présentation sur "${state.result.title}" est prête.`,
-                onClick: handleClick
             });
 
             const initialSlides = state.result.slides.map(s => ({ ...s, isLoadingImage: true }));
@@ -285,7 +277,7 @@ export default function DeckGenerator({ initialResult, prompt }: { initialResult
                     });
             });
         }
-    }, [state, toast, addNotification, router]);
+    }, [state, toast, addNotification]);
 
     const handleReset = () => {
         setKey(k => k + 1);
@@ -313,3 +305,5 @@ export default function DeckGenerator({ initialResult, prompt }: { initialResult
         </form>
     );
 }
+
+    

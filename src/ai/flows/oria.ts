@@ -39,6 +39,7 @@ import {
   GenerateNexusInputSchema,
   GenerateNexusOutputSchema,
   GenerateFluxOutputSchema,
+  GenerateImageOutputSchema,
 } from '@/ai/types';
 
 import { generateText } from './generate-text';
@@ -122,7 +123,7 @@ const motionTool = ai.defineTool(
     description:
       'Crée une courte vidéo (script, images, voix off) à partir d\'une idée ou d\'une description.',
     inputSchema: GenerateMotionInputSchema,
-    outputSchema: VideoScriptSchema,
+    outputSchema: GenerateMotionOutputSchema,
   },
   async (input) => generateMotion(input)
 );
@@ -301,3 +302,5 @@ const oriaRouterFlow = ai.defineFlow(
     return output;
   }
 );
+
+    
