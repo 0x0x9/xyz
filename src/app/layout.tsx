@@ -7,17 +7,12 @@ import { PageTransitionProvider } from '@/hooks/use-page-transition';
 import { FusionDockProvider } from '@/hooks/use-fusion-dock';
 import { NotificationsProvider } from '@/hooks/use-notifications';
 import { UIStateProvider } from '@/hooks/use-ui-state';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 
 const fontBody = Inter({
   subsets: ['latin'],
   variable: '--font-body',
-});
-
-const fontHeadline = Space_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-headline',
 });
 
 
@@ -35,8 +30,7 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className={cn(
         "font-body antialiased relative min-h-screen bg-background",
-        fontBody.variable,
-        fontHeadline.variable
+        fontBody.variable
         )}>
         <ThemeProvider
             attribute="class"
