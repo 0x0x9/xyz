@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useEffect, useState, useActionState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useFormStatus } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 import { generateToneAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -135,7 +135,7 @@ export default function ToneGenerator({ initialResult, prompt }: { initialResult
         id: key, 
         prompt: prompt || promptFromUrl || '' 
     };
-    const [state, formAction] = useActionState(generateToneAction, initialState);
+    const [state, formAction] = useFormState(generateToneAction, initialState);
     const { toast } = useToast();
     const { pending } = useFormStatus();
 
