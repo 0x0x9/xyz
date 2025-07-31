@@ -57,37 +57,56 @@ const StickyScrollSection = () => {
   });
 
   const features = [
-    { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers },
-    { title: "IA au coeur du système", description: "Oria, notre assistant IA, est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: BrainCircuit },
-    { title: "Performances sans précédent", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite pleinement la puissance de votre Station X-1 pour des rendus et des compilations ultra-rapides.", icon: Zap },
-    { title: "Gestion de fichiers unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.", icon: Folder },
+    { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw?si=EGKoM3NroQ9G6NBL' },
+    { title: "IA au coeur du système", description: "Oria, notre assistant IA, est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: BrainCircuit, videoId: 'GSN46K2O2G8?si=AWvUM1dYQGRTu9YU' },
+    { title: "Performances sans précédent", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite pleinement la puissance de votre Station X-1 pour des rendus et des compilations ultra-rapides.", icon: Zap, videoId: 'YUEb23FQVhA?playlist=YUEb23FQVhA' },
+    { title: "Gestion de fichiers unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys?playlist=ozGQ2q4l4ys' },
   ];
-
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.9]);
   
+  const cardOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
+  const cardScale = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0.8, 1, 1, 0.9]);
+  const activeFeatureIndex = useTransform(scrollYProgress, [0, 0.99], [0, features.length - 1]);
+
+
   return (
-    <div ref={targetRef} className="h-[300vh] relative">
+    <div ref={targetRef} className="h-[400vh] relative">
       <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
-        <motion.div style={{ opacity, scale }} className="w-full h-full flex items-center justify-center">
-           <div className="relative w-[80%] h-[80%] max-w-6xl aspect-video rounded-2xl overflow-hidden glass-card p-2">
-                <iframe
-                    src="https://www.youtube.com/embed/wLiwRGYaVnw?si=EGKoM3NroQ9G6NBL&autoplay=1&mute=1&loop=1&playlist=wLiwRGYaVnw&controls=0&showinfo=0&autohide=1&wmode=transparent"
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full rounded-lg"
-                ></iframe>
-            </div>
+        <motion.div style={{ opacity: cardOpacity, scale: cardScale }} className="w-full h-full flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              {features.map((feature, i) => {
+                return (
+                  <motion.div
+                    key={i}
+                    className="absolute w-full h-full"
+                    initial={{ opacity: 0, zIndex: 0 }}
+                    animate={{ 
+                      opacity: Math.round(activeFeatureIndex.get()) === i ? 1 : 0, 
+                      zIndex: Math.round(activeFeatureIndex.get()) === i ? 1 : 0
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                     <div className="relative w-[80%] h-[80%] max-w-6xl aspect-video mx-auto my-auto top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl overflow-hidden glass-card p-2">
+                        <iframe
+                            src={`https://www.youtube.com/embed/${feature.videoId}&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&autohide=1&wmode=transparent`}
+                            title={feature.title}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="w-full h-full rounded-lg"
+                        ></iframe>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </AnimatePresence>
         </motion.div>
         
         <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-8 pointer-events-none">
             {features.map((feature, i) => {
                 const start = i * 0.25;
                 const end = start + 0.25;
-                const featureOpacity = useTransform(scrollYProgress, [start, start + 0.1, end - 0.1, end], [0, 1, 1, 0]);
-                const featureY = useTransform(scrollYProgress, [start, start + 0.1], [50, 0]);
+                const featureOpacity = useTransform(scrollYProgress, [start - 0.1, start, end, end + 0.1], [0, 1, 1, 0]);
+                const featureY = useTransform(scrollYProgress, [start - 0.1, start], [50, 0]);
 
                 return (
                     <motion.div 
@@ -106,6 +125,7 @@ const StickyScrollSection = () => {
     </div>
   );
 };
+
 
 const productRange = [
     {
@@ -126,12 +146,6 @@ const productRange = [
         price: "4 499 €",
         features: ["(X)OS Studio", "Multi-GPU dédié", "128 Go RAM", "4 To SSD", "Support prioritaire"]
     },
-    {
-        greek: "👁️",
-        name: "(X)-Vision",
-        price: "1 899 €",
-        features: ["Spécialisé création visuelle", "Écrans 5K intégrés", "GPU créatif optimisé", "Calibration colorimétrique", "(X)AI Vision"]
-    }
 ]
 
 export default function FeaturesClient() {
@@ -181,7 +195,7 @@ export default function FeaturesClient() {
                 <AnimatedText text="Explorez la gamme." el="h2" className="section-title" />
                 <AnimatedText text="Des workstations pensées par et pour les créatifs." el="p" className="section-subtitle" />
             </div>
-             <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+             <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {productRange.map((product, i) => (
                     <motion.div
                         key={product.name}
