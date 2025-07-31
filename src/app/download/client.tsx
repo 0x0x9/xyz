@@ -159,15 +159,14 @@ export default function DownloadClient() {
             {/* Hero Section */}
             <section className="relative h-screen flex flex-col items-center justify-center text-center overflow-hidden">
                 <div className="absolute inset-0">
-                    <Image
-                        src="https://placehold.co/1920x1080.png"
-                        alt="Interface de (X)OS"
-                        fill
-                        className="object-cover"
-                        quality={100}
-                        priority
-                        data-ai-hint="futuristic operating system"
-                    />
+                    <iframe
+                        src="https://www.youtube.com/embed/YUEb23FQVhA?autoplay=1&mute=1&loop=1&playlist=YUEb23FQVhA&controls=0&showinfo=0&autohide=1&wmode=transparent"
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full scale-[1.5]"
+                    ></iframe>
                     <div className="absolute inset-0 bg-black/30"></div>
                 </div>
                 <div className="relative z-10 px-4 space-y-6">
