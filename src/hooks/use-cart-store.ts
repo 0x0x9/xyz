@@ -40,14 +40,13 @@ export const useCart = create<CartState>()(
                 const currentItems = get().items;
                 const isConfigured = !!product.configuration;
 
-                // Create a unique ID for configured items, but use product ID for standard items
-                const findId = isConfigured 
-                    ? JSON.stringify(product.configuration) + product.id 
-                    : product.id.toString();
+                // Create a unique identifier for configured items
+                const configId = isConfigured ? JSON.stringify(product.configuration) : null;
+                const findId = isConfigured ? `${product.id}-${configId}` : product.id.toString();
 
                 const existingItem = currentItems.find((item) => {
                     if (isConfigured && item.configuration) {
-                        return JSON.stringify(item.configuration) + item.id === findId;
+                        return item.id === product.id && JSON.stringify(item.configuration) === configId;
                     }
                     return !item.configuration && item.id === product.id;
                 });

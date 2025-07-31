@@ -12,15 +12,6 @@ import { debugCode } from './debug-code';
 import { refactorCode } from './refactor-code';
 import type { GenerateCodeOutput, ExplainCodeOutput, DebugCodeOutput, RefactorCodeInput } from '@/ai/types';
 
-// Helper function to create a consistent response structure
-function createResponse<T>(data: T | null, error: string | null = null, idDelta = 1) {
-    return (prevState: { id: number }) => ({
-        id: prevState.id + idDelta,
-        result: data,
-        error: error,
-    });
-}
-
 // Re-exporting flows wrapped in server actions compatible with useFormState
 
 export async function generateCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null }> {
