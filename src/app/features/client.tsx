@@ -47,6 +47,12 @@ const features = [
     { icon: Zap, title: "Oria, l'IA d'Orchestration", description: "Un assistant intelligent au cœur du système, qui anticipe vos besoins et automatise vos workflows." },
 ];
 
+const performanceData = [
+    { name: 'Station X-1', 'Rendu 3D': 95, 'Compilation de code': 98, 'Simulation IA': 92 },
+    { name: 'Mac Pro (équivalent)', 'Rendu 3D': 75, 'Compilation de code': 80, 'Simulation IA': 70 },
+    { name: 'PC Haut de Gamme', 'Rendu 3D': 85, 'Compilation de code': 88, 'Simulation IA': 78 },
+];
+
 export default function FeaturesClient() {
     const targetRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
@@ -113,6 +119,22 @@ export default function FeaturesClient() {
                     ))}
                 </div>
             </Section>
+
+            {/* Performance Section */}
+            <Section className="text-center">
+                <AnimatedText>
+                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+                        Des performances qui défient la réalité.
+                    </h2>
+                    <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+                       La Station X-1 a été conçue pour les workflows les plus exigeants. Voyez par vous-même comment elle se mesure à la concurrence.
+                    </p>
+                </AnimatedText>
+                <AnimatedText className="mt-16">
+                   <PerformanceChart data={performanceData} />
+                </AnimatedText>
+            </Section>
+
 
             {/* (X)OS Section */}
             <Section>
