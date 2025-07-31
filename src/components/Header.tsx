@@ -209,20 +209,20 @@ function CartSheet() {
 
 const EcosystemLink = ({ href, label, description, icon: Icon }: { href: string; label: string; description: string; icon: React.ElementType }) => (
     <motion.div whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400, damping: 15 }}>
-        <Link href={href} className="group flex items-start gap-4 p-3 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none">
-            <div className="p-2.5 rounded-lg border bg-primary/10 border-primary/20 mt-1">
-                <Icon className="h-6 w-6 text-primary" />
+        <Link href={href} className="group flex items-start gap-3 p-3 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none">
+            <div className="p-2 rounded-lg border bg-primary/10 border-primary/20 mt-1">
+                <Icon className="h-5 w-5 text-primary" />
             </div>
             <div>
-                <p className="font-semibold text-foreground">{label}</p>
-                <p className="text-sm text-muted-foreground">{description}</p>
+                <p className="font-semibold text-foreground text-sm">{label}</p>
+                <p className="text-xs text-muted-foreground">{description}</p>
             </div>
         </Link>
     </motion.div>
 );
 
 const GeneratorLink = ({ href, label, icon: Icon }: { href: string; label: string; icon: React.ElementType }) => (
-    <Link href={href} className="group flex items-center gap-2 p-2 rounded-md hover:bg-foreground/10 transition-colors duration-200">
+    <Link href={href} className="group flex items-center gap-2 p-1.5 rounded-md hover:bg-foreground/10 transition-colors duration-200">
         <Icon className="h-4 w-4 text-accent" />
         <span className="text-sm text-foreground">{label}</span>
     </Link>
@@ -287,29 +287,31 @@ export function Header() {
               <DropdownMenuPrimitive.Content
                 align="center"
                 sideOffset={10}
-                className="w-[600px] glass-card p-4 z-50 outline-none"
+                className="w-[580px] glass-card p-4 z-50 outline-none"
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: -10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: -10 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="grid grid-cols-12 gap-6"
+                  className="grid grid-cols-12 gap-4"
                 >
-                  <div className="md:col-span-7 space-y-2">
-                     <h3 className="px-3 text-sm font-semibold text-muted-foreground">Écosystème</h3>
-                     <div className="flex flex-col gap-1">
+                  <div className="col-span-6 space-y-1">
+                     <h3 className="px-3 text-sm font-semibold text-muted-foreground mb-1">Écosystème</h3>
+                     <div className="flex flex-col">
                        {ecosystemTools.map((tool) => (
                           <EcosystemLink key={tool.href} {...tool} />
                        ))}
                      </div>
                   </div>
-                  <Separator orientation="vertical" className="h-auto hidden md:block" />
-                  <div className="md:col-span-4 space-y-1">
+                  <Separator orientation="vertical" className="h-auto" />
+                  <div className="col-span-5 space-y-1">
                      <h3 className="px-2 text-sm font-semibold text-muted-foreground mb-2">Générateurs IA</h3>
-                     {generatorTools.map((tool) => (
-                        <GeneratorLink key={tool.href} {...tool} />
-                     ))}
+                     <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+                        {generatorTools.map((tool) => (
+                            <GeneratorLink key={tool.href} {...tool} />
+                        ))}
+                     </div>
                   </div>
                 </motion.div>
               </DropdownMenuPrimitive.Content>
