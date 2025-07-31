@@ -74,42 +74,30 @@ const communityLinks = [
 ]
 
 const ecosystemTools = [
-    { href: "/welcome", label: "Découvrir (X)yzz", icon: Star, description: "Une introduction à l'écosystème." },
-    { href: "/xos", label: "(X)OS", icon: AppWindow, description: "Votre bureau créatif unifié." },
-    { href: "/cloud", label: "(X)cloud", icon: Cloud, description: "Gérez vos fichiers et projets." },
-    { href: "/fusion", label: "(X)fusion", icon: Zap, description: "Combinez les outils sur une toile." },
+    { href: "/welcome", label: "Découvrir (X)OS", icon: Star, description: "Le système d'exploitation créatif." },
+    { href: "/xos", label: "(X)OS en ligne", icon: AppWindow, description: "Votre bureau, partout." },
+    { href: "/cloud", label: "(X)cloud", icon: Cloud, description: "Stockage et gestion de fichiers." },
+    { href: "/fusion", label: "(X)fusion", icon: Zap, description: "Combinez vos outils." },
+    { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
 ]
 
 const generatorTools = [
-    { 
-        category: "Stratégie",
-        tools: [
-            { href: "/flux", label: "(X)flux", icon: Wand2 },
-            { href: "/maestro", label: "Maestro", icon: BrainCircuit },
-            { href: "/brand-identity", label: "(X)brand", icon: Layers },
-            { href: "/promptor", label: "(X)promptor", icon: Lightbulb },
-            { href: "/nexus", label: "(X)nexus", icon: Network },
-        ]
-    },
-    {
-        category: "Contenu",
-        tools: [
-            { href: "/motion", label: "(X)motion", icon: Film },
-            { href: "/image", label: "Image", icon: ImageIcon },
-            { href: "/muse", label: "(X)muse", icon: Guitar },
-            { href: "/text", label: "Texte", icon: FileText },
-            { href: "/sound", label: "(X)sound", icon: Music },
-            { href: "/voice", label: "(X)voice", icon: AudioLines },
-        ]
-    },
-    {
-        category: "Dev",
-        tools: [
-            { href: "/editor", label: "(X).alpha", icon: SquareTerminal },
-            { href: "/frame", label: "(X)frame", icon: LayoutTemplate },
-            { href: "/terminal", label: "(X)term", icon: Terminal },
-        ]
-    }
+    { href: "/flux", label: "(X)flux", icon: Wand2 },
+    { href: "/maestro", label: "Maestro", icon: BrainCircuit },
+    { href: "/brand-identity", label: "(X)brand", icon: Layers },
+    { href: "/promptor", label: "(X)promptor", icon: Lightbulb },
+    { href: "/motion", label: "(X)motion", icon: Film },
+    { href: "/image", label: "Image", icon: ImageIcon },
+    { href: "/muse", label: "(X)muse", icon: Guitar },
+    { href: "/text", label: "Texte", icon: FileText },
+    { href: "/sound", label: "(X)sound", icon: Music },
+    { href: "/voice", label: "(X)voice", icon: AudioLines },
+    { href: "/editor", label: "(X).alpha", icon: SquareTerminal },
+    { href: "/frame", label: "(X)frame", icon: LayoutTemplate },
+    { href: "/terminal", label: "(X)term", icon: Terminal },
+    { href: "/code", label: '(X)code', icon: Code2 },
+    { href: "/nexus", label: '(X)nexus', icon: Network },
+    { href: "/agenda", label: '(X)agenda', icon: Calendar },
 ]
 
 
@@ -219,14 +207,36 @@ function CartSheet() {
   );
 }
 
-const DropdownMenuLinkItem = ({ href, label, description, icon: Icon, isEcosystem = false }: { href: string; label: string; description?: string; icon: React.ElementType, isEcosystem?: boolean }) => (
+const EcosystemLink = ({ href, label, description, icon: Icon }: { href: string; label: string; description: string; icon: React.ElementType }) => (
+    <motion.div whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400, damping: 15 }}>
+        <Link href={href} className="group flex items-start gap-4 p-3 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none">
+            <div className="p-2.5 rounded-lg border bg-primary/10 border-primary/20 mt-1">
+                <Icon className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+                <p className="font-semibold text-foreground">{label}</p>
+                <p className="text-sm text-muted-foreground">{description}</p>
+            </div>
+        </Link>
+    </motion.div>
+);
+
+const GeneratorLink = ({ href, label, icon: Icon }: { href: string; label: string; icon: React.ElementType }) => (
+    <Link href={href} className="group flex items-center gap-2 p-2 rounded-md hover:bg-foreground/10 transition-colors duration-200">
+        <Icon className="h-4 w-4 text-accent" />
+        <span className="text-sm text-foreground">{label}</span>
+    </Link>
+);
+
+
+const DropdownMenuLinkItem = ({ href, label, description, icon: Icon }: { href: string; label: string; description?: string; icon: React.ElementType }) => (
     <DropdownMenuPrimitive.Item asChild>
         <Link
         href={href}
         className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none"
         >
-        <div className={cn("p-1.5 rounded-md border", isEcosystem ? "bg-primary/10 border-primary/20" : "bg-accent/10 border-accent/20")}>
-            <Icon className={cn("h-5 w-5", isEcosystem ? "text-primary" : "text-accent")} />
+        <div className="p-1.5 rounded-md border bg-accent/10 border-accent/20">
+            <Icon className="h-5 w-5 text-accent" />
         </div>
         <div>
             <p className="font-semibold text-foreground text-sm">{label}</p>
@@ -277,34 +287,29 @@ export function Header() {
               <DropdownMenuPrimitive.Content
                 align="center"
                 sideOffset={10}
-                className="w-[700px] glass-card p-4 z-50 outline-none"
+                className="w-[600px] glass-card p-4 z-50 outline-none"
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: -10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: -10 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="grid grid-cols-1 md:grid-cols-12 gap-6"
+                  className="grid grid-cols-12 gap-6"
                 >
-                  <div className="md:col-span-5 space-y-2">
-                     <h3 className="px-2 text-sm font-semibold text-muted-foreground">Écosystème</h3>
+                  <div className="md:col-span-7 space-y-2">
+                     <h3 className="px-3 text-sm font-semibold text-muted-foreground">Écosystème</h3>
                      <div className="flex flex-col gap-1">
                        {ecosystemTools.map((tool) => (
-                          <DropdownMenuLinkItem key={tool.href} {...tool} isEcosystem />
+                          <EcosystemLink key={tool.href} {...tool} />
                        ))}
                      </div>
                   </div>
                   <Separator orientation="vertical" className="h-auto hidden md:block" />
-                  <div className="md:col-span-6 space-y-3">
-                     <h3 className="px-2 text-sm font-semibold text-muted-foreground">Générateurs IA</h3>
-                     <div className="grid grid-flow-col grid-rows-7 gap-x-6 gap-y-1">
-                        {generatorTools.flatMap(category => [
-                            <h4 key={category.category} className="font-medium text-sm text-foreground/80 px-2 mt-2 first:mt-0 col-span-full">{category.category}</h4>,
-                            ...category.tools.map(tool => (
-                                <DropdownMenuLinkItem key={tool.href} {...tool} />
-                            ))
-                        ])}
-                     </div>
+                  <div className="md:col-span-4 space-y-1">
+                     <h3 className="px-2 text-sm font-semibold text-muted-foreground mb-2">Générateurs IA</h3>
+                     {generatorTools.map((tool) => (
+                        <GeneratorLink key={tool.href} {...tool} />
+                     ))}
                   </div>
                 </motion.div>
               </DropdownMenuPrimitive.Content>
@@ -441,7 +446,7 @@ export function Header() {
                         </div>
                         <div className="flex flex-col gap-1 mt-4">
                              <h4 className="font-semibold text-muted-foreground mb-2">Générateurs IA</h4>
-                            {generatorTools.flatMap(cat => cat.tools).map((tool) => (
+                            {generatorTools.map((tool) => (
                                 <Link key={tool.href} href={tool.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
                                     <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
                                         <tool.icon className="h-5 w-5 text-accent" />
