@@ -471,6 +471,7 @@
     }
 
     /* Styles pour la page /features (Apple-like) */
+    .hero { @apply h-screen flex flex-col items-center justify-center text-center text-white relative overflow-hidden bg-gradient-to-b from-black to-[#1a1a1a]; }
     .hero-badge { @apply bg-white/10 px-4 py-1.5 rounded-full text-xs font-medium mb-6 backdrop-blur-xl border border-white/20 inline-block; }
     .hero-tagline { @apply text-xl font-normal mb-2 opacity-90; }
     .hero-subtitle { @apply text-3xl font-semibold mb-8 max-w-3xl; }
@@ -486,7 +487,12 @@
     .section-subtitle { @apply text-xl text-[color:var(--apple-secondary)] max-w-2xl mx-auto; }
 
     .ecosystem-grid { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8; }
-    .ecosystem-card { @apply bg-white dark:bg-[#2c2c2e] rounded-xl p-10 text-center shadow-lg transition-all duration-300 ease-in-out relative overflow-hidden; }
+    .ecosystem-card { 
+        @apply bg-card text-card-foreground rounded-xl p-10 text-center shadow-lg transition-all duration-300 ease-in-out relative overflow-hidden;
+    }
+    .dark .ecosystem-card {
+        @apply bg-[#1c1c1e];
+    }
     .ecosystem-card::before { content: ''; @apply absolute top-0 left-0 right-0 h-1 bg-[var(--xyzz-gradient)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300; }
     .ecosystem-card:hover { @apply -translate-y-2 shadow-2xl; }
     
@@ -509,8 +515,4 @@
     .product-price { @apply text-xl font-semibold text-[color:var(--apple-blue)] mb-6; }
     .product-features { @apply list-none mb-6 text-left; }
     .product-features li { @apply py-1 text-sm text-[color:var(--apple-secondary)]; }
-
-    body.dark .ecosystem-card {
-        @apply bg-[#1c1c1e];
-    }
 }
