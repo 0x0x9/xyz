@@ -5,9 +5,9 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Cpu, Zap, Layers, Folder, Code, Terminal, BrainCircuit, Lightbulb, Film, Check, Download, ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import { Cpu, Zap, Layers, Folder, Code, Terminal, BrainCircuit, Lightbulb, Film, Check, Download, ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import PerformanceChart from '../ui/performance-chart';
 
 const features = [
     { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw' },
@@ -24,32 +24,22 @@ function StickyScrollSection() {
     });
 
     const activeCardIndex = useTransform(scrollYProgress, [0, 1], [0, features.length]);
-    const cardOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [1, 1, 1, 0]);
-    const cardScale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
 
     return (
         <div ref={targetRef} className="relative h-[400vh]">
             <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
-                <AnimatePresence mode="wait">
+                 <AnimatePresence mode="wait">
                     {features.map((feature, i) => {
-                        const targetOpacity = activeCardIndex.get() - i;
-                        const opacity = (targetOpacity >= 0 && targetOpacity < 1) 
-                            ? 1 
-                            : (targetOpacity > 1 && targetOpacity < 2) 
-                                ? 2 - targetOpacity 
-                                : (targetOpacity < 0 && targetOpacity > -1)
-                                    ? 1 + targetOpacity
-                                    : 0;
-                        
-                        if (opacity <= 0) return null;
+                         const isActive = Math.floor(activeCardIndex.get()) === i;
+                         if (!isActive) return null;
 
                         return (
                              <motion.div
                                 key={feature.title}
-                                initial={{ opacity: 0, scale: 0.9 }}
+                                initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ duration: 0.5, ease: 'easeInOut' }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.3, ease: 'easeInOut' }}
                                 style={{
                                     position: 'absolute',
                                     width: '100%',
@@ -82,6 +72,20 @@ function StickyScrollSection() {
         </div>
     );
 }
+
+const AnimatedSection = ({ children, className }: { children: React.ReactNode, className?: string }) => {
+    const ref = useRef(null);
+     const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ["start 0.9", "start 0.5"]
+    });
+    
+    return (
+        <motion.div ref={ref} style={{ opacity: scrollYProgress, y: useTransform(scrollYProgress, [0, 1], [30, 0])}} className={className}>
+            {children}
+        </motion.div>
+    )
+};
 
 
 export default function FeaturesClient() {
@@ -124,13 +128,13 @@ export default function FeaturesClient() {
        <StickyScrollSection />
 
       <Section>
-        <AnimatedText>
+        <AnimatedSection>
             <div className="text-center container mx-auto px-6 lg:px-8">
                 <h2 className="section-title">Créativité sans limites.</h2>
                 <p className="section-subtitle">Un écosystème conçu pour amplifier vos idées, pas pour les contraindre.</p>
             </div>
-        </AnimatedText>
-        <AnimatedText>
+        </AnimatedSection>
+        <AnimatedSection>
             <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 text-center container mx-auto px-6 lg:px-8">
                 <div>
                     <Code className="h-12 w-12 text-primary mx-auto"/>
@@ -148,54 +152,49 @@ export default function FeaturesClient() {
                     <p className="mt-2 text-muted-foreground">Des codecs accélérés par le matériel, des rendus en tâche de fond qui ne ralentissent jamais votre travail et un pipeline de production assisté par IA.</p>
                 </div>
             </div>
-        </AnimatedText>
+        </AnimatedSection>
       </Section>
       
        <Section>
-            <AnimatedText>
+            <AnimatedSection>
                 <div className="text-center container mx-auto px-6 lg:px-8">
                     <h2 className="section-title">Explorez la gamme.</h2>
                     <p className="section-subtitle">Des workstations pensées par et pour les créatifs.</p>
                 </div>
-            </AnimatedText>
-             <AnimatedText>
+            </AnimatedSection>
+             <AnimatedSection>
                 <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 container mx-auto px-6 lg:px-8">
                     {productRange.map((product, i) => (
-                        <div
-                            key={product.name}
-                            className="h-full"
-                        >
-                            <div className="flex flex-col h-full text-center p-8 bg-card/50 dark:bg-card/20 border border-border/50 hover:border-primary/30 hover:-translate-y-2 transition-all duration-300 relative group overflow-hidden rounded-2xl">
-                                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
-                                <header className="p-0 mb-6">
-                                    <div className="mx-auto text-5xl font-light text-muted-foreground mb-4">{product.greek}</div>
-                                    <h3 className="text-3xl font-bold">{product.name}</h3>
-                                    <p className="text-primary font-semibold mt-1">{product.price}</p>
-                                </header>
-                                <div className="p-0 flex-grow">
-                                    <ul className="space-y-3 text-muted-foreground">
-                                        {product.features.map(feat => (
-                                            <li key={feat} className="flex items-center gap-3 text-sm">
-                                                <Check className="h-4 w-4 text-green-500 shrink-0" />
-                                                <span className="text-left">{feat}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                <footer className="p-0 mt-8">
-                                    <Button asChild className="w-full">
-                                        <Link href="/store">Choisir</Link>
-                                    </Button>
-                                </footer>
+                         <div key={product.name} className="flex flex-col h-full text-center p-8 glass-card hover:-translate-y-2 transition-all duration-300 relative group overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                            <header className="p-0 mb-6">
+                                <div className="mx-auto text-5xl font-light text-muted-foreground mb-4">{product.greek}</div>
+                                <h3 className="text-3xl font-bold">{product.name}</h3>
+                                <p className="text-primary font-semibold mt-1">{product.price}</p>
+                            </header>
+                            <div className="p-0 flex-grow">
+                                <ul className="space-y-3 text-muted-foreground">
+                                    {product.features.map(feat => (
+                                        <li key={feat} className="flex items-center gap-3 text-sm">
+                                            <Check className="h-4 w-4 text-green-500 shrink-0" />
+                                            <span className="text-left">{feat}</span>
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
+                            <footer className="p-0 mt-8">
+                                <Button asChild className="w-full">
+                                    <Link href="/store">Choisir</Link>
+                                </Button>
+                            </footer>
                         </div>
                     ))}
                 </div>
-            </AnimatedText>
+            </AnimatedSection>
       </Section>
 
       <Section>
-        <AnimatedText className="text-center">
+        <AnimatedSection className="text-center">
           <h2 className="section-title">Prêt à transformer votre machine ?</h2>
           <p className="section-subtitle">Téléchargez (X)OS ou découvrez la Station X-1, le matériel conçu pour l'exécuter à la perfection.</p>
           <div 
@@ -208,7 +207,7 @@ export default function FeaturesClient() {
                 <Link href="/hardware">Explorer la Station X-1</Link>
               </Button>
           </div>
-        </AnimatedText>
+        </AnimatedSection>
       </Section>
     </>
   );
@@ -220,17 +219,3 @@ const Section = ({ children, className }: { children: React.ReactNode, className
       {children}
     </section>
   );
-
-const AnimatedText = ({ children, className }: { children: React.ReactNode, className?: string }) => {
-    const ref = useRef(null);
-     const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start 0.9", "start 0.5"]
-    });
-    
-    return (
-        <motion.div ref={ref} style={{ opacity: scrollYProgress, y: useTransform(scrollYProgress, [0, 1], [30, 0])}} className={className}>
-            {children}
-        </motion.div>
-    )
-};
