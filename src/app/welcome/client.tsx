@@ -141,7 +141,7 @@ export default function WelcomeClient() {
                     <div className="relative aspect-square">
                          <AnimatedText>
                              <Image
-                                src="https://placehold.co/800x800.png"
+                                src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80"
                                 alt="Station de Création X-1"
                                 fill
                                 className="object-contain"
@@ -164,7 +164,7 @@ export default function WelcomeClient() {
                 </AnimatedText>
                 <AnimatedText className="mt-16">
                     <Image 
-                        src="https://placehold.co/1200x600.png"
+                        src="https://images.unsplash.com/photo-1618423484838-b7a4aa4d8523?auto=format&fit=crop&w=1200&q=80"
                         alt="Illustration de plusieurs systèmes d'exploitation fonctionnant ensemble"
                         width={1200}
                         height={600}
@@ -180,7 +180,7 @@ export default function WelcomeClient() {
                     <div className="relative aspect-square">
                          <AnimatedText>
                              <Image
-                                src="https://placehold.co/800x800.png"
+                                src="https://images.unsplash.com/photo-1620712943543-959651a7e23a?auto=format&fit=crop&w=800&q=80"
                                 alt="Illustration de l'IA Oria"
                                 fill
                                 className="object-contain"
