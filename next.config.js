@@ -27,7 +27,10 @@ const nextConfig = {
     allowedDevOrigins: ['*'],
   },
   webpack: (config, { isServer }) => {
-    // This is no longer needed with the updated Firebase plugin for Genkit
+    if (isServer) {
+      config.externals.push('@opentelemetry/instrumentation');
+      config.externals.push('require-in-the-middle');
+    }
     return config;
   }
 };
