@@ -10,48 +10,66 @@ import { generateCode } from './generate-code';
 import { explainCode } from './explain-code';
 import { debugCode } from './debug-code';
 import { refactorCode } from './refactor-code';
-import type { GenerateCodeOutput, ExplainCodeOutput, DebugCodeOutput, GenerateCodeInput } from '@/ai/types';
-import { useFormState } from 'react-dom';
+import type { GenerateCodeOutput, ExplainCodeOutput, DebugCodeOutput, GenerateCodeInput, RefactorCodeInput } from '@/ai/types';
 
-// Helper function to handle form state for client components
-async function handleFormAction<T_Input, T_Output>(
-    action: (input: T_Input) => Promise<T_Output>,
-    prevState: { id: number; result: T_Output | null; error: string | null },
-    formData: FormData
-): Promise<{ id: number; result: T_Output | null; error: string | null }> {
-    try {
-        const input = Object.fromEntries(formData.entries()) as T_Input;
-        const result = await action(input);
-        return { id: prevState.id + 1, result, error: null };
-    } catch (e: any) {
-        console.error(e);
-        return { id: prevState.id + 1, result: null, error: e.message || "An unknown error occurred." };
-    }
+// Helper function to create a consistent response structure
+function createResponse<T>(data: T | null, error: string | null = null, idDelta = 1) {
+    return (prevState: { id: number }) => ({
+        id: prevState.id + idDelta,
+        result: data,
+        error: error,
+    });
 }
 
 // Re-exporting flows wrapped in server actions compatible with useFormState
 
-export async function generateCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null, prompt: string, language: string }> {
-    const prompt = formData.get('prompt') as string;
-    const language = formData.get('language') as string;
+export async function generateCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null }> {
     try {
-        const result = await generateCode({ prompt, language });
-        return { ...prevState, result, error: null, prompt, language };
+        const result = await generateCode({ 
+            prompt: formData.get('prompt') as string,
+            language: formData.get('language') as string,
+        });
+        return createResponse(result)(prevState);
     } catch (e: any) {
-        return { ...prevState, result: null, error: e.message, prompt, language };
+        return createResponse(null, e.message || "An unknown error occurred.")(prevState);
     }
 }
 
 export async function explainCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: ExplainCodeOutput | null, error: string | null }> {
-    return handleFormAction(explainCode, prevState, formData);
+    try {
+        const result = await explainCode({
+            code: formData.get('code') as string,
+            language: formData.get('language') as string,
+        });
+        return createResponse(result)(prevState);
+    } catch (e: any) {
+        return createResponse(null, e.message || "An unknown error occurred.")(prevState);
+    }
 }
 
 export async function debugCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: DebugCodeOutput | null, error: string | null }> {
-    return handleFormAction(debugCode, prevState, formData);
+    try {
+        const result = await debugCode({
+            code: formData.get('code') as string,
+            language: formData.get('language') as string,
+        });
+        return createResponse(result)(prevState);
+    } catch (e: any) {
+        return createResponse(null, e.message || "An unknown error occurred.")(prevState);
+    }
 }
 
 export async function refactorCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null }> {
-    return handleFormAction(refactorCode, prevState, formData);
+     try {
+        const result = await refactorCode({
+            prompt: formData.get('prompt') as string,
+            code: formData.get('code') as string,
+            language: formData.get('language') as string,
+        });
+        return createResponse(result)(prevState);
+    } catch (e: any) {
+        return createResponse(null, e.message || "An unknown error occurred.")(prevState);
+    }
 }
 
 // Re-export original functions for potential direct server-side use
