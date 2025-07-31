@@ -25,13 +25,6 @@ const nextConfig = {
   },
   devIndicators: {
     allowedDevOrigins: ['*'],
-  },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.externals.push('@opentelemetry/instrumentation');
-      config.externals.push('require-in-the-middle');
-    }
-    return config;
   }
 };
 
