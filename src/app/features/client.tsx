@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardTitle, CardDescription, CardHeader, CardFooter } from '@/components/ui/card';
@@ -49,83 +49,44 @@ const AnimatedText = ({ text, el: Wrapper = 'p', className, stagger = 0.02, once
     );
 };
 
-const StickyScrollSection = () => {
-  const targetRef = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ['start start', 'end end'],
-  });
+const FeatureShowcase = ({ title, description, icon: Icon, videoId, imagePosition = 'left' }: {
+    title: string,
+    description: string,
+    icon: React.ElementType,
+    videoId: string,
+    imagePosition?: 'left' | 'right'
+}) => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-  const features = [
-    { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw?playlist=wLiwRGYaVnw' },
-    { title: "IA au coeur du système", description: "Oria, notre assistant IA, est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: BrainCircuit, videoId: 'crtsXQdtqbw?playlist=crtsXQdtqbw' },
-    { title: "Performances sans précédent", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite pleinement la puissance de votre Station X-1 pour des rendus et des compilations ultra-rapides.", icon: Zap, videoId: 'YUEb23FQVhA?playlist=YUEb23FQVhA' },
-    { title: "Gestion de fichiers unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys?playlist=ozGQ2q4l4ys' },
-  ];
-  
-  const cardOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
-  const cardScale = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0.8, 1, 1, 0.9]);
-  const activeFeatureIndex = useTransform(scrollYProgress, [0, 0.99], [0, features.length - 1]);
-
-
-  return (
-    <div ref={targetRef} className="h-[400vh] relative">
-      <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
-        <motion.div style={{ opacity: cardOpacity, scale: cardScale }} className="w-full h-full flex items-center justify-center">
-            <AnimatePresence mode="wait">
-              {features.map((feature, i) => {
-                return (
-                  <motion.div
-                    key={i}
-                    className="absolute w-full h-full"
-                    initial={{ opacity: 0, zIndex: 0 }}
-                    animate={{ 
-                      opacity: Math.round(activeFeatureIndex.get()) === i ? 1 : 0, 
-                      zIndex: Math.round(activeFeatureIndex.get()) === i ? 1 : 0
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                     <div className="relative w-[80%] h-[80%] max-w-6xl aspect-video mx-auto my-auto top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl overflow-hidden glass-card p-2">
-                        <iframe
-                            src={`https://www.youtube.com/embed/${feature.videoId}&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&autohide=1&wmode=transparent`}
-                            title={feature.title}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="w-full h-full rounded-lg"
-                        ></iframe>
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </AnimatePresence>
+    return (
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 50 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center"
+        >
+            <div className={cn("relative aspect-video rounded-2xl overflow-hidden glass-card p-2", imagePosition === 'right' && 'md:order-2')}>
+                 <iframe
+                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId.split('?')[0]}&controls=0&showinfo=0&autohide=1&wmode=transparent`}
+                    title={title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full rounded-lg"
+                ></iframe>
+            </div>
+            <div className={cn("space-y-4", imagePosition === 'right' && 'md:order-1')}>
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20">
+                    <Icon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="text-3xl font-bold">{title}</h3>
+                <p className="text-lg text-muted-foreground">{description}</p>
+            </div>
         </motion.div>
-        
-        <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-8 pointer-events-none">
-            {features.map((feature, i) => {
-                const start = i * 0.25;
-                const end = start + 0.25;
-                const featureOpacity = useTransform(scrollYProgress, [start - 0.1, start, end, end + 0.1], [0, 1, 1, 0]);
-                const featureY = useTransform(scrollYProgress, [start - 0.1, start], [50, 0]);
-
-                return (
-                    <motion.div 
-                        key={i} 
-                        style={{ opacity: featureOpacity, y: featureY }}
-                        className="flex flex-col items-center justify-center text-center p-6 bg-background/50 backdrop-blur-md rounded-2xl border border-white/10"
-                    >
-                        <feature.icon className="h-10 w-10 text-primary mb-4"/>
-                        <h3 className="text-xl font-bold">{feature.title}</h3>
-                        <p className="text-muted-foreground mt-2">{feature.description}</p>
-                    </motion.div>
-                );
-            })}
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
-
 
 const productRange = [
     {
@@ -149,6 +110,13 @@ const productRange = [
 ]
 
 export default function FeaturesClient() {
+  const features = [
+    { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw?playlist=wLiwRGYaVnw' },
+    { title: "IA au coeur du système", description: "Oria, notre assistant IA, est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: BrainCircuit, videoId: 'crtsXQdtqbw?si=x8dMhB8SXvOxsa2l' },
+    { title: "Performances sans précédent", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite pleinement la puissance de votre Station X-1 pour des rendus et des compilations ultra-rapides.", icon: Zap, videoId: 'YUEb23FQVhA?playlist=YUEb23FQVhA' },
+    { title: "Gestion de fichiers unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys?playlist=ozGQ2q4l4ys' },
+  ];
+
   return (
     <>
       <div className="relative h-screen">
@@ -164,7 +132,17 @@ export default function FeaturesClient() {
           </div>
       </div>
       
-      <StickyScrollSection />
+       <Section>
+        <div className="space-y-24 md:space-y-32">
+          {features.map((feature, i) => (
+            <FeatureShowcase
+              key={i}
+              {...feature}
+              imagePosition={i % 2 === 0 ? 'left' : 'right'}
+            />
+          ))}
+        </div>
+      </Section>
 
       <Section>
         <div className="text-center">
