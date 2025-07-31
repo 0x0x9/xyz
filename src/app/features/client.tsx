@@ -5,7 +5,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Cpu, Zap, Layers, Folder, Check, ArrowRight, Sparkles } from 'lucide-react';
+import { Cpu, Zap, Layers, Folder, Check, ArrowRight, Sparkles, Users } from 'lucide-react';
 import Link from 'next/link';
 
 const features = [
@@ -24,7 +24,7 @@ function StickyScrollSection() {
 
     const numFeatures = features.length;
     const activeCardIndex = useTransform(scrollYProgress, (pos) => {
-        return Math.floor(pos * numFeatures);
+        return Math.min(Math.floor(pos * numFeatures), numFeatures - 1);
     });
 
     return (
@@ -32,7 +32,6 @@ function StickyScrollSection() {
             <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
                 <AnimatePresence mode="wait">
                     {features.map((feature, i) => {
-                        // Check if the current card is the active one
                         if (i === activeCardIndex.get()) {
                             return (
                                 <motion.div
@@ -218,5 +217,3 @@ const Section = ({ children, className }: { children: React.ReactNode, className
       {children}
     </section>
   );
-
-```
