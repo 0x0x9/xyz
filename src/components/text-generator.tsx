@@ -1,8 +1,9 @@
 
 'use client';
 
-import { useEffect, useRef, useState, useActionState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useFormState, useFormStatus } from 'react-dom';
 import { generateTextAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,7 +13,6 @@ import { LoadingState } from './loading-state';
 import AiLoadingAnimation from './ui/ai-loading-animation';
 import { uploadDocumentAction } from '@/app/actions';
 import { useNotifications } from '@/hooks/use-notifications';
-import { useFormStatus } from 'react-dom';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -167,7 +167,7 @@ export default function TextGenerator({ initialText, prompt }: { initialText?: s
     }
   }
 
-  const [state, dispatch] = useActionState(formAction, initialState);
+  const [state, dispatch] = useFormState(formAction, initialState);
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   const { addNotification } = useNotifications();

@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useActionState, useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useFormStatus } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 import { generateCodeAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -251,7 +251,7 @@ export default function CodeGenerator({ initialResult, prompt, language }: { ini
         }
     }
 
-    const [state, dispatch] = useActionState(formAction, initialState);
+    const [state, dispatch] = useFormState(formAction, initialState);
     const { toast } = useToast();
     const { addNotification } = useNotifications();
 

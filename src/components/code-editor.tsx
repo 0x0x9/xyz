@@ -1,13 +1,13 @@
 
 'use client';
 
-import { useState, useCallback, useEffect, useMemo, useRef, useActionState } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import CodeMirror from '@uiw/react-codemirror';
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import { EditorView } from '@codemirror/view';
-import { useFormStatus } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 
 import { cn } from '@/lib/utils';
 import DocManager from './doc-manager';
@@ -72,7 +72,7 @@ const makeTransparent = EditorView.theme({
 const FrameGeneratorPanel = ({ onProjectGenerated }: { onProjectGenerated: (codes: { html: string; css: string; js: string }) => void }) => {
     const { toast } = useToast();
     const initialState = { message: '', error: '', id: 0, result: null };
-    const [state, formAction] = useActionState(generateFrameAction, initialState);
+    const [state, formAction] = useFormState(generateFrameAction, initialState);
     const [imageDataUri, setImageDataUri] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
@@ -194,9 +194,9 @@ const FileBasedEditor = ({
     const { theme } = useTheme();
     const { toast } = useToast();
     
-    const [refactorState, refactorFormAction] = useActionState(refactorCodeAction, { id: 0, result: null, error: null });
-    const [debugState, debugFormAction] = useActionState(debugCodeAction, { id: 0, result: null, error: null });
-    const [explainState, explainFormAction] = useActionState(explainCodeAction, { id: 0, result: null, error: null });
+    const [refactorState, refactorFormAction] = useFormState(refactorCodeAction, { id: 0, result: null, error: null });
+    const [debugState, debugFormAction] = useFormState(debugCodeAction, { id: 0, result: null, error: null });
+    const [explainState, explainFormAction] = useFormState(explainCodeAction, { id: 0, result: null, error: null });
     
     const language = useMemo(() => {
         if (activeFile) {

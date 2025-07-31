@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState, useActionState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
 import { generateVoiceAction } from '@/app/actions';
@@ -178,7 +178,7 @@ export default function VoiceGenerator({ initialText, initialAudioDataUri, promp
     }
   }
 
-  const [state, dispatch] = useActionState(formAction, initialState);
+  const [state, dispatch] = useFormState(formAction, initialState);
   const { toast } = useToast();
   const { addNotification } = useNotifications();
 
