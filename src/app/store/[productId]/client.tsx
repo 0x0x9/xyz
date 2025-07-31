@@ -24,10 +24,10 @@ export default function ProductClient({ product, relatedProducts }: { product: P
     const handleAddToCart = () => {
         const productToAdd = {
             ...product,
-            image: activeImage, // Use the active image for the cart
-            price: totalPrice, // Use the configured price
+            price: totalPrice,
             name: configuration ? `${product.name} (Configuré)` : product.name,
             configuration: configuration ?? undefined,
+            image: activeImage,
         };
         addItem(productToAdd);
         toast({
