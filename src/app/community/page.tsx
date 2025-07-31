@@ -1,25 +1,28 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Users, MessageSquare, Lightbulb } from "lucide-react";
+import { ArrowRight, Users, MessageSquare, BookOpen } from "lucide-react";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const features = [
   {
     icon: <MessageSquare className="h-8 w-8 text-accent" />,
-    title: "Discussions Enrichissantes",
-    description: "Participez à des conversations sur les dernières tendances, les techniques et les défis du monde créatif."
+    title: "Forum d'entraide",
+    description: "Participez à des conversations, posez des questions et partagez vos connaissances avec des créatifs du monde entier.",
+    href: "/forum"
+  },
+  {
+    icon: <BookOpen className="h-8 w-8 text-accent" />,
+    title: "Blog (X)press",
+    description: "Plongez au coeur de l'écosystème avec nos tutoriels, analyses et interviews d'artistes.",
+    href: "/blog"
   },
   {
     icon: <Users className="h-8 w-8 text-accent" />,
-    title: "Collaborations & Opportunités",
-    description: "Trouvez des partenaires pour vos projets, partagez vos offres de services ou découvrez de nouvelles missions."
-  },
-  {
-    icon: <Lightbulb className="h-8 w-8 text-accent" />,
-    title: "Partage & Inspiration",
-    description: "Montrez vos dernières créations, recevez des retours constructifs et inspirez-vous du travail des autres membres."
+    title: "Collaborations",
+    description: "Trouvez des partenaires pour vos projets, partagez vos offres de services ou découvrez de nouvelles missions.",
+    href: "/forum"
   }
 ];
 
@@ -36,27 +39,29 @@ const CommunityPage = () => {
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               Un espace d'échange, de collaboration et d'inspiration pour les créatifs qui repoussent les limites.
             </p>
-            <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg rounded-full">
-              <Link href="/forum">
-                Accéder au Forum <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
           </div>
         </section>
 
         <section className="container mx-auto px-4 md:px-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {features.map(feature => (
-                    <Card key={feature.title} className="glass-card text-center">
+                    <Card key={feature.title} className="glass-card text-center flex flex-col">
                         <CardHeader>
                             <div className="mx-auto w-16 h-16 rounded-xl bg-accent/10 flex items-center justify-center border border-accent/20 mb-4">
                                 {feature.icon}
                             </div>
                             <CardTitle>{feature.title}</CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">{feature.description}</p>
+                        <CardContent className="flex-grow">
+                            <CardDescription>{feature.description}</CardDescription>
                         </CardContent>
+                        <div className="p-6 pt-0">
+                           <Button asChild variant="outline">
+                                <Link href={feature.href}>
+                                    Explorer <ArrowRight className="ml-2 h-4 w-4" />
+                                </Link>
+                            </Button>
+                        </div>
                     </Card>
                 ))}
             </div>

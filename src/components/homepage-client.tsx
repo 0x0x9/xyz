@@ -222,12 +222,12 @@ const toolCategories = [
 
 const ecosystemLinks = [
     { 
-        title: "Blog (X)press", 
-        description: "Tutoriels, analyses et inspiration pour repousser vos limites.", 
-        href: "/blog",
-        icon: BookOpen,
-        image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=800&q=80",
-        imageHint: "reading book"
+        title: "Communauté", 
+        description: "Échangez avec d'autres créatifs sur le forum et découvrez les dernières actualités sur le blog.", 
+        href: "/community",
+        icon: Users,
+        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+        imageHint: "creative team meeting"
     },
     { 
         title: "Galerie (X)hibit", 
@@ -241,9 +241,9 @@ const ecosystemLinks = [
         title: "Rejoignez l'équipe", 
         description: "Nous recherchons des talents passionnés pour façonner le futur avec nous.", 
         href: "/careers",
-        icon: Users,
-        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
-        imageHint: "creative team meeting"
+        icon: Sparkles,
+        image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=800&q=80",
+        imageHint: "person working on laptop"
     },
 ];
 

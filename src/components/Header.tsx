@@ -40,6 +40,8 @@ import {
   Download,
   Apple,
   Terminal,
+  MessageSquare,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -59,11 +61,14 @@ import {
 
 const navLinks = [
   { href: "/store", label: "Boutique" },
-  { href: "/blog", label: "Blog" },
   { href: "/gallery", label: "Galerie" },
-  { href: "/community", label: "Communauté" },
   { href: "/careers", label: "Carrières" },
 ];
+
+const communityLinks = [
+    { href: "/forum", label: "Forum", icon: MessageSquare, description: "Échangez avec d'autres créatifs." },
+    { href: "/blog", label: "Blog (X)press", icon: BookOpen, description: "Tutoriels, analyses et inspiration." },
+]
 
 const toolCategories = [
   {
@@ -311,6 +316,51 @@ export function Header() {
                 variant="ghost"
                 className="text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full h-9 px-4"
               >
+                Communauté <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuPrimitive.Trigger>
+            <DropdownMenuPrimitive.Portal>
+              <DropdownMenuPrimitive.Content
+                align="center"
+                sideOffset={10}
+                className="w-80 glass-card p-2 z-50 outline-none"
+              >
+                 <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                    {communityLinks.map((link) => (
+                         <DropdownMenuPrimitive.Item asChild key={link.href}>
+                          <Link
+                            href={link.href}
+                            className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none"
+                          >
+                            <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
+                              <link.icon className="h-5 w-5 text-accent" />
+                            </div>
+                            <div>
+                              <p className="font-semibold text-foreground text-sm">
+                                {link.label}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {link.description}
+                              </p>
+                            </div>
+                          </Link>
+                        </DropdownMenuPrimitive.Item>
+                    ))}
+                </motion.div>
+              </DropdownMenuPrimitive.Content>
+            </DropdownMenuPrimitive.Portal>
+          </DropdownMenuPrimitive.Root>
+          <DropdownMenuPrimitive.Root>
+            <DropdownMenuPrimitive.Trigger asChild>
+              <Button
+                variant="ghost"
+                className="text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full h-9 px-4"
+              >
                 Outils <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuPrimitive.Trigger>
@@ -436,6 +486,30 @@ export function Header() {
                     Télécharger <Download className="ml-2 h-6 w-6" />
                   </Link>
                   <Accordion type="multiple" className="w-full pt-4">
+                    <AccordionItem value="community" className="border-b-0">
+                      <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
+                        Communauté
+                      </AccordionTrigger>
+                      <AccordionContent className="pl-4">
+                         <div className="flex flex-col gap-1">
+                            {communityLinks.map((link) => (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    onClick={() => setIsSheetOpen(false)}
+                                    className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors"
+                                >
+                                    <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
+                                        <link.icon className="h-5 w-5 text-accent" />
+                                    </div>
+                                    <span className="text-lg font-medium">
+                                        {link.label}
+                                    </span>
+                                </Link>
+                            ))}
+                         </div>
+                      </AccordionContent>
+                    </AccordionItem>
                     <AccordionItem value="tools" className="border-b-0">
                       <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
                         Outils
