@@ -11,10 +11,10 @@ const ForumPage = () => {
         <section className="container mx-auto px-4 md:px-6 py-28 md:py-36">
           <div className="text-center space-y-4 mb-16">
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-              Forum de la Communauté
+              Forum & Collaborations
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Échangez, partagez vos créations et collaborez avec d'autres passionnés.
+              Échangez, partagez vos créations, trouvez des freelances et collaborez avec d'autres passionnés.
             </p>
           </div>
           <ForumClient />

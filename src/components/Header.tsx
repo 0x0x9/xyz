@@ -42,6 +42,7 @@ import {
   Terminal,
   MessageSquare,
   BookOpen,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -66,7 +67,7 @@ const navLinks = [
 ];
 
 const communityLinks = [
-    { href: "/forum", label: "Forum", icon: MessageSquare, description: "Échangez avec d'autres créatifs." },
+    { href: "/forum", label: "Forum & Collaborations", icon: Users, description: "Échangez, trouvez des freelances et collaborez." },
     { href: "/blog", label: "Blog (X)press", icon: BookOpen, description: "Tutoriels, analyses et inspiration." },
 ]
 
@@ -132,6 +133,12 @@ const toolCategories = [
         label: "(X)agenda",
         icon: Calendar,
         description: "Planifiez vos événements avec l'IA.",
+      },
+      {
+        href: "/nexus",
+        label: "(X)nexus",
+        icon: Network,
+        description: "Déployez vos idées en cartes mentales visuelles.",
       },
     ],
   },
