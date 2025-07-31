@@ -110,25 +110,25 @@ const StickyScrollSection = () => {
 const productRange = [
     {
         greek: "Ω",
-        name: "oméga",
+        name: "(X)-oméga",
         price: "1 999 €",
         features: ["(X)OS complet", "Dual-OS Windows/macOS", "32 Go RAM", "1 To SSD", "(X)Cloud inclus"]
     },
      {
         greek: "α",
-        name: "alpha",
+        name: "(X)-alpha",
         price: "2 999 €",
         features: ["(X)OS Pro", "Triple-OS + Linux", "64 Go RAM", "2 To SSD", "(X)AI intégré"]
     },
     {
         greek: "φ",
-        name: "fi",
+        name: "(X)-fi",
         price: "4 499 €",
         features: ["(X)OS Studio", "Multi-GPU dédié", "128 Go RAM", "4 To SSD", "Support prioritaire"]
     },
     {
         greek: "👁️",
-        name: "(X)Vision",
+        name: "(X)-Vision",
         price: "1 899 €",
         features: ["Spécialisé création visuelle", "Écrans 5K intégrés", "GPU créatif optimisé", "Calibration colorimétrique", "(X)AI Vision"]
     }
@@ -137,7 +137,6 @@ const productRange = [
 export default function FeaturesClient() {
   return (
     <>
-      {/* Hero Section */}
       <div className="relative h-screen">
           <div className="absolute inset-0">
              <video autoPlay loop muted playsInline className="w-full h-full object-cover" poster="https://images.unsplash.com/photo-1618423484838-b7a4aa4d8523?auto=format&fit=crop&w=1600&q=80">
@@ -151,10 +150,8 @@ export default function FeaturesClient() {
           </div>
       </div>
       
-      {/* Sticky Scroll Section */}
       <StickyScrollSection />
 
-      {/* Highlights Section */}
       <Section>
         <div className="text-center">
           <AnimatedText text="Créativité sans limites." el="h2" className="section-title" />
@@ -179,7 +176,6 @@ export default function FeaturesClient() {
         </div>
       </Section>
       
-      {/* Product Range Section */}
        <Section>
             <div className="text-center">
                 <AnimatedText text="Explorez la gamme." el="h2" className="section-title" />
@@ -193,24 +189,26 @@ export default function FeaturesClient() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 0.5, delay: i * 0.1 }}
+                        className="h-full"
                     >
-                         <Card className="ecosystem-card flex flex-col h-full">
-                            <CardHeader className="p-0 mb-4">
-                                <div className="product-greek mx-auto text-5xl font-light text-muted-foreground">{product.greek}</div>
-                                <CardTitle className="text-2xl">{product.name}</CardTitle>
-                                <CardDescription className="text-primary font-semibold">À partir de {product.price}</CardDescription>
+                         <Card className="flex flex-col h-full text-center p-8 bg-card/50 dark:bg-card/20 border-border/50 hover:border-primary/30 hover:-translate-y-2 transition-all duration-300 relative group overflow-hidden">
+                             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                            <CardHeader className="p-0 mb-6">
+                                <div className="mx-auto text-5xl font-light text-muted-foreground mb-4">{product.greek}</div>
+                                <CardTitle className="text-3xl font-bold">{product.name}</CardTitle>
+                                <CardDescription className="text-primary font-semibold mt-1">{product.price}</CardDescription>
                             </CardHeader>
                             <CardContent className="p-0 flex-grow">
-                                <ul className="space-y-2 text-muted-foreground text-sm">
+                                <ul className="space-y-3 text-muted-foreground">
                                     {product.features.map(feat => (
-                                        <li key={feat} className="flex items-center gap-2">
-                                            <Check className="h-4 w-4 text-green-500" />
-                                            <span>{feat}</span>
+                                        <li key={feat} className="flex items-center gap-3 text-sm">
+                                            <Check className="h-4 w-4 text-green-500 shrink-0" />
+                                            <span className="text-left">{feat}</span>
                                         </li>
                                     ))}
                                 </ul>
                             </CardContent>
-                            <CardFooter className="p-0 mt-6">
+                            <CardFooter className="p-0 mt-8">
                                 <Button asChild className="w-full">
                                     <Link href="/store">Choisir</Link>
                                 </Button>
@@ -233,10 +231,10 @@ export default function FeaturesClient() {
             viewport={{ once: true }}
           >
               <Button size="lg" asChild className="rounded-full text-lg">
-                <a href="/download">Télécharger (X)OS</a>
+                <Link href="/download">Télécharger (X)OS</Link>
               </Button>
               <Button size="lg" variant="outline" asChild className="rounded-full text-lg">
-                <a href="/hardware">Explorer la Station X-1</a>
+                <Link href="/hardware">Explorer la Station X-1</Link>
               </Button>
           </motion.div>
       </Section>
