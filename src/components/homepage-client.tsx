@@ -14,7 +14,7 @@ import {
   Calendar, 
   Network, 
   Film, 
-  Image as ImageIcon, 
+  Image as ImageIconLucide, 
   AudioLines, 
   FileText, 
   Guitar, 
@@ -34,7 +34,6 @@ import HomepageOriaChat from '@/components/homepage-oria';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
-
 function AnimatedSection({ children, className }: { children: React.ReactNode, className?: string }) {
     const ref = useRef(null);
      const { scrollYProgress } = useScroll({
@@ -49,47 +48,59 @@ function AnimatedSection({ children, className }: { children: React.ReactNode, c
     )
 }
 
-function FeatureShowcase({ title, description, buttonText, buttonHref, videoId, imagePosition = 'left' }: {
+function ImmersiveFeatureSection({ title, description, buttonText, buttonHref, videoId, icon: Icon }: {
     title: string,
     description: string,
     buttonText: string,
     buttonHref: string,
     videoId: string,
-    imagePosition?: 'left' | 'right'
+    icon: React.ElementType
 }) {
-    const Icon = buttonHref === '/welcome' ? Sparkles : Cpu;
+    const targetRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: targetRef,
+        offset: ['start end', 'end start'],
+    });
+
+    const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.3]);
+    const contentOpacity = useTransform(scrollYProgress, [0.1, 0.4, 0.8, 1], [0, 1, 1, 0]);
+    const contentY = useTransform(scrollYProgress, [0.1, 0.4], [50, 0]);
 
     return (
-        <AnimatedSection>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div className={cn("relative aspect-video lg:aspect-square rounded-2xl overflow-hidden glass-card", imagePosition === 'right' && 'lg:order-2')}>
-                     <iframe
+        <div ref={targetRef} className="h-[120vh] relative">
+            <div className="sticky top-0 h-screen w-full overflow-hidden">
+                <motion.div style={{ scale: videoScale }} className="absolute inset-0">
+                    <iframe
                         src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId.split('?')[0]}&controls=0&showinfo=0&autohide=1&wmode=transparent`}
                         title={title}
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover scale-[1.5]"
                     ></iframe>
-                </div>
-                 <div className="space-y-6">
-                     <h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+                    <div className="absolute inset-0 bg-black/50"></div>
+                </motion.div>
+                <motion.div 
+                    style={{ opacity: contentOpacity, y: contentY }}
+                    className="relative z-10 h-full flex flex-col justify-center items-center text-center text-white px-8"
+                >
+                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 [text-shadow:0_4px_20px_rgba(0,0,0,0.5)]">
                        {title}
                     </h2>
-                    <p className="text-lg md:text-xl text-muted-foreground">
+                    <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
                         {description}
                     </p>
-                     <div className="pt-2">
+                    <div className="pt-8">
                         <Button size="lg" asChild className="rounded-full text-lg">
                             <Link href={buttonHref}>
                                 {buttonText} <Icon className="ml-2 h-5 w-5" />
                             </Link>
                         </Button>
                     </div>
-                </div>
+                </motion.div>
             </div>
-        </AnimatedSection>
-    )
+        </div>
+    );
 }
 
 const toolCategories = [
@@ -151,7 +162,7 @@ const toolCategories = [
         title: 'Image',
         description: 'Créez des visuels uniques à partir de mots.',
         href: '/xos?open=image',
-        icon: ImageIcon,
+        icon: ImageIconLucide,
       },
       {
         title: '(X)voice',
@@ -255,8 +266,8 @@ const HomePageClient = () => {
   return (
     <>
       <Header />
-      <main className="flex-1 container mx-auto px-4 md:px-6 py-24 md:py-32">
-        <section className="text-center mb-16">
+      <main>
+        <section className="container mx-auto px-4 md:px-6 py-36 md:py-48 text-center">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70 mb-6">
             Votre écosystème créatif. <br />
             <span className="text-accent">Unifié par l'IA.</span>
@@ -268,26 +279,24 @@ const HomePageClient = () => {
           <HomepageOriaChat />
         </section>
 
-        <section className="space-y-24 md:space-y-36 my-24 md:my-32">
-            <FeatureShowcase 
-                title="(X)OS : Le cœur de votre créativité."
-                description="Ce n'est pas un système d'exploitation. C'est une extension de votre imagination, un environnement unifié où tous vos outils et idées convergent. Disponible sur notre matériel dédié et en ligne, partout."
-                buttonText="Découvrir (X)OS"
-                buttonHref="/welcome"
-                videoId="9Ks_dCYhX4o"
-                imagePosition="left"
-            />
-             <FeatureShowcase 
-                title="Station X-1 : La puissance incarnée."
-                description="La performance n'est que le début. La Station X-1 est conçue pour une synergie parfaite avec (X)OS, libérant une puissance de calcul et une fluidité sans précédent pour les workflows les plus exigeants."
-                buttonText="Explorer le matériel"
-                buttonHref="/hardware"
-                videoId="ozGQ2q4l4ys"
-                imagePosition="right"
-            />
-        </section>
+        <ImmersiveFeatureSection
+            title="(X)OS : Le cœur de votre créativité."
+            description="Ce n'est pas un système d'exploitation. C'est une extension de votre imagination, un environnement unifié où tous vos outils et idées convergent."
+            buttonText="Découvrir (X)OS"
+            buttonHref="/welcome"
+            videoId="9Ks_dCYhX4o"
+            icon={Sparkles}
+        />
+        <ImmersiveFeatureSection
+            title="Station X-1 : La puissance incarnée."
+            description="La performance n'est que le début. La Station X-1 est conçue pour une synergie parfaite avec (X)OS, libérant une puissance de calcul et une fluidité sans précédent."
+            buttonText="Explorer le matériel"
+            buttonHref="/hardware"
+            videoId="ozGQ2q4l4ys"
+            icon={Cpu}
+        />
 
-        <section id="tools" className="my-24 md:my-32">
+        <section id="tools" className="my-24 md:my-32 container mx-auto px-4 md:px-6">
           <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold">Découvrez nos outils</h2>
               <p className="max-w-2xl mx-auto text-md text-muted-foreground mt-2">
@@ -344,7 +353,7 @@ const HomePageClient = () => {
           </div>
         </section>
 
-        <section id="community-hub" className="my-24 md:my-32">
+        <section id="community-hub" className="my-24 md:my-32 container mx-auto px-4 md:px-6">
             <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-bold">Plus qu'une plateforme, une communauté.</h2>
                 <p className="max-w-2xl mx-auto text-md text-muted-foreground mt-2">
@@ -378,7 +387,7 @@ const HomePageClient = () => {
             </div>
         </section>
 
-        <section id="demo" className="mt-24">
+        <section id="demo" className="mt-24 container mx-auto px-4 md:px-6">
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold">La création, réinventée.</h2>
             <p className="max-w-2xl mx-auto text-md text-muted-foreground mt-2">
