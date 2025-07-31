@@ -25,7 +25,13 @@ const nextConfig = {
   },
   devIndicators: {
     allowedDevOrigins: ['*'],
-  }
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = [...config.externals, 'handlebars'];
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;
