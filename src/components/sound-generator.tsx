@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -40,7 +41,7 @@ function ResultsDisplay({ result, onReset }: { result: GenerateSoundOutput, onRe
         if (!result.audioDataUri) return;
         setIsSaving(true);
         try {
-            const fileName = `sound-${Date.now()}.wav`;
+            const fileName = `sounds/sound-${Date.now()}.wav`;
             await uploadDocumentAction({ name: fileName, content: result.audioDataUri, mimeType: 'audio/wav' });
             toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)cloud.` });
         } catch (error: any) {

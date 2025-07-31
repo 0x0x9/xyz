@@ -6,11 +6,14 @@
 
 import { z } from 'zod';
 
-// From: src/ai/flows/debug-code.ts
-export const DebugCodeInputSchema = z.object({
-  code: z.string().describe("Le code à débugger."),
+// Shared base for code-related schemas
+const CodeInputBaseSchema = z.object({
   language: z.string().describe("Le langage de programmation du code."),
+  code: z.string().describe("Le bloc de code à analyser ou modifier."),
 });
+
+// From: src/ai/flows/debug-code.ts
+export const DebugCodeInputSchema = CodeInputBaseSchema;
 export type DebugCodeInput = z.infer<typeof DebugCodeInputSchema>;
 
 export const DebugCodeOutputSchema = z.object({
@@ -21,10 +24,7 @@ export type DebugCodeOutput = z.infer<typeof DebugCodeOutputSchema>;
 
 
 // From: src/ai/flows/explain-code.ts
-export const ExplainCodeInputSchema = z.object({
-  code: z.string().describe("L'extrait de code à expliquer."),
-  language: z.string().describe("Le langage de programmation du code."),
-});
+export const ExplainCodeInputSchema = CodeInputBaseSchema;
 export type ExplainCodeInput = z.infer<typeof ExplainCodeInputSchema>;
 
 export const ExplainCodeOutputSchema = z.object({
@@ -33,13 +33,17 @@ export const ExplainCodeOutputSchema = z.object({
 export type ExplainCodeOutput = z.infer<typeof ExplainCodeOutputSchema>;
 
 
-// From: src/ai/flows/generate-code.ts
+// From: src/ai/flows/generate-code.ts & refactor-code.ts
 export const GenerateCodeInputSchema = z.object({
   prompt: z.string().describe("La requête de l'utilisateur pour un extrait de code."),
   language: z.string().describe("Le langage de programmation pour l'extrait de code (ex: 'typescript', 'python')."),
-  code: z.string().optional().describe("Le code existant à refactoriser ou sur lequel baser la génération."),
 });
 export type GenerateCodeInput = z.infer<typeof GenerateCodeInputSchema>;
+
+export const RefactorCodeInputSchema = CodeInputBaseSchema.extend({
+    prompt: z.string().describe("Les instructions pour la refactorisation."),
+});
+export type RefactorCodeInput = z.infer<typeof RefactorCodeInputSchema>;
 
 export const GenerateCodeOutputSchema = z.object({
   code: z.string().describe("L'extrait de code généré, formaté dans un bloc markdown."),
@@ -412,7 +416,7 @@ export type CopilotLyricsOutput = z.infer<typeof CopilotLyricsOutputSchema>;
 // From: src/ai/flows/oria-chat.ts
 export const OriaHistoryMessageSchema = z.object({
   role: z.enum(['user', 'model']),
-  content: z.string().describe("Le contenu textuel du message. Pour les réponses du modèle avec des données structurées, ce sera une chaîne JSON."),
+  content: z.string().describe("Le contenu textuel du message."),
 });
 export type OriaHistoryMessage = z.infer<typeof OriaHistoryMessageSchema>;
 

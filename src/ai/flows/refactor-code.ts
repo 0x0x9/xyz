@@ -9,9 +9,9 @@
 
 import { ai } from '@/ai/genkit';
 import {
-  GenerateCodeInputSchema as RefactorCodeInputSchema,
+  RefactorCodeInputSchema,
   GenerateCodeOutputSchema as RefactorCodeOutputSchema,
-  type GenerateCodeInput as RefactorCodeInput,
+  type RefactorCodeInput,
   type GenerateCodeOutput as RefactorCodeOutput,
 } from '@/ai/types';
 

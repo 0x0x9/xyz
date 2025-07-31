@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
-import { generateDeckAction, generateImageAction } from '@/app/actions';
+import { generateDeckAction, generateImageAction, uploadDocumentAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,11 +14,8 @@ import type { GenerateDeckOutput, DeckSlide } from '@/ai/types';
 import { LoadingState } from './loading-state';
 import AiLoadingAnimation from './ui/ai-loading-animation';
 import Image from 'next/image';
-import { httpsCallable } from 'firebase/functions';
-import { functions } from '@/lib/firebase';
 import { useNotifications } from '@/hooks/use-notifications';
 import { Skeleton } from './ui/skeleton';
-import { uploadDocumentAction } from '@/app/actions';
 
 
 type SlideWithImage = DeckSlide & { imageUrl?: string; isLoadingImage: boolean };
@@ -79,11 +76,11 @@ function ResultsDisplay({ result, slidesWithImages, onReset }: { result: Generat
 
     const handleDownload = () => {
         const markdown = formatDeckAsMarkdown(result);
-        const blob = new Blob([markdown], { type: 'text/markdown' });
+        const blob = new Blob([markdown], { type: 'text/markdown;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `deck-${result.title.replace(/\s+/g, '_') || 'presentation'}.md`;
+        link.download = `deck-${result.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_') || 'presentation'}.md`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -94,7 +91,7 @@ function ResultsDisplay({ result, slidesWithImages, onReset }: { result: Generat
         setIsSaving(true);
         try {
             const markdownContent = formatDeckAsMarkdown(result);
-            const fileName = `deck-${result.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_') || 'presentation'}.md`;
+            const fileName = `decks/deck-${result.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_') || 'presentation'}.md`;
             const dataUri = `data:text/markdown;base64,${btoa(unescape(encodeURIComponent(markdownContent)))}`;
             
             await uploadDocumentAction({ name: fileName, content: dataUri, mimeType: 'text/markdown' });

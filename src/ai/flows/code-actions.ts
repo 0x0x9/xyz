@@ -12,7 +12,11 @@ import { debugCode } from './debug-code';
 import { refactorCode } from './refactor-code';
 import type { GenerateCodeOutput, ExplainCodeOutput, DebugCodeOutput, RefactorCodeInput } from '@/ai/types';
 
-// Re-exporting flows wrapped in server actions compatible with useFormState
+const createErrorResponse = (e: any, id: number) => {
+    const errorMessage = e.message || "An unknown error occurred.";
+    console.error("AI Action Error:", errorMessage);
+    return { id: id + 1, result: null, error: errorMessage };
+}
 
 export async function generateCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null }> {
     try {
@@ -22,7 +26,7 @@ export async function generateCodeAction(prevState: any, formData: FormData): Pr
         });
         return { id: prevState.id + 1, result, error: null };
     } catch (e: any) {
-        return { id: prevState.id + 1, result: null, error: e.message || "An unknown error occurred." };
+        return createErrorResponse(e, prevState.id);
     }
 }
 
@@ -34,7 +38,7 @@ export async function explainCodeAction(prevState: any, formData: FormData): Pro
         });
         return { id: prevState.id + 1, result, error: null };
     } catch (e: any) {
-        return { id: prevState.id + 1, result: null, error: e.message || "An unknown error occurred." };
+        return createErrorResponse(e, prevState.id);
     }
 }
 
@@ -46,7 +50,7 @@ export async function debugCodeAction(prevState: any, formData: FormData): Promi
         });
         return { id: prevState.id + 1, result, error: null };
     } catch (e: any) {
-        return { id: prevState.id + 1, result: null, error: e.message || "An unknown error occurred." };
+        return createErrorResponse(e, prevState.id);
     }
 }
 
@@ -59,7 +63,7 @@ export async function refactorCodeAction(prevState: any, formData: FormData): Pr
         } as RefactorCodeInput);
         return { id: prevState.id + 1, result, error: null };
     } catch (e: any) {
-        return { id: prevState.id + 1, result: null, error: e.message || "An unknown error occurred." };
+        return createErrorResponse(e, prevState.id);
     }
 }
 
