@@ -1,4 +1,4 @@
-import { genkit } from 'genkit';
+import { genkit, configureGenkit } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
 import { firebase } from '@genkit-ai/firebase';
 
@@ -9,6 +9,8 @@ if (!process.env.GOOGLE_API_KEY) {
   );
 }
 
-export const ai = genkit({
+configureGenkit({
   plugins: [firebase, googleAI()],
 });
+
+export { genkit as ai };
