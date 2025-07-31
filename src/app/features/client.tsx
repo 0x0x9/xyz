@@ -22,50 +22,47 @@ function StickyScrollSection() {
         offset: ['start start', 'end end'],
     });
 
-    const numFeatures = features.length;
-    const activeCardIndex = useTransform(scrollYProgress, (pos) => {
-        return Math.min(Math.floor(pos * numFeatures), numFeatures - 1);
-    });
+    const cardOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1, 1, 1, 0]);
+    const cardScale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1, 1, 0.9, 0.8]);
 
     return (
         <div ref={targetRef} className="relative h-[400vh]">
             <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
-                <AnimatePresence mode="wait">
+                 <motion.div style={{ opacity: cardOpacity, scale: cardScale }} className="w-full h-full flex items-center justify-center">
                     {features.map((feature, i) => {
-                        if (i === activeCardIndex.get()) {
-                            return (
-                                <motion.div
-                                    key={feature.title + i}
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    transition={{ duration: 0.5, ease: 'easeInOut' }}
-                                    className="absolute inset-0 w-full h-full"
-                                >
-                                    <div className="absolute inset-0">
-                                        <iframe
-                                            src={`https://www.youtube.com/embed/${feature.videoId}?autoplay=1&mute=1&loop=1&playlist=${feature.videoId.split('?')[0]}&controls=0&showinfo=0&autohide=1&wmode=transparent`}
-                                            title={feature.title}
-                                            frameBorder="0"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowFullScreen
-                                            className="w-full h-full object-cover scale-[1.5]"
-                                        ></iframe>
-                                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+                        const start = i / features.length;
+                        const end = (i + 1) / features.length;
+                        
+                        const opacity = useTransform(scrollYProgress, [start - 0.05, start, start + 0.1, end - 0.1, end], [0, 1, 1, 1, 0]);
+
+                        return (
+                            <motion.div
+                                key={feature.title + i}
+                                style={{ opacity }}
+                                className="absolute inset-0 w-full h-full"
+                            >
+                                <div className="absolute inset-0">
+                                    <iframe
+                                        src={`https://www.youtube.com/embed/${feature.videoId}?autoplay=1&mute=1&loop=1&playlist=${feature.videoId.split('?')[0]}&controls=0&showinfo=0&autohide=1&wmode=transparent`}
+                                        title={feature.title}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="w-full h-full object-cover scale-[1.5]"
+                                    ></iframe>
+                                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+                                </div>
+                                <div className="relative h-full flex flex-col items-center justify-center text-center text-white p-8">
+                                    <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 mb-6">
+                                        <feature.icon className="w-8 h-8 text-white" />
                                     </div>
-                                    <div className="relative h-full flex flex-col items-center justify-center text-center text-white p-8">
-                                        <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 mb-6">
-                                            <feature.icon className="w-8 h-8 text-white" />
-                                        </div>
-                                        <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{feature.title}</h2>
-                                        <p className="text-lg md:text-xl text-white/80 max-w-2xl">{feature.description}</p>
-                                    </div>
-                                </motion.div>
-                            );
-                        }
-                        return null;
+                                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{feature.title}</h2>
+                                    <p className="text-lg md:text-xl text-white/80 max-w-2xl">{feature.description}</p>
+                                </div>
+                            </motion.div>
+                        );
                     })}
-                </AnimatePresence>
+                </motion.div>
             </div>
         </div>
     );
