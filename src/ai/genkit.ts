@@ -19,4 +19,8 @@ configureGenkit({
       apiKey: process.env.GOOGLE_API_KEY,
     }),
   ],
-  logLevel: 'debug
+  logLevel: 'debug',
+});
+
+// Instance Genkit
+export const ai = genkit({});
