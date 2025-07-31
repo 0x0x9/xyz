@@ -123,82 +123,83 @@ export default function FeaturesClient() {
       
        <StickyScrollSection />
 
-      <section className="py-24 sm:py-32 md:py-40">
-        <div className="text-center container mx-auto px-6 lg:px-8">
-          <h2 className="section-title">Créativité sans limites.</h2>
-          <p className="section-subtitle">Un écosystème conçu pour amplifier vos idées, pas pour les contraindre.</p>
-        </div>
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 text-center container mx-auto px-6 lg:px-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}>
-                <Code className="h-12 w-12 text-primary mx-auto"/>
-                <h3 className="mt-4 text-2xl font-bold">Pour les développeurs</h3>
-                <p className="mt-2 text-muted-foreground">Un terminal unifié, des conteneurs natifs et un SDK puissant pour étendre l'écosystème. Créez des outils qui s'intègrent parfaitement à (X)OS.</p>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} viewport={{ once: true }}>
-                <Cpu className="h-12 w-12 text-primary mx-auto"/>
-                <h3 className="mt-4 text-2xl font-bold">Pour les designers</h3>
-                <p className="mt-2 text-muted-foreground">Une gestion des couleurs au niveau du système, une calibration d'écran parfaite et une suite d'outils de design qui communiquent entre eux sans effort.</p>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }} viewport={{ once: true }}>
-                <Film className="h-12 w-12 text-primary mx-auto"/>
-                <h3 className="mt-4 text-2xl font-bold">Pour les vidéastes</h3>
-                <p className="mt-2 text-muted-foreground">Des codecs accélérés par le matériel, des rendus en tâche de fond qui ne ralentissent jamais votre travail et un pipeline de production assisté par IA.</p>
-            </motion.div>
-        </div>
-      </section>
-      
-       <section className="py-24 sm:py-32 md:py-40">
+      <Section>
+        <AnimatedText>
             <div className="text-center container mx-auto px-6 lg:px-8">
-                <h2 className="section-title">Explorez la gamme.</h2>
-                <p className="section-subtitle">Des workstations pensées par et pour les créatifs.</p>
+                <h2 className="section-title">Créativité sans limites.</h2>
+                <p className="section-subtitle">Un écosystème conçu pour amplifier vos idées, pas pour les contraindre.</p>
             </div>
-             <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 container mx-auto px-6 lg:px-8">
-                {productRange.map((product, i) => (
-                    <motion.div
-                        key={product.name}
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 0.5, delay: i * 0.1 }}
-                        className="h-full"
-                    >
-                         <div className="flex flex-col h-full text-center p-8 bg-card/50 dark:bg-card/20 border border-border/50 hover:border-primary/30 hover:-translate-y-2 transition-all duration-300 relative group overflow-hidden rounded-2xl">
-                             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
-                            <header className="p-0 mb-6">
-                                <div className="mx-auto text-5xl font-light text-muted-foreground mb-4">{product.greek}</div>
-                                <h3 className="text-3xl font-bold">{product.name}</h3>
-                                <p className="text-primary font-semibold mt-1">{product.price}</p>
-                            </header>
-                            <div className="p-0 flex-grow">
-                                <ul className="space-y-3 text-muted-foreground">
-                                    {product.features.map(feat => (
-                                        <li key={feat} className="flex items-center gap-3 text-sm">
-                                            <Check className="h-4 w-4 text-green-500 shrink-0" />
-                                            <span className="text-left">{feat}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+        </AnimatedText>
+        <AnimatedText>
+            <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 text-center container mx-auto px-6 lg:px-8">
+                <div>
+                    <Code className="h-12 w-12 text-primary mx-auto"/>
+                    <h3 className="mt-4 text-2xl font-bold">Pour les développeurs</h3>
+                    <p className="mt-2 text-muted-foreground">Un terminal unifié, des conteneurs natifs et un SDK puissant pour étendre l'écosystème. Créez des outils qui s'intègrent parfaitement à (X)OS.</p>
+                </div>
+                <div>
+                    <Cpu className="h-12 w-12 text-primary mx-auto"/>
+                    <h3 className="mt-4 text-2xl font-bold">Pour les designers</h3>
+                    <p className="mt-2 text-muted-foreground">Une gestion des couleurs au niveau du système, une calibration d'écran parfaite et une suite d'outils de design qui communiquent entre eux sans effort.</p>
+                </div>
+                <div>
+                    <Film className="h-12 w-12 text-primary mx-auto"/>
+                    <h3 className="mt-4 text-2xl font-bold">Pour les vidéastes</h3>
+                    <p className="mt-2 text-muted-foreground">Des codecs accélérés par le matériel, des rendus en tâche de fond qui ne ralentissent jamais votre travail et un pipeline de production assisté par IA.</p>
+                </div>
+            </div>
+        </AnimatedText>
+      </Section>
+      
+       <Section>
+            <AnimatedText>
+                <div className="text-center container mx-auto px-6 lg:px-8">
+                    <h2 className="section-title">Explorez la gamme.</h2>
+                    <p className="section-subtitle">Des workstations pensées par et pour les créatifs.</p>
+                </div>
+            </AnimatedText>
+             <AnimatedText>
+                <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 container mx-auto px-6 lg:px-8">
+                    {productRange.map((product, i) => (
+                        <div
+                            key={product.name}
+                            className="h-full"
+                        >
+                            <div className="flex flex-col h-full text-center p-8 bg-card/50 dark:bg-card/20 border border-border/50 hover:border-primary/30 hover:-translate-y-2 transition-all duration-300 relative group overflow-hidden rounded-2xl">
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                                <header className="p-0 mb-6">
+                                    <div className="mx-auto text-5xl font-light text-muted-foreground mb-4">{product.greek}</div>
+                                    <h3 className="text-3xl font-bold">{product.name}</h3>
+                                    <p className="text-primary font-semibold mt-1">{product.price}</p>
+                                </header>
+                                <div className="p-0 flex-grow">
+                                    <ul className="space-y-3 text-muted-foreground">
+                                        {product.features.map(feat => (
+                                            <li key={feat} className="flex items-center gap-3 text-sm">
+                                                <Check className="h-4 w-4 text-green-500 shrink-0" />
+                                                <span className="text-left">{feat}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <footer className="p-0 mt-8">
+                                    <Button asChild className="w-full">
+                                        <Link href="/store">Choisir</Link>
+                                    </Button>
+                                </footer>
                             </div>
-                            <footer className="p-0 mt-8">
-                                <Button asChild className="w-full">
-                                    <Link href="/store">Choisir</Link>
-                                </Button>
-                            </footer>
                         </div>
-                    </motion.div>
-                ))}
-            </div>
-      </section>
+                    ))}
+                </div>
+            </AnimatedText>
+      </Section>
 
-      <section className="text-center py-24 sm:py-32 md:py-40">
+      <Section>
+        <AnimatedText className="text-center">
           <h2 className="section-title">Prêt à transformer votre machine ?</h2>
           <p className="section-subtitle">Téléchargez (X)OS ou découvrez la Station X-1, le matériel conçu pour l'exécuter à la perfection.</p>
-          <motion.div 
+          <div 
             className="mt-12 flex flex-wrap justify-center gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            viewport={{ once: true }}
           >
               <Button size="lg" asChild className="rounded-full text-lg">
                 <Link href="/download">Télécharger (X)OS</Link>
@@ -206,46 +207,30 @@ export default function FeaturesClient() {
               <Button size="lg" variant="outline" asChild className="rounded-full text-lg">
                 <Link href="/hardware">Explorer la Station X-1</Link>
               </Button>
-          </motion.div>
-      </section>
+          </div>
+        </AnimatedText>
+      </Section>
     </>
   );
 }
 
 // Helper components
 const Section = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <section className={cn("py-24 sm:py-32 md:py-40", className)}>
-    {children}
-  </section>
-);
+    <section className={cn("py-24 sm:py-32 md:py-40", className)}>
+      {children}
+    </section>
+  );
 
-const AnimatedText = ({ text, el: Wrapper = 'p', className, stagger = 0.02, once = true }: { text: string; el?: React.ElementType; className?: string; stagger?: number, once?: boolean }) => {
+const AnimatedText = ({ children, className }: { children: React.ReactNode, className?: string }) => {
     const ref = useRef(null);
-    const isInView = useInView(ref, { once, amount: 0.5 });
-    const words = text.split(" ");
-
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { staggerChildren: stagger },
-        },
-    };
-
-    const wordVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { type: 'spring', damping: 12, stiffness: 100 } },
-    };
-
+     const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ["start 0.9", "start 0.5"]
+    });
+    
     return (
-        <Wrapper ref={ref} className={className}>
-            <motion.span variants={containerVariants} initial="hidden" animate={isInView ? "visible" : "hidden"} aria-label={text}>
-                {words.map((word, index) => (
-                    <motion.span key={index} variants={wordVariants} className="inline-block mr-[0.25em]">
-                        {word}
-                    </motion.span>
-                ))}
-            </motion.span>
-        </Wrapper>
-    );
+        <motion.div ref={ref} style={{ opacity: scrollYProgress, y: useTransform(scrollYProgress, [0, 1], [30, 0])}} className={className}>
+            {children}
+        </motion.div>
+    )
 };
