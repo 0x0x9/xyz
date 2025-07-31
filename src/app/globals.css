@@ -486,7 +486,7 @@
     .section-subtitle { @apply text-xl text-[color:var(--apple-secondary)] max-w-2xl mx-auto; }
 
     .ecosystem-grid { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8; }
-    .ecosystem-card { @apply bg-white dark:bg-[#2c2c2e] rounded-xl p-10 text-center shadow-lg transition-all duration-400 ease-in-out relative overflow-hidden group; }
+    .ecosystem-card { @apply bg-white dark:bg-[#2c2c2e] rounded-xl p-10 text-center shadow-lg transition-all duration-300 ease-in-out relative overflow-hidden; }
     .ecosystem-card::before { content: ''; @apply absolute top-0 left-0 right-0 h-1 bg-[var(--xyzz-gradient)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300; }
     .ecosystem-card:hover { @apply -translate-y-2 shadow-2xl; }
     
@@ -502,7 +502,7 @@
     .premium-label { @apply text-lg opacity-80; }
 
     .products-grid { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16; }
-    .product-card { @apply bg-[var(--apple-light-bg)] rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden group; }
+    .product-card { @apply bg-[var(--apple-light-bg)] rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden; }
     .product-card:hover::after { content: ''; @apply absolute inset-0 bg-[var(--xyzz-gradient)] opacity-5 transition-opacity duration-300; }
     .product-greek { @apply text-5xl font-light mb-4 text-[color:var(--apple-secondary)]; }
     .product-name { @apply text-2xl font-semibold mb-2 text-[color:var(--apple-text)]; }

@@ -66,19 +66,19 @@ const FeaturesClient = () => {
           </div>
           
           <div className="ecosystem-grid">
-            <div className="ecosystem-card animate-on-scroll">
+            <div className="ecosystem-card group animate-on-scroll">
                 <div className="card-icon">🖥️</div>
                 <h3 className="card-title">(X)OS</h3>
                 <p className="card-description">Une interface innovante et réactive. Conçue pour optimiser l'expérience utilisateur dans l'harmonie parfaite entre Windows et macOS.</p>
             </div>
             
-            <div className="ecosystem-card animate-on-scroll">
+            <div className="ecosystem-card group animate-on-scroll">
                 <div className="card-icon">☁️</div>
                 <h3 className="card-title">(X)Cloud</h3>
                 <p className="card-description">Récupère instantanément votre environnement de travail, même après un crash. Avec (X)SYNC, sauvegarde et restauration automatique.</p>
             </div>
             
-            <div className="ecosystem-card animate-on-scroll">
+            <div className="ecosystem-card group animate-on-scroll">
                 <div className="card-icon">🤖</div>
                 <h3 className="card-title">(X)AI</h3>
                 <p className="card-description">Poursuivez votre créativité avec un transfert intelligent de fichiers et presets sans perte de qualité. Collaboration en temps réel.</p>
@@ -138,7 +138,7 @@ const FeaturesClient = () => {
           </div>
           
           <div className="products-grid">
-            <div className="product-card">
+            <div className="product-card group">
                 <div className="product-greek">Ω</div>
                 <h3 className="product-name">oméga</h3>
                 <div className="product-price">À partir de 1 999 €</div>
@@ -152,7 +152,7 @@ const FeaturesClient = () => {
                 <a href="#" className="btn-primary">Choisir</a>
             </div>
             
-            <div className="product-card">
+            <div className="product-card group">
                 <div className="product-greek">α</div>
                 <h3 className="product-name">alpha</h3>
                 <div className="product-price">À partir de 2 999 €</div>
@@ -166,7 +166,7 @@ const FeaturesClient = () => {
                 <a href="#" className="btn-primary">Choisir</a>
             </div>
             
-            <div className="product-card">
+            <div className="product-card group">
                 <div className="product-greek">φ</div>
                 <h3 className="product-name">fi</h3>
                 <div className="product-price">À partir de 4 499 €</div>
@@ -180,7 +180,7 @@ const FeaturesClient = () => {
                 <a href="#" className="btn-primary">Choisir</a>
             </div>
             
-            <div className="product-card">
+            <div className="product-card group">
                 <div className="product-greek">👁️</div>
                 <h3 className="product-name">(X)Vision</h3>
                 <div className="product-price">À partir de 1 899 €</div>
