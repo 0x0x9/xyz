@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import PerformanceChart from '@/components/ui/performance-chart';
 
-function Section({ children, className }: { children: React.ReactNode, className?: string }) {
+function Section({ children, className, useMotion = true }: { children: React.ReactNode, className?: string, useMotion?: boolean }) {
     const ref = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -18,11 +18,11 @@ function Section({ children, className }: { children: React.ReactNode, className
     });
     const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
 
+    const content = useMotion ? <motion.div style={{ y }}>{children}</motion.div> : <>{children}</>;
+
     return (
         <section ref={ref} className={cn("relative container mx-auto px-4 md:px-6 py-24 md:py-36 min-h-screen flex flex-col justify-center", className)}>
-             <motion.div style={{ y }}>
-                {children}
-            </motion.div>
+             {content}
         </section>
     );
 }
@@ -60,17 +60,20 @@ export default function FeaturesClient() {
         offset: ["start start", "end end"],
     });
 
-    const textOpacity = useTransform(scrollYProgress, [0, 0.3, 0.8, 1], [1, 1, 0, 0]);
-    const imageScale = useTransform(scrollYProgress, [0.4, 1], [1, 1.5]);
-    const imageOpacity = useTransform(scrollYProgress, [0.4, 0.9, 1], [1, 1, 0]);
+    // Animate the hero text to fade out as the image scales up
+    const textOpacity = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 1, 0]);
+    const textY = useTransform(scrollYProgress, [0, 0.25], [0, -100]);
+    // Start scaling the image a bit later, and make it more pronounced
+    const imageScale = useTransform(scrollYProgress, [0.2, 1], [1, 2.5]);
+    const imageOpacity = useTransform(scrollYProgress, [0.2, 0.8, 1], [1, 1, 0]);
 
     return (
         <div ref={targetRef}>
              {/* Hero Section */}
-            <div className="h-[200vh] relative">
+            <div className="h-[250vh] relative">
                 <div className="sticky top-0 h-screen flex flex-col items-center justify-center text-center overflow-hidden">
                     <motion.div 
-                         style={{ opacity: textOpacity }}
+                         style={{ opacity: textOpacity, y: textY }}
                          className="relative z-10 px-4 space-y-6"
                     >
                         <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-foreground [text-shadow:0_4px_20px_rgba(0,0,0,0.1)]">
@@ -88,6 +91,7 @@ export default function FeaturesClient() {
                                 fill
                                 className="object-cover"
                                 data-ai-hint="powerful desktop computer sleek laptop"
+                                priority
                             />
                         </div>
                          <div className="absolute inset-0 bg-background/20"></div>
@@ -201,7 +205,7 @@ export default function FeaturesClient() {
             </Section>
 
              {/* Final CTA Section */}
-             <Section className="text-center">
+             <Section className="text-center" useMotion={false}>
                 <AnimatedText>
                     <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
                         Prêt à réinventer votre workflow ?
