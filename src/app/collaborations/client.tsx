@@ -15,20 +15,49 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from '@/components/ui/badge';
-import { collaborationPosts } from '@/lib/collaborations-data';
+import { collaborationPosts as initialPosts, type CollaborationPost } from '@/lib/collaborations-data';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 
 export default function CollaborationsClient() {
+    const [posts, setPosts] = useState<CollaborationPost[]>(initialPosts);
     const [searchTerm, setSearchTerm] = useState('');
     const [category, setCategory] = useState('Tout');
     const categories = ['Tout', 'Recherche de projet', 'Offre de service', 'Portfolio'];
+    const { toast } = useToast();
+    const [isFormOpen, setIsFormOpen] = useState(false);
 
-    const filteredPosts = collaborationPosts.filter(post => {
+    const filteredPosts = posts.filter(post => {
         const matchesCategory = category === 'Tout' || post.type === category;
         const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) 
             || post.author.toLowerCase().includes(searchTerm.toLowerCase())
             || post.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()));
         return matchesCategory && matchesSearch;
     });
+
+    const handlePublish = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const newPost: CollaborationPost = {
+            id: Date.now(),
+            author: "Vous (Utilisateur Actuel)", // Placeholder
+            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80",
+            imageHint: "user avatar placeholder",
+            title: formData.get('title') as string,
+            description: formData.get('description') as string,
+            skills: (formData.get('skills') as string).split(',').map(s => s.trim()).filter(Boolean),
+            type: formData.get('type') as CollaborationPost['type'],
+        };
+        
+        setPosts(prev => [newPost, ...prev]);
+        toast({
+            title: "Annonce publiée !",
+            description: "Votre annonce est maintenant visible par la communauté.",
+        });
+        setIsFormOpen(false);
+    }
 
     return (
         <div className="max-w-6xl mx-auto">
@@ -52,10 +81,53 @@ export default function CollaborationsClient() {
                         ))}
                     </SelectContent>
                 </Select>
-                 <Button size="lg" className="w-full md:w-auto">
-                    <PlusCircle className="mr-2 h-5 w-5" />
-                    Publier une annonce
-                </Button>
+                 <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                    <DialogTrigger asChild>
+                         <Button size="lg" className="w-full md:w-auto">
+                            <PlusCircle className="mr-2 h-5 w-5" />
+                            Publier une annonce
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="glass-card sm:max-w-[625px]">
+                         <form onSubmit={handlePublish}>
+                            <DialogHeader>
+                                <DialogTitle>Publier une annonce</DialogTitle>
+                                <DialogDescription>
+                                    Partagez votre projet ou vos compétences avec la communauté (X)yzz.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-6 py-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="type">Type d'annonce</Label>
+                                    <Select name="type" required defaultValue="Offre de service">
+                                        <SelectTrigger id="type"><SelectValue placeholder="Sélectionner..." /></SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Offre de service">Offre de service</SelectItem>
+                                            <SelectItem value="Recherche de projet">Recherche de projet</SelectItem>
+                                            <SelectItem value="Portfolio">Portfolio</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="title">Titre de l'annonce</Label>
+                                    <Input id="title" name="title" required placeholder="Ex: Motion Designer disponible pour missions" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="description">Description</Label>
+                                    <Textarea id="description" name="description" required placeholder="Décrivez votre projet ou vos services en détail..." />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="skills">Compétences (séparées par des virgules)</Label>
+                                    <Input id="skills" name="skills" required placeholder="Ex: After Effects, Animation 2D, Cinema 4D" />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <DialogClose asChild><Button type="button" variant="ghost">Annuler</Button></DialogClose>
+                                <Button type="submit">Publier</Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                 </Dialog>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
