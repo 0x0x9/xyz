@@ -1,3 +1,4 @@
+
 'use server';
 
 import { genkit } from 'genkit';
@@ -20,5 +21,4 @@ export const ai = genkit({
       apiKey: process.env.GOOGLE_API_KEY,
     }),
   ],
-  logLevel: 'debug',
 });
