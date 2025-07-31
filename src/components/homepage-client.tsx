@@ -49,13 +49,12 @@ function AnimatedSection({ children, className }: { children: React.ReactNode, c
     )
 }
 
-function FeatureShowcase({ title, description, buttonText, buttonHref, imageUrl, imageHint, imagePosition = 'left' }: {
+function FeatureShowcase({ title, description, buttonText, buttonHref, videoId, imagePosition = 'left' }: {
     title: string,
     description: string,
     buttonText: string,
     buttonHref: string,
-    imageUrl: string,
-    imageHint: string,
+    videoId: string,
     imagePosition?: 'left' | 'right'
 }) {
     const Icon = buttonHref === '/welcome' ? Sparkles : Cpu;
@@ -63,14 +62,15 @@ function FeatureShowcase({ title, description, buttonText, buttonHref, imageUrl,
     return (
         <AnimatedSection>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div className={cn("relative aspect-video lg:aspect-square", imagePosition === 'right' && 'lg:order-2')}>
-                     <Image
-                        src={imageUrl}
-                        alt={title}
-                        fill
-                        className="object-contain rounded-2xl"
-                        data-ai-hint={imageHint}
-                    />
+                <div className={cn("relative aspect-video lg:aspect-square rounded-2xl overflow-hidden glass-card", imagePosition === 'right' && 'lg:order-2')}>
+                     <iframe
+                        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId.split('?')[0]}&controls=0&showinfo=0&autohide=1&wmode=transparent`}
+                        title={title}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full object-cover"
+                    ></iframe>
                 </div>
                  <div className="space-y-6">
                      <h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
@@ -274,8 +274,7 @@ const HomePageClient = () => {
                 description="Ce n'est pas un système d'exploitation. C'est une extension de votre imagination, un environnement unifié où tous vos outils et idées convergent. Disponible sur notre matériel dédié et en ligne, partout."
                 buttonText="Découvrir (X)OS"
                 buttonHref="/welcome"
-                imageUrl="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80"
-                imageHint="futuristic operating system"
+                videoId="9Ks_dCYhX4o"
                 imagePosition="left"
             />
              <FeatureShowcase 
@@ -283,8 +282,7 @@ const HomePageClient = () => {
                 description="La performance n'est que le début. La Station X-1 est conçue pour une synergie parfaite avec (X)OS, libérant une puissance de calcul et une fluidité sans précédent pour les workflows les plus exigeants."
                 buttonText="Explorer le matériel"
                 buttonHref="/hardware"
-                imageUrl="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80"
-                imageHint="powerful desktop computer"
+                videoId="ozGQ2q4l4ys"
                 imagePosition="right"
             />
         </section>
