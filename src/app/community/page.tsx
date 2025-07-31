@@ -14,17 +14,17 @@ const features = [
     href: "/forum"
   },
   {
+    icon: <Users className="h-8 w-8 text-accent" />,
+    title: "Collaborations",
+    description: "Trouvez des partenaires pour vos projets, partagez vos offres de services ou découvrez de nouvelles missions.",
+    href: "/collaborations"
+  },
+  {
     icon: <BookOpen className="h-8 w-8 text-accent" />,
     title: "Blog (X)press",
     description: "Plongez au coeur de l'écosystème avec nos tutoriels, analyses et interviews d'artistes.",
     href: "/blog"
   },
-  {
-    icon: <Users className="h-8 w-8 text-accent" />,
-    title: "Collaborations",
-    description: "Trouvez des partenaires pour vos projets, partagez vos offres de services ou découvrez de nouvelles missions.",
-    href: "/forum"
-  }
 ];
 
 const CommunityPage = () => {

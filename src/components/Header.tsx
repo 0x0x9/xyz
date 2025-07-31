@@ -67,7 +67,8 @@ const navLinks = [
 ];
 
 const communityLinks = [
-    { href: "/forum", label: "Forum & Collaborations", icon: Users, description: "Échangez, trouvez des freelances et collaborez." },
+    { href: "/forum", label: "Forum d'entraide", icon: MessageSquare, description: "Discutez avec la communauté et partagez vos idées." },
+    { href: "/collaborations", label: "Collaborations", icon: Users, description: "Trouvez des partenaires et des projets." },
     { href: "/blog", label: "Blog (X)press", icon: BookOpen, description: "Tutoriels, analyses et inspiration." },
 ]
 
