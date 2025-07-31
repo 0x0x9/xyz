@@ -24,6 +24,12 @@
     --input: 240 5.9% 90%;
     --ring: 217 91% 60%;
     --radius: 1rem;
+    --apple-blue: #007aff;
+    --apple-text: #1d1d1f;
+    --apple-secondary: #6e6e73;
+    --apple-light-bg: #f5f5f7;
+    --xyzz-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --glass-bg: rgba(255, 255, 255, 0.8);
   }
 
   .dark {
@@ -47,6 +53,10 @@
     --input: 220 13% 18%;
     --ring: 217 91% 60%;
     --radius: 1rem;
+    --apple-text: #f5f5f7;
+    --apple-secondary: #86868b;
+    --apple-light-bg: #1a1a1a;
+    --glass-bg: rgba(29, 29, 31, 0.8);
   }
 }
 
@@ -424,8 +434,7 @@
     z-index: 1;
     pointer-events: none;
   }
-
-  /* Specific styles for Features page */
+  
   .text-clamp-6xl { font-size: clamp(3rem, 8vw, 6rem); }
   .bg-radial-gradient-hero { background: radial-gradient(ellipse at center, rgba(102, 126, 234, 0.3) 0%, transparent 70%); }
   .bg-radial-gradient-premium { background: radial-gradient(circle at 30% 70%, rgba(102, 126, 234, 0.2) 0%, transparent 40%), radial-gradient(circle at 70% 30%, rgba(118, 75, 162, 0.2) 0%, transparent 40%); }
@@ -433,7 +442,7 @@
   .animate-pulse-hero { animation: pulse-hero 4s ease-in-out infinite alternate; }
 
   @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-  .animate-on-scroll { opacity: 0; animation: fadeInUp 0.8s ease forwards; animation-delay: 0.2s; }
+  .animate-on-scroll { opacity: 0; animation: fadeInUp 0.8s ease-out forwards; animation-delay: 0.2s; }
 }
 
 @layer components {
@@ -460,18 +469,48 @@
         from { width: 0%; }
         to { width: 100%; }
     }
-    
-    .btn-primary {
-        @apply inline-block bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-medium transition-all duration-300;
-    }
-    .btn-primary:hover {
-        @apply bg-blue-700 scale-105;
-    }
 
-    .btn-secondary {
-        @apply inline-block bg-transparent text-blue-500 border border-blue-500 px-6 py-3 rounded-full text-lg font-medium transition-all duration-300;
-    }
-    .btn-secondary:hover {
-        @apply bg-blue-500 text-white;
+    /* Styles pour la page /features (Apple-like) */
+    .hero-badge { @apply bg-white/10 px-4 py-1.5 rounded-full text-xs font-medium mb-6 backdrop-blur-xl border border-white/20 inline-block; }
+    .hero-tagline { @apply text-xl font-normal mb-2 opacity-90; }
+    .hero-subtitle { @apply text-3xl font-semibold mb-8 max-w-3xl; }
+    .hero-cta { @apply flex flex-wrap gap-5 mt-10 justify-center; }
+
+    .btn-primary { @apply inline-block bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-medium transition-all duration-300; }
+    .btn-primary:hover { @apply bg-blue-700 scale-105; }
+    .btn-secondary { @apply inline-block bg-transparent text-blue-500 border border-blue-500 px-6 py-3 rounded-full text-lg font-medium transition-all duration-300; }
+    .btn-secondary:hover { @apply bg-blue-500 text-white; }
+    
+    .section-header { @apply text-center mb-20; }
+    .section-title { @apply text-5xl font-bold mb-4 tracking-[-0.022em] text-[color:var(--apple-text)]; }
+    .section-subtitle { @apply text-xl text-[color:var(--apple-secondary)] max-w-2xl mx-auto; }
+
+    .ecosystem-grid { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8; }
+    .ecosystem-card { @apply bg-white dark:bg-[#2c2c2e] rounded-xl p-10 text-center shadow-lg transition-all duration-400 ease-in-out relative overflow-hidden group; }
+    .ecosystem-card::before { content: ''; @apply absolute top-0 left-0 right-0 h-1 bg-[var(--xyzz-gradient)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300; }
+    .ecosystem-card:hover { @apply -translate-y-2 shadow-2xl; }
+    
+    .card-icon { @apply w-16 h-16 mx-auto mb-6 bg-[var(--xyzz-gradient)] rounded-2xl flex items-center justify-center text-3xl text-white; }
+    .card-title { @apply text-2xl font-semibold mb-3 text-[color:var(--apple-text)]; }
+    .card-description { @apply text-[color:var(--apple-secondary)] leading-relaxed; }
+
+    .premium-section { @apply bg-black text-white py-32 px-5 relative overflow-hidden; }
+    .premium-title { @apply text-6xl font-bold mb-6 bg-gradient-to-r from-white to-[#667eea] bg-clip-text text-transparent; }
+    .premium-grid { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-16; }
+    .premium-item { @apply text-center p-8 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1; }
+    .premium-number { @apply text-4xl font-bold mb-2 bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent; }
+    .premium-label { @apply text-lg opacity-80; }
+
+    .products-grid { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16; }
+    .product-card { @apply bg-[var(--apple-light-bg)] rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden group; }
+    .product-card:hover::after { content: ''; @apply absolute inset-0 bg-[var(--xyzz-gradient)] opacity-5 transition-opacity duration-300; }
+    .product-greek { @apply text-5xl font-light mb-4 text-[color:var(--apple-secondary)]; }
+    .product-name { @apply text-2xl font-semibold mb-2 text-[color:var(--apple-text)]; }
+    .product-price { @apply text-xl font-semibold text-[color:var(--apple-blue)] mb-6; }
+    .product-features { @apply list-none mb-6 text-left; }
+    .product-features li { @apply py-1 text-sm text-[color:var(--apple-secondary)]; }
+
+    body.dark .ecosystem-card {
+        @apply bg-[#1c1c1e];
     }
 }

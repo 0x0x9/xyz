@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils'; // Assuming cn is a utility for combining class names
+import { cn } from '@/lib/utils';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 const FeaturesClient = () => {
@@ -14,7 +14,6 @@ const FeaturesClient = () => {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
   useEffect(() => {
-    // IntersectionObserver for scroll animations
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -100px 0px'
@@ -44,14 +43,14 @@ const FeaturesClient = () => {
       {/* Hero Section Premium */}
       <section ref={heroRef} className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden bg-gradient-to-b from-black to-[#1a1a1a]">
         <motion.div style={{ y }} className="absolute inset-0 bg-radial-gradient-hero animate-pulse-hero"></motion.div>
-        <div className="relative z-10">
-          <div className="bg-white/10 px-4 py-1.5 rounded-full text-xs font-medium mb-6 backdrop-blur-xl border border-white/20 inline-block">Nouveau</div>
+        <div className="relative z-10 px-4">
+          <div className="hero-badge">Nouveau</div>
           <h1 className="hero-title text-clamp-6xl font-bold mb-4 tracking-[-0.022em] bg-gradient-to-r from-white via-[#667eea] to-[#764ba2] bg-clip-text text-transparent">
             (X)OS
           </h1>
-          <p className="text-xl font-normal mb-2 opacity-90">De l'Ωméga à l'αlpha.</p>
-          <h2 className="text-3xl font-semibold mb-8 max-w-3xl">L'harmonie entre l'univers Windows et macOS.<br />L'élégance d'un outil, la puissance d'un studio.</h2>
-          <div className="flex gap-5 mt-10">
+          <p className="hero-tagline text-xl font-normal mb-2 opacity-90">De l'Ωméga à l'αlpha.</p>
+          <h2 className="hero-subtitle text-3xl font-semibold mb-8 max-w-3xl">L'harmonie entre l'univers Windows et macOS.<br />L'élégance d'un outil, la puissance d'un studio.</h2>
+          <div className="hero-cta">
             <a href="#" className="btn-primary">Découvrir (X)OS</a>
             <a href="#" className="btn-secondary">Regarder la présentation</a>
           </div>
@@ -60,71 +59,62 @@ const FeaturesClient = () => {
 
       {/* Section Écosystème */}
       <section className="ecosystem py-24 px-5 bg-[#f5f5f7]">
-        <div className="max-w-[1024px] mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="section-title text-5xl font-bold mb-4 tracking-[-0.022em]">Un écosystème. Trois mondes.</h2>
-            <p className="section-subtitle text-xl text-[#6e6e73] max-w-2xl mx-auto">L'alliance parfaite entre Windows et macOS sur une seule machine, nous révolutionnons votre façon de travailler.</p>
+        <div className="container mx-auto">
+          <div className="section-header">
+            <h2 className="section-title">Un écosystème. Trois mondes.</h2>
+            <p className="section-subtitle">L'alliance parfaite entre Windows et macOS sur une seule machine, nous révolutionnons votre façon de travailler.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="ecosystem-card bg-white rounded-xl p-10 text-center shadow-lg transition-all duration-400 ease-cubic-bezier relative overflow-hidden group">
-                <div className="card-icon w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-2xl flex items-center justify-center text-white text-3xl">🖥️</div>
-                <h3 className="card-title text-2xl font-semibold mb-3">
-                  <span className="dark:text-black">(X)OS</span>
-                </h3>
-                <p className="text-[#6e6e73] leading-relaxed">Une interface innovante et réactive. Conçue pour optimiser l'expérience utilisateur dans l'harmonie parfaite entre Windows et macOS.</p>
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+          <div className="ecosystem-grid">
+            <div className="ecosystem-card animate-on-scroll">
+                <div className="card-icon">🖥️</div>
+                <h3 className="card-title">(X)OS</h3>
+                <p className="card-description">Une interface innovante et réactive. Conçue pour optimiser l'expérience utilisateur dans l'harmonie parfaite entre Windows et macOS.</p>
             </div>
             
-            <div className="ecosystem-card bg-white rounded-xl p-10 text-center shadow-lg transition-all duration-400 ease-cubic-bezier relative overflow-hidden group">
-                <div className="card-icon w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-2xl flex items-center justify-center text-white text-3xl">☁️</div>
-                <h3 className="card-title text-2xl font-semibold mb-3">
-                  <span className="dark:text-black">(X)Cloud</span>
-                </h3>
-                <p className="text-[#6e6e73] leading-relaxed">Récupère instantanément votre environnement de travail, même après un crash. Avec (X)SYNC, sauvegarde et restauration automatique.</p>
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            <div className="ecosystem-card animate-on-scroll">
+                <div className="card-icon">☁️</div>
+                <h3 className="card-title">(X)Cloud</h3>
+                <p className="card-description">Récupère instantanément votre environnement de travail, même après un crash. Avec (X)SYNC, sauvegarde et restauration automatique.</p>
             </div>
             
-            <div className="ecosystem-card bg-white rounded-xl p-10 text-center shadow-lg transition-all duration-400 ease-cubic-bezier relative overflow-hidden group">
-                <div className="card-icon w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-2xl flex items-center justify-center text-white text-3xl">🤖</div>
-                <h3 className="card-title text-2xl font-semibold mb-3">
-                  <span className="dark:text-black">(X)AI</span>
-                </h3>
-                <p className="text-[#6e6e73] leading-relaxed">Poursuivez votre créativité avec un transfert intelligent de fichiers et presets sans perte de qualité. Collaboration en temps réel.</p>
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            <div className="ecosystem-card animate-on-scroll">
+                <div className="card-icon">🤖</div>
+                <h3 className="card-title">(X)AI</h3>
+                <p className="card-description">Poursuivez votre créativité avec un transfert intelligent de fichiers et presets sans perte de qualité. Collaboration en temps réel.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Section Premium Performance */}
-      <section className="premium-section bg-black text-white py-32 px-5 relative overflow-hidden">
+      <section className="premium-section">
         <div className="absolute inset-0 bg-radial-gradient-premium"></div>
-        <div className="relative z-10 text-center max-w-[1024px] mx-auto">
-          <h2 className="premium-title text-6xl font-bold mb-6 bg-gradient-to-r from-white to-[#667eea] bg-clip-text text-transparent">Performance. Révolutionnée.</h2>
+        <div className="container mx-auto relative z-10 text-center">
+          <h2 className="premium-title">Performance. Révolutionnée.</h2>
           <p className="text-xl mb-10 opacity-90">Une interface pensée pour inspirer et fluidifier votre processus créatif</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-16">
-            <div className="premium-item text-center p-8 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1">
-                <div className="premium-number text-4xl font-bold mb-2 bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent">Multi-GPU</div>
-                <div className="premium-label text-lg opacity-80">Support avancé</div>
+          <div className="premium-grid">
+            <div className="premium-item">
+                <div className="premium-number">Multi-GPU</div>
+                <div className="premium-label">Support avancé</div>
             </div>
-            <div className="premium-item text-center p-8 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1">
-                <div className="premium-number text-4xl font-bold mb-2 bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent">1 Po</div>
-                <div className="premium-label text-lg opacity-80">Stockage cloud</div>
+            <div className="premium-item">
+                <div className="premium-number">1 Po</div>
+                <div className="premium-label">Stockage cloud</div>
             </div>
-            <div className="premium-item text-center p-8 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1">
-                <div className="premium-number text-4xl font-bold mb-2 bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent">0s</div>
-                <div className="premium-label text-lg opacity-80">Commutation OS</div>
+            <div className="premium-item">
+                <div className="premium-number">0s</div>
+                <div className="premium-label">Commutation OS</div>
             </div>
-            <div className="premium-item text-center p-8 bg-white/5 rounded-2xl backdrop-blur-xl border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1">
-                <div className="premium-number text-4xl font-bold mb-2 bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent">∞</div>
-                <div className="premium-label text-lg opacity-80">Possibilités créatives</div>
+            <div className="premium-item">
+                <div className="premium-number">∞</div>
+                <div className="premium-label">Possibilités créatives</div>
             </div>
           </div>
         </div>
       </section>
-
+      
       {/* NEW OS SECTION */}
       <section className="feature-section py-24 px-5 bg-white text-center">
         <div className="container">
@@ -138,81 +128,70 @@ const FeaturesClient = () => {
         </div>
       </section>
 
+
       {/* Section Gamme Produits */}
       <section className="products py-24 px-5 bg-[#f5f5f7]">
-        <div className="max-w-[1024px] mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="section-title text-5xl font-bold mb-4 tracking-[-0.022em]">Explorez la gamme.</h2>
-            <p className="section-subtitle text-xl text-[#6e6e73] max-w-2xl mx-auto">Workstation (X)yzz. - L'ordinateur pensé par et pour les créatifs</p>
+        <div className="container mx-auto">
+          <div className="section-header">
+            <h2 className="section-title">Explorez la gamme.</h2>
+            <p className="section-subtitle">Workstation (X)yzz. - L'ordinateur pensé par et pour les créatifs</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
-            <div className="product-card bg-white rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden group">
-                <div className="product-greek text-5xl font-light mb-4 text-[#6e6e73]">Ω</div>
-                <h3 className="product-name text-2xl font-semibold mb-2">
-                  <span className="dark:text-black">oméga</span>
-                </h3>
-                <div className="product-price text-xl font-semibold text-[#007aff] mb-6">À partir de 1 999 €</div>
-                <ul className="product-features list-none mb-6 text-left">
-                    <li className="py-1 text-sm text-[#6e6e73]">• (X)OS complet</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• Dual-OS Windows/macOS</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• 32 Go RAM</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• 1 To SSD</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• (X)Cloud inclus</li>
+          <div className="products-grid">
+            <div className="product-card">
+                <div className="product-greek">Ω</div>
+                <h3 className="product-name">oméga</h3>
+                <div className="product-price">À partir de 1 999 €</div>
+                <ul className="product-features">
+                    <li>• (X)OS complet</li>
+                    <li>• Dual-OS Windows/macOS</li>
+                    <li>• 32 Go RAM</li>
+                    <li>• 1 To SSD</li>
+                    <li>• (X)Cloud inclus</li>
                 </ul>
                 <a href="#" className="btn-primary">Choisir</a>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#667eea] to-[#764ba2] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
             </div>
             
-            <div className="product-card bg-white rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden group">
-                <div className="product-greek text-5xl font-light mb-4 text-[#6e6e73]">α</div>
-                <h3 className="product-name text-2xl font-semibold mb-2">
-                  <span className="dark:text-black">alpha</span>
-                </h3>
-                <div className="product-price text-xl font-semibold text-[#007aff] mb-6">À partir de 2 999 €</div>
-                <ul className="product-features list-none mb-6 text-left">
-                    <li className="py-1 text-sm text-[#6e6e73]">• (X)OS Pro</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• Triple-OS + Linux</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• 64 Go RAM</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• 2 To SSD</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• (X)AI intégré</li>
+            <div className="product-card">
+                <div className="product-greek">α</div>
+                <h3 className="product-name">alpha</h3>
+                <div className="product-price">À partir de 2 999 €</div>
+                <ul className="product-features">
+                    <li>• (X)OS Pro</li>
+                    <li>• Triple-OS + Linux</li>
+                    <li>• 64 Go RAM</li>
+                    <li>• 2 To SSD</li>
+                    <li>• (X)AI intégré</li>
                 </ul>
                 <a href="#" className="btn-primary">Choisir</a>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#667eea] to-[#764ba2] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
             </div>
             
-            <div className="product-card bg-white rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden group">
-                <div className="product-greek text-5xl font-light mb-4 text-[#6e6e73]">φ</div>
-                <h3 className="product-name text-2xl font-semibold mb-2">
-                  <span className="dark:text-black">fi</span>
-                </h3>
-                <div className="product-price text-xl font-semibold text-[#007aff] mb-6">À partir de 4 499 €</div>
-                <ul className="product-features list-none mb-6 text-left">
-                    <li className="py-1 text-sm text-[#6e6e73]">• (X)OS Studio</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• Multi-GPU dédié</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• 128 Go RAM</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• 4 To SSD</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• Support prioritaire</li>
+            <div className="product-card">
+                <div className="product-greek">φ</div>
+                <h3 className="product-name">fi</h3>
+                <div className="product-price">À partir de 4 499 €</div>
+                <ul className="product-features">
+                    <li>• (X)OS Studio</li>
+                    <li>• Multi-GPU dédié</li>
+                    <li>• 128 Go RAM</li>
+                    <li>• 4 To SSD</li>
+                    <li>• Support prioritaire</li>
                 </ul>
                 <a href="#" className="btn-primary">Choisir</a>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#667eea] to-[#764ba2] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
             </div>
             
-            <div className="product-card bg-white rounded-xl p-10 text-center transition-all duration-300 relative overflow-hidden group">
-                <div className="product-greek text-5xl font-light mb-4 text-[#6e6e73]">👁️</div>
-                <h3 className="product-name text-2xl font-semibold mb-2">
-                  <span className="dark:text-black">(X)Vision</span>
-                </h3>
-                <div className="product-price text-xl font-semibold text-[#007aff] mb-6">À partir de 1 899 €</div>
-                <ul className="product-features list-none mb-6 text-left">
-                    <li className="py-1 text-sm text-[#6e6e73]">• Spécialisé création visuelle</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• Écrans 5K intégrés</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• GPU créatif optimisé</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• Calibration colorimétrique</li>
-                    <li className="py-1 text-sm text-[#6e6e73]">• (X)AI Vision</li>
+            <div className="product-card">
+                <div className="product-greek">👁️</div>
+                <h3 className="product-name">(X)Vision</h3>
+                <div className="product-price">À partir de 1 899 €</div>
+                <ul className="product-features">
+                    <li>• Spécialisé création visuelle</li>
+                    <li>• Écrans 5K intégrés</li>
+                    <li>• GPU créatif optimisé</li>
+                    <li>• Calibration colorimétrique</li>
+                    <li>• (X)AI Vision</li>
                 </ul>
                 <a href="#" className="btn-primary">Choisir</a>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#667eea] to-[#764ba2] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
             </div>
           </div>
         </div>
