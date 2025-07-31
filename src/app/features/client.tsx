@@ -5,8 +5,10 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Cpu, Zap, Layers, Folder, Code, Terminal, BrainCircuit, Lightbulb, Film } from 'lucide-react';
+import { Card, CardContent, CardTitle, CardDescription, CardHeader, CardFooter } from '@/components/ui/card';
+import { Cpu, Zap, Layers, Folder, Code, Terminal, BrainCircuit, Lightbulb, Film, Check } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Section = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <section className={cn("py-24 sm:py-32 md:py-40", className)}>
@@ -63,7 +65,6 @@ const StickyScrollSection = () => {
 
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.9]);
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '-100%']);
   
   return (
     <div ref={targetRef} className="h-[300vh] relative">
@@ -74,7 +75,7 @@ const StickyScrollSection = () => {
             </div>
         </motion.div>
         
-        <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-8">
+        <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-8 pointer-events-none">
             {features.map((feature, i) => {
                 const start = i * 0.25;
                 const end = start + 0.25;
@@ -99,10 +100,36 @@ const StickyScrollSection = () => {
   );
 };
 
+const productRange = [
+    {
+        greek: "Ω",
+        name: "oméga",
+        price: "1 999 €",
+        features: ["(X)OS complet", "Dual-OS Windows/macOS", "32 Go RAM", "1 To SSD", "(X)Cloud inclus"]
+    },
+     {
+        greek: "α",
+        name: "alpha",
+        price: "2 999 €",
+        features: ["(X)OS Pro", "Triple-OS + Linux", "64 Go RAM", "2 To SSD", "(X)AI intégré"]
+    },
+    {
+        greek: "φ",
+        name: "fi",
+        price: "4 499 €",
+        features: ["(X)OS Studio", "Multi-GPU dédié", "128 Go RAM", "4 To SSD", "Support prioritaire"]
+    },
+    {
+        greek: "👁️",
+        name: "(X)Vision",
+        price: "1 899 €",
+        features: ["Spécialisé création visuelle", "Écrans 5K intégrés", "GPU créatif optimisé", "Calibration colorimétrique", "(X)AI Vision"]
+    }
+]
 
 export default function FeaturesClient() {
   return (
-    <div className="bg-background text-foreground">
+    <div className="bg-background/80 text-foreground">
       {/* Hero Section */}
       <div className="relative h-screen">
           <div className="absolute inset-0">
@@ -113,7 +140,7 @@ export default function FeaturesClient() {
           </div>
           <div className="relative h-full flex flex-col items-center justify-center text-center text-white px-4">
               <AnimatedText text="(X)OS" el="h1" className="text-7xl md:text-9xl font-bold tracking-tighter" stagger={0.1} />
-              <AnimatedText text="Le système d'exploitation de la création." el="p" className="mt-4 text-xl md:text-2xl max-w-3xl" stagger={0.01} />
+              <AnimatedText text="De l'Ωméga à l'αlpha. L'harmonie entre les univers." el="p" className="mt-4 text-xl md:text-2xl max-w-3xl" stagger={0.01} />
           </div>
       </div>
       
@@ -145,19 +172,46 @@ export default function FeaturesClient() {
         </div>
       </Section>
       
-      {/* Testimonials */}
-       <Section className="bg-muted/30">
-        <div className="text-center">
-            <AnimatedText text="Ce qu'ils en disent." el="h2" className="section-title"/>
-        </div>
-        <div className="mt-20 max-w-4xl mx-auto space-y-12">
-            <blockquote className="text-center text-2xl md:text-3xl font-medium leading-tight">
-                <AnimatedText text='"(X)OS a unifié mon workflow de développement et de design comme aucun autre outil. Passer de mon IDE sous Linux à Figma sous macOS est devenu trivial."' />
-                <footer className="mt-6 text-lg">
-                    <AnimatedText text="— Léa Dupont, Développeuse Full-Stack" el="cite" className="text-muted-foreground not-italic"/>
-                </footer>
-            </blockquote>
-        </div>
+      {/* Product Range Section */}
+       <Section>
+            <div className="text-center">
+                <AnimatedText text="Explorez la gamme." el="h2" className="section-title" />
+                <AnimatedText text="Des workstations pensées par et pour les créatifs." el="p" className="section-subtitle" />
+            </div>
+             <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {productRange.map((product, i) => (
+                    <motion.div
+                        key={product.name}
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.3 }}
+                        transition={{ duration: 0.5, delay: i * 0.1 }}
+                    >
+                         <Card className="ecosystem-card flex flex-col h-full">
+                            <CardHeader className="p-0 mb-4">
+                                <div className="product-greek mx-auto text-5xl font-light text-muted-foreground">{product.greek}</div>
+                                <CardTitle className="text-2xl">{product.name}</CardTitle>
+                                <CardDescription className="text-primary font-semibold">À partir de {product.price}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="p-0 flex-grow">
+                                <ul className="space-y-2 text-muted-foreground text-sm">
+                                    {product.features.map(feat => (
+                                        <li key={feat} className="flex items-center gap-2">
+                                            <Check className="h-4 w-4 text-green-500" />
+                                            <span>{feat}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </CardContent>
+                            <CardFooter className="p-0 mt-6">
+                                <Button asChild className="w-full">
+                                    <Link href="/store">Choisir</Link>
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    </motion.div>
+                ))}
+            </div>
       </Section>
 
        {/* Final CTA */}
