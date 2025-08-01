@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npm run genkit:dev-concurrently",
     "genkit:dev": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next dev -p 9002",
-    "genkit:watch": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json genkit start --watch src/ai/dev.ts",
+    "genkit:watch": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json genkit start",
     "build": "npm run build:genkit && npm run build:next",
     "build:next": "next build",
     "start": "npm run start:next",
