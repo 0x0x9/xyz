@@ -25,6 +25,7 @@ import {
   GenerateIdeasInputSchema,
   GenerateIdeasOutputSchema,
   GenerateMotionInputSchema,
+  GenerateMotionOutputSchema,
   VideoScriptSchema,
   GenerateVoiceInputSchema,
   GenerateVoiceOutputSchema,
@@ -67,7 +68,7 @@ const textTool = ai.defineTool(
   {
     name: 'text',
     description:
-      'Génère du contenu textuel comme des articles, des poèmes, des scripts ou tout autre contenu textuel. À utiliser pour l\'écriture créative ou la génération de contenu.',
+      "Génère du contenu textuel comme des articles, des poèmes, des scripts ou tout autre contenu textuel. À utiliser pour l'écriture créative ou la génération de contenu.",
     inputSchema: GenerateTextInputSchema,
     outputSchema: GenerateTextOutputSchema,
   },
@@ -78,7 +79,7 @@ const paletteTool = ai.defineTool(
   {
     name: 'palette',
     description:
-      'Génère une palette de couleurs harmonieuse à partir d\'un thème ou d\'une description.',
+      "Génère une palette de couleurs harmonieuse à partir d'un thème ou d'une description.",
     inputSchema: GeneratePaletteInputSchema,
     outputSchema: GeneratePaletteOutputSchema,
   },
@@ -88,7 +89,7 @@ const paletteTool = ai.defineTool(
 const toneTool = ai.defineTool(
   {
     name: 'tone',
-    description: 'Définit le ton de voix d\'une marque ou d\'un projet.',
+    description: "Définit le ton de voix d'une marque ou d'un projet.",
     inputSchema: GenerateToneInputSchema,
     outputSchema: GenerateToneOutputSchema,
   },
@@ -99,7 +100,7 @@ const personaTool = ai.defineTool(
   {
     name: 'persona',
     description:
-      'Crée des profils d\'utilisateurs (personas) pour un projet ou un produit donné.',
+      "Crée des profils d'utilisateurs (personas) pour un projet ou un produit donné.",
     inputSchema: GeneratePersonaInputSchema,
     outputSchema: GeneratePersonaOutputSchema,
   },
@@ -110,7 +111,7 @@ const promptorTool = ai.defineTool(
   {
     name: 'promptor',
     description:
-      'Transforme une idée vague ou un concept en plusieurs pistes créatives concrètes, y compris des prompts d\'image, des titres et des styles.',
+      "Transforme une idée vague ou un concept en plusieurs pistes créatives concrètes, y compris des prompts d'image, des titres et des styles.",
     inputSchema: GenerateIdeasInputSchema,
     outputSchema: GenerateIdeasOutputSchema,
   },
@@ -121,7 +122,7 @@ const motionTool = ai.defineTool(
   {
     name: 'motion',
     description:
-      'Crée une courte vidéo (script, images, voix off) à partir d\'une idée ou d\'une description.',
+      "Crée une courte vidéo (script, images, voix off) à partir d'une idée ou d'une description.",
     inputSchema: GenerateMotionInputSchema,
     outputSchema: GenerateMotionOutputSchema,
   },
@@ -142,7 +143,7 @@ const codeTool = ai.defineTool(
   {
     name: 'code',
     description:
-      'Génère un extrait de code dans un langage de programmation spécifique. L\'utilisateur doit spécifier le langage.',
+      "Génère un extrait de code dans un langage de programmation spécifique. L'utilisateur doit spécifier le langage.",
     inputSchema: GenerateCodeInputSchema,
     outputSchema: GenerateCodeOutputSchema,
   },
@@ -162,7 +163,7 @@ const deckTool = ai.defineTool(
 const frameTool = ai.defineTool(
   {
     name: 'frame',
-    description: 'Génère une maquette (wireframe) HTML et CSS (Tailwind) à partir d\'une description.',
+    description: "Génère une maquette (wireframe) HTML et CSS (Tailwind) à partir d'une description.",
     inputSchema: GenerateFrameInputSchema,
     outputSchema: GenerateFrameOutputSchema,
   },
@@ -172,7 +173,7 @@ const frameTool = ai.defineTool(
 const soundTool = ai.defineTool(
   {
     name: 'sound',
-    description: 'Génère un son, une musique ou un effet sonore à partir d\'une description.',
+    description: "Génère un son, une musique ou un effet sonore à partir d'une description.",
     inputSchema: GenerateSoundInputSchema,
     outputSchema: GenerateSoundOutputSchema,
   },
@@ -182,7 +183,7 @@ const soundTool = ai.defineTool(
 const nexusTool = ai.defineTool(
   {
     name: 'nexus',
-    description: 'Génère une carte mentale hiérarchique à partir d\'une idée ou d\'un sujet.',
+    description: "Génère une carte mentale hiérarchique à partir d'une idée ou d'un sujet.",
     inputSchema: GenerateNexusInputSchema,
     outputSchema: GenerateNexusOutputSchema,
   },
@@ -302,5 +303,3 @@ const oriaRouterFlow = ai.defineFlow(
     return output;
   }
 );
-
-    

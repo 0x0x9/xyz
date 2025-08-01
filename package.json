@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 9002",
-    "genkit:dev": "genkit start --tsx src/ai/dev.ts",
-    "genkit:watch": "genkit start --tsx --watch src/ai/dev.ts",
-    "build": "next build",
-    "start": "next start",
+    "dev": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next dev -p 9002",
+    "genkit:dev": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json genkit start --tsx src/ai/dev.ts",
+    "genkit:watch": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json genkit start --tsx --watch src/ai/dev.ts",
+    "build": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next build",
+    "start": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },

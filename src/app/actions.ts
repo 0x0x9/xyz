@@ -51,6 +51,7 @@ export async function fluxAction(prevState: any, formData: FormData): Promise<{ 
         const result = await generateFlux({ prompt, job });
         return { ...prevState, message: 'success', result, error: null, prompt, job };
     } catch (e: any) {
+        console.error('Error in fluxAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, prompt, job };
     }
 }
@@ -62,6 +63,7 @@ export async function generateFrameAction(prevState: any, formData: FormData): P
         const result = await generateFrame({ prompt, photoDataUri: photoDataUri || undefined });
         return { ...prevState, message: 'success', result, error: null };
     } catch (e: any) {
+        console.error('Error in generateFrameAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message };
     }
 }
@@ -75,6 +77,7 @@ export async function oriaChatAction(prevState: any, formData: FormData): Promis
         const result = await oria({ prompt, history, context });
         return { message: 'success', error: null, id: prevState.id + 1, result };
     } catch (e: any) {
+        console.error('Error in oriaChatAction:', e);
         return { message: 'error', error: e.message || "An unknown error occurred", id: prevState.id + 1, result: null };
     }
 }
@@ -85,6 +88,7 @@ export async function generateScheduleAction(prevState: any, formData: FormData)
         const plan = await generateSchedule({ prompt });
         return { ...prevState, message: 'success', plan, error: null, prompt };
     } catch(e: any) {
+        console.error('Error in generateScheduleAction:', e);
         return { ...prevState, message: 'error', plan: null, error: e.message, prompt };
     }
 }
@@ -95,6 +99,7 @@ export async function generateTextAction(prevState: any, formData: FormData): Pr
         const result = await generateText({ prompt });
         return { message: 'success', text: result.text, error: null, id: prevState.id + 1, prompt };
     } catch (e: any) {
+        console.error('Error in generateTextAction:', e);
         return { message: 'error', text: '', error: e.message, id: prevState.id + 1, prompt };
     }
 }
@@ -104,6 +109,7 @@ export async function generateMoodboardAction(prompts: string[]) {
         const result = await generateMoodboard({ prompts });
         return { message: 'success', imageDataUris: result.imageDataUris, error: null };
     } catch (e: any) {
+        console.error('Error in generateMoodboardAction:', e);
         return { message: 'error', imageDataUris: [], error: e.message as string };
     }
 }
@@ -117,6 +123,7 @@ export async function parseEventAction(
         const result = await parseEvent({ prompt, currentDate: new Date().toISOString() });
         return { id: prevState.id + 1, success: true, event: result, error: null };
     } catch (e: any) {
+        console.error('Error in parseEventAction:', e);
         return { id: prevState.id + 1, success: false, event: null, error: e.message };
     }
 }
@@ -130,6 +137,7 @@ export async function generateMuseAction(prevState: any, formData: FormData): Pr
         const result = await generateMuse({ theme, mood, tempo, references });
         return { ...prevState, message: 'success', result, error: null, theme, mood, tempo, references };
     } catch (e: any) {
+        console.error('Error in generateMuseAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, theme, mood, tempo, references };
     }
 }
@@ -143,6 +151,7 @@ export async function copilotLyricsAction(prevState: any, formData: FormData): P
         const result = await copilotLyrics({ textToEdit, fullText, mood, action });
         return { success: true, suggestions: result.suggestions, error: null, action };
     } catch (e: any) {
+        console.error('Error in copilotLyricsAction:', e);
         return { success: false, suggestions: null, error: e.message, action };
     }
 }
@@ -153,6 +162,7 @@ export async function generateIdeasAction(prevState: any, formData: FormData): P
         const result = await generateIdeas({ prompt });
         return { ...prevState, message: 'success', result, error: null, prompt };
     } catch (e: any) {
+        console.error('Error in generateIdeasAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, prompt };
     }
 }
@@ -163,6 +173,7 @@ export async function generateMotionAction(prevState: any, formData: FormData): 
         const result = await generateMotion({ prompt });
         return { ...prevState, message: 'success', result, error: null, prompt };
     } catch(e: any) {
+        console.error('Error in generateMotionAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, prompt };
     }
 }
@@ -174,6 +185,7 @@ export async function generateImageAction(prevState: any, formData: FormData): P
         const { imageDataUri } = await generateImage({ prompt, style });
         return { ...prevState, message: 'success', imageDataUri, error: null, prompt, style };
     } catch (e: any) {
+        console.error('Error in generateImageAction:', e);
         return { ...prevState, message: 'error', imageDataUri: null, error: e.message, prompt, style };
     }
 }
@@ -184,16 +196,18 @@ export async function generateNexusAction(prevState: any, formData: FormData): P
         const result = await generateNexus({ prompt });
         return { ...prevState, message: 'success', result, error: null, prompt };
     } catch (e: any) {
+        console.error('Error in generateNexusAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, prompt };
     }
 }
 
-export async function generatePaletteAction(prevState: any, formData: FormData): Promise<{ message: string, result: GeneratePaletteOutput | null, error: string | null, id: number, prompt: string }> {
+export async function generatePaletteAction(prevState: any, formData: FormData): Promise<{ message: string, result: GeneratePaletteOutput | null, error: 'string' | null, id: number, prompt: string }> {
     const prompt = formData.get('prompt') as string;
     try {
         const result = await generatePalette({ prompt });
         return { ...prevState, message: 'success', result, error: null, prompt };
     } catch(e: any) {
+        console.error('Error in generatePaletteAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, prompt };
     }
 }
@@ -204,6 +218,7 @@ export async function generatePersonaAction(prevState: any, formData: FormData):
         const result = await generatePersona({ prompt });
         return { ...prevState, message: 'success', result, error: null, prompt };
     } catch(e: any) {
+        console.error('Error in generatePersonaAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, prompt };
     }
 }
@@ -214,6 +229,7 @@ export async function generateSoundAction(prevState: any, formData: FormData): P
         const result = await generateSound({ prompt });
         return { ...prevState, message: 'success', result, error: null, prompt };
     } catch(e: any) {
+        console.error('Error in generateSoundAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, prompt };
     }
 }
@@ -224,6 +240,7 @@ export async function generateToneAction(prevState: any, formData: FormData): Pr
         const result = await generateTone({ prompt });
         return { ...prevState, message: 'success', result, error: null, prompt };
     } catch (e: any) {
+        console.error('Error in generateToneAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, prompt };
     }
 }
@@ -247,6 +264,7 @@ export async function generateDeckAction(prevState: any, formData: FormData): Pr
         const result = await generateDeck({ prompt });
         return { ...prevState, message: 'success', result, error: null, prompt };
     } catch (e: any) {
+        console.error('Error in generateDeckAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, prompt };
     }
 }
@@ -258,6 +276,7 @@ export async function generateVoiceAction(prevState: any, formData: FormData): P
         const result = await generateVoice({ text, voice });
         return { ...prevState, message: 'success', result, error: null, text, voice };
     } catch (e: any) {
+        console.error('Error in generateVoiceAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, text, voice };
     }
 }
@@ -355,5 +374,3 @@ export async function uploadMuseDocumentAction(data: { name: string; content: st
         return { success: false, error: error.message || "An unknown error occurred" };
     }
 }
-
-    

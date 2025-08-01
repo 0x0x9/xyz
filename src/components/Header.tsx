@@ -59,6 +59,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Separator } from "./ui/separator";
+import { useAuth } from './auth-component';
 
 const navLinks = [
   { href: "/store", label: "Boutique" },
@@ -94,7 +95,7 @@ const generatorTools = [
     { href: "/voice", label: "(X)voice", icon: AudioLines },
     { href: "/editor", label: "(X).alpha", icon: SquareTerminal },
     { href: "/frame", label: "(X)frame", icon: LayoutTemplate },
-    { href: "/terminal", label: "(X)term", icon: Terminal },
+    { href: "/terminal", label: "(X)term', icon: Terminal },
     { href: "/code", label: '(X)code', icon: Code2 },
     { href: "/nexus", label: '(X)nexus', icon: Network },
     { href: "/agenda", label: '(X)agenda', icon: Calendar },
@@ -248,6 +249,8 @@ const DropdownMenuLinkItem = ({ href, label, description, icon: Icon }: { href: 
 
 export function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const { user, handleSignOut } = useAuth();
+  
   return (
     <header className="fixed top-0 left-0 right-0 z-50 p-4">
       <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between rounded-full glass-card relative">
@@ -273,7 +276,6 @@ export function Header() {
             </Button>
           ))}
           
-          {/* Outils Dropdown */}
           <DropdownMenuPrimitive.Root>
             <DropdownMenuPrimitive.Trigger asChild>
               <Button
@@ -287,7 +289,7 @@ export function Header() {
               <DropdownMenuPrimitive.Content
                 align="center"
                 sideOffset={10}
-                className="w-[580px] glass-card p-4 z-50 outline-none"
+                className="w-[500px] glass-card p-4 z-50 outline-none"
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: -10 }}
@@ -296,7 +298,7 @@ export function Header() {
                   transition={{ duration: 0.2, ease: "easeOut" }}
                   className="grid grid-cols-12 gap-4"
                 >
-                  <div className="col-span-6 space-y-1">
+                  <div className="col-span-5 space-y-1">
                      <h3 className="px-3 text-sm font-semibold text-muted-foreground mb-1">Écosystème</h3>
                      <div className="flex flex-col">
                        {ecosystemTools.map((tool) => (
@@ -305,7 +307,7 @@ export function Header() {
                      </div>
                   </div>
                   <Separator orientation="vertical" className="h-auto" />
-                  <div className="col-span-5 space-y-1">
+                  <div className="col-span-6 space-y-2">
                      <h3 className="px-2 text-sm font-semibold text-muted-foreground mb-2">Générateurs IA</h3>
                      <div className="grid grid-cols-2 gap-x-2 gap-y-1">
                         {generatorTools.map((tool) => (
@@ -318,7 +320,6 @@ export function Header() {
             </DropdownMenuPrimitive.Portal>
           </DropdownMenuPrimitive.Root>
           
-          {/* Communauté Dropdown */}
            <DropdownMenuPrimitive.Root>
             <DropdownMenuPrimitive.Trigger asChild>
               <Button
@@ -354,19 +355,25 @@ export function Header() {
           <div className="hidden md:flex items-center gap-2">
             <ThemeToggle />
             <CartSheet />
-            <Button
-              variant="ghost"
-              className="text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full"
-              asChild
-            >
-              <Link href="/login">Connexion</Link>
-            </Button>
-            <Button
-              className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full"
-              asChild
-            >
-              <Link href="/subscribe">S'abonner</Link>
-            </Button>
+            {user ? (
+                <>
+                    <Button variant="ghost" className="rounded-full" asChild>
+                      <Link href="/account">Mon Compte</Link>
+                    </Button>
+                    <Button variant="outline" className="rounded-full" onClick={handleSignOut}>
+                      Déconnexion
+                    </Button>
+                </>
+            ) : (
+                <>
+                    <Button variant="ghost" className="rounded-full" asChild>
+                        <Link href="/login">Connexion</Link>
+                    </Button>
+                    <Button className="rounded-full" asChild>
+                        <Link href="/subscribe">S'abonner</Link>
+                    </Button>
+                </>
+            )}
           </div>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
@@ -468,19 +475,23 @@ export function Header() {
                   <ThemeToggle />
                 </div>
                 <CartSheet />
-                <Button
-                  variant="outline"
-                  className="border-border bg-transparent hover:bg-accent/10 text-lg h-12 rounded-full"
-                  asChild
-                >
-                  <Link href="/login">Connexion</Link>
-                </Button>
-                <Button
-                  className="bg-accent hover:bg-accent/90 text-lg h-12 rounded-full"
-                  asChild
-                >
-                  <Link href="/subscribe">S'abonner</Link>
-                </Button>
+                {user ? (
+                   <>
+                      <Button asChild variant="outline" className="text-lg h-12 rounded-full">
+                        <Link href="/account">Mon Compte</Link>
+                      </Button>
+                       <Button onClick={handleSignOut} className="text-lg h-12 rounded-full">Déconnexion</Button>
+                   </>
+                ) : (
+                    <>
+                        <Button variant="outline" className="text-lg h-12 rounded-full" asChild>
+                            <Link href="/login">Connexion</Link>
+                        </Button>
+                        <Button className="text-lg h-12 rounded-full" asChild>
+                            <Link href="/subscribe">S'abonner</Link>
+                        </Button>
+                    </>
+                )}
               </div>
             </SheetContent>
           </Sheet>
