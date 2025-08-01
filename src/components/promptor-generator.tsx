@@ -118,7 +118,7 @@ function ResultsDisplay({ result, onReset }: { result: GenerateIdeasOutput, onRe
 }
 
 function PromptorForm({ state }: {
-    state: { message: string, result: GenerateIdeasOutput | null, error: string, id: number, prompt: string }
+    state: { message: string, result: GenerateIdeasOutput | null, error: string | null, id: number, prompt: string }
 }) {
     const { pending } = useFormStatus();
     
@@ -165,7 +165,7 @@ export default function PromptorGenerator({ initialResult, prompt }: { initialRe
     const initialState = {
         message: initialResult ? 'success' : '',
         result: initialResult || null,
-        error: '',
+        error: null,
         id: key,
         prompt: prompt || promptFromUrl || ''
     };
@@ -174,7 +174,7 @@ export default function PromptorGenerator({ initialResult, prompt }: { initialRe
     const { pending } = useFormStatus();
 
     useEffect(() => {
-        if (state.message === 'error' && state.error) {
+        if (state.error) {
             setShowForm(true);
             toast({
                 variant: 'destructive',
@@ -182,7 +182,7 @@ export default function PromptorGenerator({ initialResult, prompt }: { initialRe
                 description: state.error,
             });
         }
-        if (state.message === 'success' && state.result) {
+        if (state.result) {
             setShowForm(false);
         }
     }, [state, toast]);

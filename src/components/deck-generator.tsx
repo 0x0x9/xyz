@@ -177,7 +177,7 @@ function ResultsDisplay({ result, slidesWithImages, onReset }: { result: Generat
 }
 
 function DeckGeneratorForm({ state }: {
-    state: { message: string, result: GenerateDeckOutput | null, error: string, id: number, prompt: string },
+    state: { message: string, result: GenerateDeckOutput | null, error: string | null, id: number, prompt: string },
 }) {
     const { pending } = useFormStatus();
 
@@ -222,7 +222,7 @@ export default function DeckGenerator({ initialResult, prompt }: { initialResult
     const initialState = {
         message: initialResult ? 'success' : '',
         result: initialResult || null,
-        error: '',
+        error: null,
         id: key,
         prompt: prompt || ''
     };
@@ -233,7 +233,7 @@ export default function DeckGenerator({ initialResult, prompt }: { initialResult
     const { pending } = useFormStatus();
     
     useEffect(() => {
-        if (state.message === 'error' && state.error) {
+        if (state.error) {
             setShowForm(true);
             toast({
                 variant: 'destructive',
@@ -256,7 +256,7 @@ export default function DeckGenerator({ initialResult, prompt }: { initialResult
             initialSlides.forEach((slide, index) => {
                 const formData = new FormData();
                 formData.append('prompt', slide.imagePrompt);
-                generateImageAction({ id: Math.random() }, formData)
+                generateImageAction({ id: Math.random(), message: '', imageDataUri: null, error: null, prompt: '' }, formData)
                     .then(imageResult => {
                         if (imageResult.message === 'success' && imageResult.imageDataUri) {
                             setSlidesWithImages(prev => {

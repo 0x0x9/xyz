@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -88,7 +89,7 @@ function ResultsDisplay({ result, onReset }: { result: GeneratePaletteOutput, on
 }
 
 function PaletteForm({ state }: {
-    state: { message: string, result: GeneratePaletteOutput | null, error: string, id: number, prompt: string }
+    state: { message: string, result: GeneratePaletteOutput | null, error: string | null, id: number, prompt: string }
 }) {
     const { pending } = useFormStatus();
     
@@ -135,7 +136,7 @@ export default function PaletteGenerator({ initialResult, prompt }: { initialRes
     const initialState = { 
         message: initialResult ? 'success' : '', 
         result: initialResult || null, 
-        error: '', 
+        error: null, 
         id: key, 
         prompt: prompt || promptFromUrl || '' 
     };
@@ -144,7 +145,7 @@ export default function PaletteGenerator({ initialResult, prompt }: { initialRes
     const { pending } = useFormStatus();
 
     useEffect(() => {
-        if (state.message === 'error' && state.error) {
+        if (state.error) {
             setShowForm(true);
             toast({
                 variant: 'destructive',
@@ -152,7 +153,7 @@ export default function PaletteGenerator({ initialResult, prompt }: { initialRes
                 description: state.error,
             });
         }
-        if (state.message === 'success' && state.result) {
+        if (state.result) {
             setShowForm(false);
         }
     }, [state, toast]);

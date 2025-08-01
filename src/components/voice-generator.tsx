@@ -40,7 +40,7 @@ function SubmitButton() {
   );
 }
 
-function VoiceGeneratorFormBody({ state }: { state: { message: string, result: { audioDataUri: string | null }, error: string, id: number, text: string, voice: string } }) {
+function VoiceGeneratorFormBody({ state }: { state: { message: string, result: { audioDataUri: string | null }, error: string | null, id: number, text: string, voice: string } }) {
   const { pending } = useFormStatus();
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
@@ -159,7 +159,7 @@ export default function VoiceGenerator({ initialText, initialAudioDataUri, promp
   const initialState = {
       message: initialAudioDataUri ? 'success' : '',
       result: { audioDataUri: initialAudioDataUri || null },
-      error: '',
+      error: null,
       id: 0,
       text: initialText || prompt || '',
       voice: 'Algenib'
@@ -170,7 +170,7 @@ export default function VoiceGenerator({ initialText, initialAudioDataUri, promp
   const { addNotification } = useNotifications();
 
   useEffect(() => {
-    if (state.message === 'error' && state.error) {
+    if (state.error) {
       toast({
         variant: 'destructive',
         title: 'Erreur',

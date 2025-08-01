@@ -24,7 +24,7 @@ function SubmitButton() {
 }
 
 function TextGeneratorFormBody({ state }: { 
-    state: { message: string, text: string, error: string, id: number, prompt: string }
+    state: { message: string, text: string, error: string | null, id: number, prompt: string }
 }) {
   const { pending } = useFormStatus();
   const { toast } = useToast();
@@ -61,7 +61,7 @@ function TextGeneratorFormBody({ state }: {
             const dataUri = `data:text/plain;base64,${btoa(unescape(encodeURIComponent(state.text)))}`;
             
             await uploadDocumentAction({ name: fileName, content: dataUri, mimeType: 'text/plain' });
-            toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)drive.` });
+            toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)cloud.` });
         } catch (error: any) {
             toast({ variant: 'destructive', title: "Erreur d'enregistrement", description: error.message });
         } finally {
@@ -151,29 +151,18 @@ export default function TextGenerator({ initialText, prompt }: { initialText?: s
   const initialState = {
       message: initialText ? 'success' : '',
       text: initialText || '',
-      error: '',
+      error: null,
       id: 0,
       prompt: prompt || promptFromUrl || ''
   };
   
-  const formAction = async (prevState: any, formData: FormData) => {
-    const promptText = formData.get('prompt') as string;
-    try {
-        const result = await generateTextAction(prevState, formData);
-        if (result.error) throw new Error(result.error);
-        return { ...result, message: 'success', prompt: promptText };
-    } catch (e: any) {
-        return { ...prevState, message: 'error', error: e.message, prompt: promptText };
-    }
-  }
-
-  const [state, dispatch] = useFormState(formAction, initialState);
+  const [state, dispatch] = useFormState(generateTextAction, initialState);
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   const { addNotification } = useNotifications();
 
   useEffect(() => {
-    if (state.message === 'error' && state.error) {
+    if (state.error) {
       toast({
         variant: 'destructive',
         title: 'Erreur',

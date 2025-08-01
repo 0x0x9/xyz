@@ -125,9 +125,8 @@ function ResultsDisplay({ result, onReset }: { result: GenerateNexusOutput, onRe
     );
 }
 
-function NexusForm({ state, onReset }: {
-    state: { message: string, result: GenerateNexusOutput | null, error: string, id: number, prompt: string },
-    onReset: () => void;
+function NexusForm({ state }: {
+    state: { message: string, result: GenerateNexusOutput | null, error: string | null, id: number, prompt: string },
 }) {
     const { pending } = useFormStatus();
     
@@ -172,7 +171,7 @@ export default function NexusGenerator({ initialResult, prompt }: { initialResul
     const initialState = {
         message: initialResult ? 'success' : '',
         result: initialResult || null,
-        error: '',
+        error: null,
         id: key,
         prompt: prompt || ''
     };
@@ -181,7 +180,7 @@ export default function NexusGenerator({ initialResult, prompt }: { initialResul
     const { pending } = useFormStatus();
     
     useEffect(() => {
-        if (state.message === 'error' && state.error) {
+        if (state.error) {
             setShowForm(true);
             toast({
                 variant: 'destructive',
@@ -189,7 +188,7 @@ export default function NexusGenerator({ initialResult, prompt }: { initialResul
                 description: state.error,
             });
         }
-        if (state.message === 'success' && state.result) {
+        if (state.result) {
             setShowForm(false);
         }
     }, [state, toast]);
@@ -202,7 +201,7 @@ export default function NexusGenerator({ initialResult, prompt }: { initialResul
     return (
         <form action={formAction} key={key}>
              <div className="max-w-4xl mx-auto">
-                {showForm && <NexusForm state={initialState} onReset={handleReset}/>}
+                {showForm && <NexusForm state={initialState} />}
                 
                 {pending && (
                     <div className="mt-12">

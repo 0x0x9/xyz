@@ -147,7 +147,7 @@ function ResultsDisplay({ result, language }: { result: GenerateCodeOutput, lang
 }
 
 function CodeGeneratorFormBody({ state }: {
-    state: { message: string, result: GenerateCodeOutput | null, error: string, id: number, prompt: string, language: string },
+    state: { message: string, result: GenerateCodeOutput | null, error: string | null, id: number, prompt?: string, language?: string },
 }) {
     const { pending } = useFormStatus();
 
@@ -218,7 +218,7 @@ function CodeGeneratorFormBody({ state }: {
                 </div>
             )}
 
-            {!pending && state.result && <ResultsDisplay result={state.result} language={state.language} />}
+            {!pending && state.result && <ResultsDisplay result={state.result} language={state.language!} />}
         </div>
     );
 }
@@ -232,38 +232,25 @@ export default function CodeGenerator({ initialResult, prompt, language }: { ini
     const initialState = {
         message: initialResult ? 'success' : '',
         result: initialResult || null,
-        error: '',
+        error: null,
         id: 0,
         prompt: prompt || promptFromUrl || '',
         language: language || langFromUrl || 'typescript'
     };
     
-    const formAction = async (prevState: any, formData: FormData) => {
-        const lang = formData.get('language') as string;
-        const promptText = formData.get('prompt') as string;
-        
-        try {
-            const result = await generateCodeAction(prevState, formData);
-            if (result.error) throw new Error(result.error);
-            return { ...result, message: 'success', prompt: promptText, language: lang };
-        } catch (e: any) {
-            return { ...prevState, message: 'error', error: e.message, prompt: promptText, language: lang };
-        }
-    }
-
-    const [state, dispatch] = useFormState(formAction, initialState);
+    const [state, dispatch] = useFormState(generateCodeAction, initialState);
     const { toast } = useToast();
     const { addNotification } = useNotifications();
 
     useEffect(() => {
-        if (state.message === 'error' && state.error) {
+        if (state.error) {
             toast({
                 variant: 'destructive',
                 title: 'Erreur (X)code',
                 description: state.error,
             });
         }
-        if (state.message === 'success' && state.result) {
+        if (state.result) {
             const resultId = `code-result-${state.id}`;
             const handleClick = () => {
                 localStorage.setItem(resultId, JSON.stringify(state));
@@ -273,7 +260,7 @@ export default function CodeGenerator({ initialResult, prompt, language }: { ini
             addNotification({
                 icon: Code2,
                 title: "Code généré !",
-                description: `Votre snippet pour "${state.prompt.substring(0, 30)}..." est prêt.`,
+                description: `Votre snippet pour "${state.prompt?.substring(0, 30)}..." est prêt.`,
                 onClick: handleClick
             });
         }

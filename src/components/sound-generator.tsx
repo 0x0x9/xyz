@@ -81,7 +81,7 @@ function ResultsDisplay({ result, onReset }: { result: GenerateSoundOutput, onRe
 }
 
 function SoundForm({ state }: {
-    state: { message: string, result: GenerateSoundOutput | null, error: string, id: number, prompt: string }
+    state: { message: string, result: GenerateSoundOutput | null, error: string | null, id: number, prompt: string }
 }) {
     const { pending } = useFormStatus();
 
@@ -136,7 +136,7 @@ export default function SoundGenerator({ initialResult, prompt }: { initialResul
     const initialState = {
         message: initialResult ? 'success' : '',
         result: initialResult || null,
-        error: '',
+        error: null,
         id: key,
         prompt: prompt || promptFromUrl || ''
     };
@@ -146,7 +146,7 @@ export default function SoundGenerator({ initialResult, prompt }: { initialResul
     const { pending } = useFormStatus();
 
     useEffect(() => {
-        if (state.message === 'error' && state.error) {
+        if (state.error) {
             setShowForm(true);
             toast({
                 variant: 'destructive',
@@ -154,7 +154,7 @@ export default function SoundGenerator({ initialResult, prompt }: { initialResul
                 description: state.error,
             });
         }
-         if (state.message === 'success' && state.result) {
+         if (state.result) {
             setShowForm(false);
             const resultId = `sound-result-${state.id}`;
             const handleClick = () => {

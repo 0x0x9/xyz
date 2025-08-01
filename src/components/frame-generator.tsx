@@ -84,7 +84,6 @@ export default function FrameGenerator() {
                         name="prompt"
                         placeholder="Exemple : Une carte de profil utilisateur avec un avatar, un nom, et un bouton 'Suivre'."
                         rows={6}
-                        required
                         minLength={10}
                         className="bg-transparent text-base"
                         disabled={pending}
@@ -95,7 +94,7 @@ export default function FrameGenerator() {
                         <input type="file" accept="image/*" onChange={handleFileChange} ref={fileInputRef} className="hidden" />
                         {imageDataUri ? (
                             <div className="relative group w-full h-32 rounded-lg border border-dashed border-border flex items-center justify-center">
-                                <Image src={imageDataUri} alt="Aperçu de l'image" layout="fill" objectFit="contain" className="p-2"/>
+                                <Image src={imageDataUri} alt="Aperçu de l'image" fill objectFit="contain" className="p-2"/>
                                 <Button
                                     type="button"
                                     variant="destructive"

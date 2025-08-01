@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -146,7 +147,7 @@ function ResultsDisplay({ personas, onReset }: { personas: PersonaWithImage[], o
 
 
 function PersonaForm({ state }: {
-    state: { message: string, result: GeneratePersonaOutput | null, error: string, id: number, prompt: string }
+    state: { message: string, result: GeneratePersonaOutput | null, error: string | null, id: number, prompt: string }
 }) {
     const { pending } = useFormStatus();
 
@@ -193,7 +194,7 @@ export default function PersonaGenerator({ initialResult, prompt }: { initialRes
     const initialState = { 
         message: initialResult ? 'success' : '', 
         result: initialResult || null, 
-        error: '', 
+        error: null, 
         id: key, 
         prompt: prompt || promptFromUrl || '' 
     };
@@ -203,7 +204,7 @@ export default function PersonaGenerator({ initialResult, prompt }: { initialRes
     const { pending } = useFormStatus();
 
     useEffect(() => {
-        if (state.message === 'error' && state.error) {
+        if (state.error) {
             setShowForm(true);
             toast({
                 variant: 'destructive',
@@ -212,7 +213,7 @@ export default function PersonaGenerator({ initialResult, prompt }: { initialRes
             });
         }
 
-        if (state.message === 'success' && state.result?.personas) {
+        if (state.result?.personas) {
             setShowForm(false);
             const initialPersonas = state.result.personas.map(p => ({ ...p, isLoadingImage: true }));
             setPersonasWithImages(initialPersonas);
@@ -221,7 +222,7 @@ export default function PersonaGenerator({ initialResult, prompt }: { initialRes
                 const formData = new FormData();
                 formData.append('prompt', persona.avatarPrompt);
                 
-                generateImageAction({ id: Math.random() }, formData)
+                generateImageAction({ id: Math.random(), message: '', imageDataUri: null, error: null, prompt: '' }, formData)
                     .then(imageResult => {
                         if (imageResult.message === 'success' && imageResult.imageDataUri) {
                             setPersonasWithImages(prev => {
