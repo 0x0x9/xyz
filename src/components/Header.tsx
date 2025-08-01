@@ -95,7 +95,7 @@ const generatorTools = [
     { href: "/voice", label: "(X)voice", icon: AudioLines },
     { href: "/editor", label: "(X).alpha", icon: SquareTerminal },
     { href: "/frame", label: "(X)frame", icon: LayoutTemplate },
-    { href: "/terminal", label: "(X)term', icon: Terminal },
+    { href: "/terminal", label: "(X)term", icon: Terminal },
     { href: "/code", label: '(X)code', icon: Code2 },
     { href: "/nexus", label: '(X)nexus', icon: Network },
     { href: "/agenda", label: '(X)agenda', icon: Calendar },

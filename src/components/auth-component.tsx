@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signOut, signInWithEmailAndPassword, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
 export const useAuth = () => {
