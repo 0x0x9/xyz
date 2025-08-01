@@ -3,13 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next dev -p 9002",
-    "genkit:dev": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json genkit start --tsx src/ai/dev.ts",
+    "dev": "npm run genkit:dev-concurrently",
+    "genkit:dev": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next dev -p 9002",
     "genkit:watch": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json genkit start --tsx --watch src/ai/dev.ts",
-    "build": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next build",
-    "start": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next start",
+    "build": "npm run build:genkit && npm run build:next",
+    "build:next": "next build",
+    "start": "npm run start:next",
+    "start:next": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:genkit": "genkit build",
+    "genkit:dev-concurrently": "concurrently \"npm run genkit:watch\" \"npm run start:next\""
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.2",
