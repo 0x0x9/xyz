@@ -97,10 +97,10 @@ const OriaResultDisplay = ({ result, openApp }: { result: OriaChatOutput, openAp
                     const appId = appMapping[typedKey]!;
                     let props: Record<string, any> = { prompt: fluxData.projectPlan?.creativeBrief };
 
-                    if (typedKey === 'frame') props = { initialProjectCodes: { html: fluxData.frame!.htmlCode, css: fluxData.frame!.cssCode, js: fluxData.frame!.jsCode }};
-                    else if (typedKey === 'text') props = { initialFile: { code: fluxData.text!.text, language: 'markdown' } };
-                    else if (typedKey === 'code') props = { initialFile: { code: fluxData.code!.code, language: 'typescript' } };
-                    else props = { initialResult: fluxData[typedKey] };
+                    if (typedKey === 'frame') props = { ...props, initialProjectCodes: { html: fluxData.frame!.htmlCode, css: fluxData.frame!.cssCode, js: fluxData.frame!.jsCode }};
+                    else if (typedKey === 'text') props = { ...props, initialFile: { code: fluxData.text!.text, language: 'markdown' } };
+                    else if (typedKey === 'code') props = { ...props, initialFile: { code: fluxData.code!.code, language: 'typescript' } };
+                    else props = { ...props, initialResult: fluxData[typedKey] };
 
                     appsToOpen.push({ appId, props });
                 }
@@ -458,89 +458,47 @@ function OriaXosUI({ messages, handleReset, openApp, formRef }: { messages: Mess
 
 export default function OriaXOS({ openApp }: OriaXosProps) {
   const formRef = useRef<HTMLFormElement>(null);
-  const nextId = useRef(0);
-
   const [messages, setMessages] = useState<Message[]>([]);
   const initialState = { id: 0, result: null, error: '', message: '' };
+  const [state, formAction] = useFormState(oriaChatAction, initialState);
 
   const handleReset = () => {
     setMessages([]);
   };
 
-  const clientAction = async (prevState: any, formData: FormData) => {
-    const prompt = formData.get('prompt') as string;
-    if (!prompt.trim()) return initialState;
-
-    const history: OriaHistoryMessage[] = messages.map(msg => ({
-        role: msg.type === 'user' ? 'user' : 'model',
-        content: msg.type === 'user' ? msg.text! : JSON.stringify(msg.result!)
-    }));
-
-    formData.append('history', JSON.stringify(history));
-
-    setMessages(prev => [...prev, { id: nextId.current++, type: 'user', text: prompt }]);
-    
-    const result = await oriaChatAction(prevState, formData);
-    
-    if (result.message === 'success' && result.result) {
-        setMessages(prev => [...prev, {
-            id: nextId.current++,
-            type: 'oria',
-            result: result.result
-        }]);
-    } else {
-         setMessages(prev => [...prev, { id: nextId.current++, type: 'oria', text: `Erreur: ${result.error || 'Une erreur est survenue.'}` }]);
-    }
-    
-    formRef.current?.reset();
-    return result;
-  }
-
-  const [state, formAction] = useFormState(clientAction, initialState);
-  const { toast } = useToast();
-
-  const historyForForm = JSON.stringify(
-    messages.slice(-10).map((msg) => {
-      if (msg.type === 'user') {
-        return { role: 'user', content: msg.text || '' };
-      }
-
-      let content = msg.text || '';
-      if (msg.result) {
-        const summarizedResult = JSON.parse(JSON.stringify(msg.result));
-        if (summarizedResult.type === 'tool_result' && summarizedResult.data) {
-          const data = summarizedResult.data as any;
-          if (data.imageDataUri) data.imageDataUri = '[Image Data]';
-          if (data.audioDataUri) data.audioDataUri = '[Audio Data]';
-          if (data.imageDataUris) data.imageDataUris = data.imageDataUris.map(() => '[Image Data]');
-          if (data.scenes) {
-            data.scenes = data.scenes.map((scene: any) =>
-              scene.imageDataUri ? { ...scene, imageDataUri: '[Image Data]' } : scene
-            );
-          }
-          if (data.text && data.text.length > 500) data.text = data.text.substring(0, 500) + '...';
-          if (data.code && data.code.length > 1000) data.code = data.code.substring(0, 1000) + '...';
-        }
-        content = JSON.stringify(summarizedResult);
-      }
-
-      return {
-        role: 'model',
-        content: content,
-      };
-    })
-  );
-
   useEffect(() => {
-    if (state.message === 'error' && state.error && state.id > 0) {
-      toast({ variant: 'destructive', title: 'Erreur Oria', description: state.error });
+    if (state.id > 0) { // Action has been processed
+        if (state.message === 'success' && state.result) {
+            setMessages(prev => [...prev, {
+                id: state.id,
+                type: 'oria',
+                result: state.result,
+            }]);
+        } else if (state.message === 'error') {
+            setMessages(prev => [...prev, { id: state.id, type: 'oria', text: `Erreur: ${state.error || 'Une erreur est survenue.'}` }]);
+        }
+        formRef.current?.reset();
     }
-  }, [state, toast]);
+  }, [state]);
+
+  const wrappedAction = (formData: FormData) => {
+    const prompt = formData.get('prompt') as string;
+    if (!prompt.trim()) return;
+
+    const history: OriaHistoryMessage[] = messages.slice(-10).map(msg => ({
+      role: msg.type === 'user' ? 'user' : 'model',
+      content: msg.type === 'user' ? msg.text! : JSON.stringify(msg.result!)
+    }));
+    
+    formData.set('history', JSON.stringify(history));
+    setMessages(prev => [...prev, { id: Date.now(), type: 'user', text: prompt }]);
+    
+    formAction(formData);
+  };
 
   return (
-    <form ref={formRef} action={formAction} className="h-full">
+    <form ref={formRef} action={wrappedAction} className="h-full">
         <input type="hidden" name="context" value="xos" />
-        <input type="hidden" name="history" value={historyForForm} />
         <OriaXosUI messages={messages} handleReset={handleReset} openApp={openApp} formRef={formRef} />
     </form>
   );

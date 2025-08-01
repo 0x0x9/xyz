@@ -403,52 +403,52 @@ function OriaChatUI({ messages, handleReset, formRef }: { messages: Message[], h
 
 export default function HomepageOriaChat() {
   const formRef = useRef<HTMLFormElement>(null);
-  const nextId = useRef(0);
-
   const [messages, setMessages] = useState<Message[]>([]);
+  
   const initialState = { id: 0, result: null, error: '', message: '' };
+  const [state, formAction] = useFormState(oriaChatAction, initialState);
 
   const handleReset = () => {
     setMessages([]);
   };
 
-  const clientAction = async (formData: FormData) => {
-    const prompt = formData.get('prompt') as string;
-    if (!prompt.trim()) return;
-    
-    setMessages(prev => [...prev, { id: nextId.current++, type: 'user', text: prompt }]);
+  useEffect(() => {
+    if (state.id > 0) { // Action has been processed
+        if (state.message === 'success' && state.result) {
+            setMessages(prev => [...prev, {
+                id: state.id,
+                type: 'oria',
+                result: state.result,
+            }]);
+        } else if (state.message === 'error') {
+            let errorMessage = "Désolé, une erreur est survenue. Veuillez réessayer.";
+             if (state.error && (state.error.includes('quota') || state.error.includes('rate-limit'))) {
+                errorMessage = "Désolé, le quota de l'API a été atteint. Veuillez réessayer plus tard ou vérifier votre clé d'API Google.";
+            }
+            setMessages(prev => [...prev, { id: state.id, type: 'oria', text: errorMessage }]);
+        }
+        formRef.current?.reset();
+    }
+  }, [state]);
+  
+  const wrappedAction = (formData: FormData) => {
+      const prompt = formData.get('prompt') as string;
+      if (!prompt.trim()) return;
 
-    const history: OriaHistoryMessage[] = [
-        ...messages,
-        { id: nextId.current -1, type: 'user', text: prompt }
-    ].slice(-10).map(msg => ({
+      const history: OriaHistoryMessage[] = messages.slice(-10).map(msg => ({
         role: msg.type === 'user' ? 'user' : 'model',
         content: msg.type === 'user' ? msg.text! : JSON.stringify(msg.result!)
-    }));
+      }));
+      
+      formData.set('history', JSON.stringify(history));
+      setMessages(prev => [...prev, { id: Date.now(), type: 'user', text: prompt }]);
+      
+      formAction(formData);
+  };
 
-    const actionFormData = new FormData(formRef.current!);
-    actionFormData.set('history', JSON.stringify(history));
-    
-    const result = await oriaChatAction(initialState, actionFormData);
-    
-    if (result.message === 'success' && result.result) {
-        setMessages(prev => [...prev, {
-            id: nextId.current++,
-            type: 'oria',
-            result: result.result,
-        }]);
-    } else if (result.message === 'error') {
-        let errorMessage = "Désolé, une erreur est survenue. Veuillez réessayer.";
-        if (result.error && (result.error.includes('quota') || result.error.includes('rate-limit'))) {
-            errorMessage = "Désolé, le quota de l'API a été atteint. Veuillez réessayer plus tard ou vérifier votre clé d'API Google.";
-        }
-        setMessages(prev => [...prev, { id: nextId.current++, type: 'oria', text: errorMessage }]);
-    }
-    formRef.current?.reset();
-  }
 
   return (
-    <form ref={formRef} action={clientAction}>
+    <form ref={formRef} action={wrappedAction}>
         <input type="hidden" name="context" value="homepage" />
         <OriaChatUI messages={messages} handleReset={handleReset} formRef={formRef} />
     </form>
