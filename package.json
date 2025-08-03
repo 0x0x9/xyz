@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run genkit:watch\" \"npm run genkit:dev\"",
+    "dev": "concurrently \"npm:genkit:watch\" \"npm:genkit:dev\"",
     "genkit:dev": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next dev -p 9002",
     "genkit:watch": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json genkit start",
     "build": "genkit build && next build",
