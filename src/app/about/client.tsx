@@ -11,8 +11,8 @@ import Link from 'next/link';
 
 const teamMembers = [
   { name: 'Démon François', role: 'Fondateur & CEO', avatar: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80', hint: 'man portrait, professional, apple style' },
-  { name: 'Alfred Sisley', role: 'Directeur de la Technologie (CTO)', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80', hint: 'woman portrait, professional, apple style' },
-  { name: 'Ziari Kamal', role: 'Chef du Design (CDO)', avatar: 'https://images.unsplash.com/photo-1568822617270-359510685203?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80', hint: 'arab geek' },
+  { name: 'Alfred Sisley', role: 'Directeur de la Technologie (CTO)', avatar: 'https://plus.unsplash.com/premium_photo-1753080951630-2f2834bf8471?q=80&w=2266&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', hint: 'woman portrait, professional, apple style' },
+  { name: 'Ziari Kamal', role: 'Chef du Design (CDO)', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80', hint: 'arab geek' },
   { name: 'Chloé Martin', role: 'Responsable Communauté', avatar: 'https://images.unsplash.com/photo-1519340333755-c6e2a6a1b49a?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80', hint: 'woman portrait, friendly, apple style' },
 ];
 
