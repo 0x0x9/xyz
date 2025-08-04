@@ -263,7 +263,7 @@ export function Header() {
             <span>(X)yzz.</span>
           </Link>
         </div>
-        <nav className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1 bg-background/50 dark:bg-black/20 border border-border rounded-full p-1">
+        <nav className="hidden lg:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1 bg-background/50 dark:bg-black/20 border border-border rounded-full p-1">
           
           {navLinks.map((link) => (
             <Button
@@ -352,7 +352,7 @@ export function Header() {
 
         </nav>
         <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             <ThemeToggle />
             <CartSheet />
             {user ? (
@@ -380,7 +380,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full"
+                className="lg:hidden text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full"
               >
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Ouvrir le menu</span>
