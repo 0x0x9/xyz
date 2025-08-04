@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Cpu, Zap, Layers, Folder, Check, ArrowRight, Sparkles, Users } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const features = [
     { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw' },
@@ -105,6 +106,30 @@ export default function FeaturesClient() {
     },
 ]
 
+const whoIsItFor = [
+    {
+        title: "Pour les créatifs",
+        description: "Une suite d'outils IA intégrés qui comprennent votre vision et vous aident à la réaliser plus rapidement que jamais.",
+        icon: Sparkles,
+        image: "https://images.unsplash.com/photo-1611791485440-24e82b781373?auto=format&fit=crop&w=800&q=80",
+        imageHint: "artist painting digital"
+    },
+    {
+        title: "Pour les technophiles",
+        description: "Une architecture matérielle et logicielle ouverte, conçue pour la performance et la personnalisation, sans aucune limite.",
+        icon: Cpu,
+        image: "https://images.unsplash.com/photo-1550745165-9bc0b252726a?auto=format&fit=crop&w=800&q=80",
+        imageHint: "retro computer setup"
+    },
+    {
+        title: "Pour les équipes",
+        description: "Des outils collaboratifs natifs et une gestion de projet unifiée pour travailler en parfaite synchronisation, où que vous soyez.",
+        icon: Users,
+        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+        imageHint: "team collaborating office"
+    },
+]
+
   return (
     <>
       <div className="relative h-screen">
@@ -130,25 +155,52 @@ export default function FeaturesClient() {
             </div>
         </AnimatedSection>
         <AnimatedSection>
-            <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 text-center container mx-auto px-6 lg:px-8">
-                <div>
-                    <Sparkles className="h-12 w-12 text-primary mx-auto"/>
-                    <h3 className="mt-4 text-2xl font-bold">Pour les créatifs</h3>
-                    <p className="mt-2 text-muted-foreground">Une suite d'outils IA intégrés qui comprennent votre vision et vous aident à la réaliser plus rapidement que jamais.</p>
-                </div>
-                <div>
-                    <Cpu className="h-12 w-12 text-primary mx-auto"/>
-                    <h3 className="mt-4 text-2xl font-bold">Pour les technophiles</h3>
-                    <p className="mt-2 text-muted-foreground">Une architecture matérielle et logicielle ouverte, conçue pour la performance et la personnalisation.</p>
-                </div>
-                <div>
-                    <Users className="h-12 w-12 text-primary mx-auto"/>
-                    <h3 className="mt-4 text-2xl font-bold">Pour les équipes</h3>
-                    <p className="mt-2 text-muted-foreground">Des outils collaboratifs natifs et une gestion de projet unifiée pour travailler en parfaite synchronisation.</p>
-                </div>
-            </div>
+             <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 container mx-auto px-6 lg:px-8">
+                {whoIsItFor.map((item, i) => (
+                    <div key={i} className="relative aspect-[4/5] rounded-2xl overflow-hidden glass-card group">
+                        <Image
+                            src={item.image}
+                            alt={item.title}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            data-ai-hint={item.imageHint}
+                        />
+                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                         <div className="absolute bottom-0 left-0 p-8 text-white">
+                            <div className="p-2 bg-white/10 rounded-lg border border-white/20 mb-3 w-fit backdrop-blur-sm">
+                                <item.icon className="h-6 w-6" />
+                            </div>
+                            <h3 className="text-2xl font-bold">{item.title}</h3>
+                            <p className="mt-2 text-white/80">{item.description}</p>
+                        </div>
+                    </div>
+                ))}
+             </div>
         </AnimatedSection>
       </Section>
+      
+       <Section>
+            <AnimatedSection className="text-center">
+                <h2 className="section-title">La création, réinventée.</h2>
+                <p className="section-subtitle">
+                    Voyez comment notre suite d'outils et notre système d'exploitation unifié transforment votre processus créatif.
+                </p>
+            </AnimatedSection>
+            <AnimatedSection className="mt-16">
+                <div className="glass-card p-2 md:p-3 max-w-6xl mx-auto rounded-2xl">
+                    <div className="aspect-video w-full">
+                        <iframe
+                        src="https://www.youtube.com/embed/SqJGQ25sc8Q?si=279cRsOPl_dffifa&autoplay=1&mute=1&loop=1&playlist=SqJGQ25sc8Q&controls=0&showinfo=0"
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full rounded-lg"
+                        ></iframe>
+                    </div>
+                </div>
+            </AnimatedSection>
+        </Section>
       
        <Section>
             <AnimatedSection>
@@ -214,3 +266,5 @@ const Section = ({ children, className }: { children: React.ReactNode, className
       {children}
     </section>
   );
+
+
