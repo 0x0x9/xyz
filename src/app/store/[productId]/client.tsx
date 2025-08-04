@@ -39,6 +39,20 @@ export default function ProductClient({ product, relatedProducts }: { product: P
     const handleConfigChange = (newConfig: Configuration, newPrice: number) => {
         setConfiguration(newConfig);
         setTotalPrice(newPrice);
+        // Change image based on config
+        const configKeys = Object.keys(newConfig);
+        const changedKey = configKeys.find(key => newConfig[key as keyof Configuration] !== (configuration?.[key as keyof Configuration] ?? ''));
+        
+        if (changedKey) {
+            const optionsMap: Record<string, number> = {
+                'gpu': 1, 'ram': 2, 'storage': 3, 'cpu': 0,
+            };
+            const component = changedKey as keyof typeof optionsMap;
+            const imageIndex = optionsMap[component] || 0;
+            if (product.images[imageIndex]) {
+                setActiveImage(product.images[imageIndex]);
+            }
+        }
     }
 
     return (

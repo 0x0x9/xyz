@@ -17,9 +17,9 @@ export const products: Product[] = [
     description: "La puissance brute pour l'IA, la 3D et la vidéo 8K. Le summum de la performance.",
     price: 3499.00,
     images: [
-        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1611266964409-51c142ecb6d6?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1587593665183-a773cb21f845?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80",
         "https://images.unsplash.com/photo-1588229712046-5682b1377854?auto=format&fit=crop&w=800&q=80"
     ],
     hint: "powerful desktop computer",
