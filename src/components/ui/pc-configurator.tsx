@@ -3,11 +3,10 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
-import { Cpu, HardDrive, MemoryStick, CircuitBoard } from 'lucide-react';
-import { Separator } from './separator';
+import { Cpu, HardDrive, MemoryStick, CircuitBoard, CheckCircle } from 'lucide-react';
 
 type Option = {
     name: string;
@@ -80,7 +79,7 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
             <CardHeader>
                 <CardTitle>Configurez votre station</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-8">
                 <ConfigSection icon={Cpu} title="Processeur (CPU)" type="cpu" value={config.cpu} onSelect={handleSelection} />
                 <ConfigSection icon={CircuitBoard} title="Carte Graphique (GPU)" type="gpu" value={config.gpu} onSelect={handleSelection} />
                 <ConfigSection icon={MemoryStick} title="Mémoire (RAM)" type="ram" value={config.ram} onSelect={handleSelection} />
@@ -103,28 +102,36 @@ function ConfigSection({ icon: Icon, title, type, value, onSelect }: {
                 <Icon className="h-5 w-5 text-primary" />
                 {title}
             </h3>
-            <RadioGroup value={value} onValueChange={(val) => onSelect(type, val)} className="space-y-2">
-                {options[type].map(option => (
-                    <Label
-                        key={option.name}
-                        htmlFor={`${type}-${option.name.replace(/\s/g, '-')}`}
-                        className={cn(
-                            "flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all duration-300",
-                            "bg-card/95 dark:bg-card/80 border-border shadow-md",
-                            "hover:bg-card/25 dark:hover:bg-card/50 hover:border-primary/30 hover:backdrop-blur-xl",
-                            value === option.name && "border-primary bg-primary/20 ring-2 ring-primary/50"
-                        )}
-                    >
-                        <span className="font-medium">{option.name}</span>
-                        <div className="flex items-center gap-4">
-                            <span className="text-sm text-muted-foreground">
-                                {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
-                            </span>
-                            <RadioGroupItem value={option.name} id={`${type}-${option.name.replace(/\s/g, '-')}`} className="border-white/50" />
-                        </div>
-                    </Label>
-                ))}
-            </RadioGroup>
+            <Carousel opts={{ align: "start", slidesToScroll: 1 }} className="w-full">
+                <CarouselContent>
+                    {options[type].map((option, index) => (
+                        <CarouselItem key={index} className="basis-1/2 md:basis-1/3">
+                            <div className="p-1">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => onSelect(type, option.name)}
+                                    className={cn(
+                                        "w-full h-full p-4 flex flex-col items-center justify-center text-center gap-2 rounded-xl border-2 transition-all duration-200 text-foreground",
+                                        value === option.name
+                                            ? "border-primary bg-primary/10 ring-2 ring-primary/50"
+                                            : "bg-card/50 border-border"
+                                    )}
+                                >
+                                    {value === option.name && (
+                                        <CheckCircle className="absolute top-2 right-2 h-5 w-5 text-primary" />
+                                    )}
+                                    <span className="font-medium text-sm">{option.name}</span>
+                                    <span className="text-xs text-muted-foreground">
+                                        {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
+                                    </span>
+                                </Button>
+                            </div>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden sm:flex" />
+                <CarouselNext className="hidden sm:flex" />
+            </Carousel>
         </div>
     )
 }
