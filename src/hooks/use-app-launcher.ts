@@ -5,19 +5,13 @@ import { useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { getActionResult } from '@/app/actions';
 import type { GenerateFluxOutput } from '@/ai/types';
-import type { WindowInstance } from './use-window-manager';
 
 type OpenWindowFn = (appId: string, props?: Record<string, any>) => void;
-type CloseWindowFn = (id: number) => void;
 
-export function useAppLauncher(openWindow: OpenWindowFn, closeWindow: CloseWindowFn) {
+export function useAppLauncher(openWindow: OpenWindowFn) {
     const { toast } = useToast();
 
     const launchFluxProject = useCallback(async (fluxResult: GenerateFluxOutput, prompt?: string) => {
-        const fluxTaskId = Date.now();
-        // This is a bit of a hack, we can't directly manipulate the window state from here.
-        // We'd need a way to signal loading state back to the XOS client.
-        // For now, we'll just open the windows.
         toast({ title: "Construction de l'espace de travail (X)flux..." });
 
         const appMapping: { [key in keyof GenerateFluxOutput]?: string } = {

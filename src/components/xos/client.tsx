@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AnimatePresence } from 'framer-motion';
 
@@ -16,79 +16,55 @@ export default function XosClient() {
     const searchParams = useSearchParams();
     const isInitialLoad = useRef(true);
 
-    const { windows, openWindow, closeWindow, bringToFront, toggleMinimize, updateWindowPosition, updateWindowSize, setWindows } = useWindowManager();
+    const { 
+        windows, 
+        openWindow, 
+        closeWindow, 
+        bringToFront, 
+        toggleMinimize, 
+        updateWindowPosition, 
+        updateWindowSize,
+        setWindows,
+        isBooting,
+    } = useWindowManager();
     
-    const { launchAppFromUrl, launchFluxProject } = useAppLauncher(openWindow, closeWindow);
+    const { launchAppFromUrl } = useAppLauncher(openWindow);
 
-    const [isBooting, setIsBooting] = useState(true);
-    const hasBooted = useRef(false);
-
-    // Boot sequence
+    // Initial boot sequence
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsBooting(false);
-            if (!hasBooted.current) {
-                hasBooted.current = true;
-                if (isInitialLoad.current) {
-                    isInitialLoad.current = false;
-                    const appToOpen = searchParams.get('open');
-                    const resultId = searchParams.get('resultId');
-                    
-                    if (appToOpen) {
-                        launchAppFromUrl(appToOpen, resultId);
-                    } else {
-                        // Load saved session or default apps
-                        try {
-                            const savedStateJSON = localStorage.getItem('xosSession');
-                            if (savedStateJSON) {
-                                const savedWindows = JSON.parse(savedStateJSON);
-                                if (Array.isArray(savedWindows) && savedWindows.length > 0) {
-                                    setWindows(savedWindows);
-                                } else {
-                                    openWindow('welcome');
-                                    openWindow('oria');
-                                }
-                            } else {
-                                openWindow('welcome');
-                                openWindow('oria');
-                            }
-                        } catch (error) {
-                            console.error("Failed to load XOS session:", error);
-                            localStorage.removeItem('xosSession');
-                            openWindow('welcome');
-                            openWindow('oria');
-                        }
+        if (isInitialLoad.current && !isBooting) {
+            isInitialLoad.current = false; // Ensure this runs only once
+            
+            // 1. Check for URL-based app launch
+            const appToOpen = searchParams.get('open');
+            const resultId = searchParams.get('resultId');
+            
+            if (appToOpen) {
+                launchAppFromUrl(appToOpen, resultId);
+                return; // Prioritize URL launch over session restore
+            }
+
+            // 2. Restore from saved session
+            try {
+                const savedStateJSON = localStorage.getItem('xosSession');
+                if (savedStateJSON) {
+                    const savedWindows = JSON.parse(savedStateJSON);
+                    if (Array.isArray(savedWindows) && savedWindows.length > 0) {
+                        setWindows(savedWindows);
+                        return; // Restore successful
                     }
                 }
-            }
-        }, 100);
-        
-        return () => clearTimeout(timer);
-    }, [launchAppFromUrl, openWindow, searchParams, setWindows]);
-
-    // Save state to localStorage whenever windows change
-    useEffect(() => {
-        if (hasBooted.current && windows.length > 0) {
-            try {
-                const windowsToSave = windows.map(win => ({
-                    id: win.id,
-                    appId: win.appId,
-                    zIndex: win.zIndex,
-                    isMinimized: win.isMinimized,
-                    props: win.props,
-                    x: win.x,
-                    y: win.y,
-                    width: win.width,
-                    height: win.height,
-                }));
-                localStorage.setItem('xosSession', JSON.stringify(windowsToSave));
             } catch (error) {
-                console.error("Failed to save XOS session:", error);
+                console.error("Failed to load XOS session:", error);
+                localStorage.removeItem('xosSession'); // Clear corrupted session
             }
-        } else if (hasBooted.current && windows.length === 0) {
-            localStorage.removeItem('xosSession');
+
+            // 3. Open default apps if no session and no URL launch
+            openWindow('welcome');
+            openWindow('oria');
         }
-    }, [windows]);
+    }, [isBooting, searchParams, launchAppFromUrl, setWindows, openWindow]);
+
 
     return (
         <div className="absolute inset-0" >

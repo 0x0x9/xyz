@@ -7,13 +7,15 @@ import Image from 'next/image';
 import { oriaChatAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, ArrowRight, Copy, ZoomIn, Download, BadgeCheck, BadgeX, TerminalSquare, RotateCcw, Presentation, LayoutTemplate, Music, Wand2, Users, Film, Network, Lightbulb, FileText, Palette, Mic, AudioLines, Code2 } from 'lucide-react';
+import { Send, ArrowRight, Copy, ZoomIn, Download, BadgeCheck, BadgeX, TerminalSquare, RotateCcw, Presentation, LayoutTemplate, Music, Wand2, Users, Film, Network, Lightbulb, FileText, Palette, Mic, AudioLines, Code2, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import AiLoadingAnimation from '@/components/ui/ai-loading-animation';
 import { useFusionDock } from '@/hooks/use-fusion-dock';
 import type { OriaChatOutput, GenerateImageOutput, GeneratePaletteOutput, GenerateToneOutput, GenerateCodeOutput, GenerateTextOutput, GenerateVoiceOutput, GenerateDeckOutput, GenerateFrameOutput, GenerateSoundOutput, GenerateFluxOutput, GenerateMotionOutput, GenerateNexusOutput, GenerateIdeasOutput, GeneratePersonaOutput, OriaHistoryMessage } from '@/ai/types';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, AlertDialogDescription } from './ui/alert-dialog';
+import OriaAnimation from './ui/oria-animation';
+import { useAppLauncher } from '@/hooks/use-app-launcher';
 
 type Message = {
     id: number;
@@ -45,6 +47,7 @@ const toolInfoMap = {
 // Component to render specific tool results
 const OriaResultDisplay = ({ result, openApp }: { result: OriaChatOutput, openApp: OriaXosProps['openApp'] }) => {
     const { loadTools } = useFusionDock();
+    const { launchFluxProject } = useAppLauncher(openApp);
     const { toast } = useToast();
     const [showToolCard, setShowToolCard] = useState(result.type === 'tool_result');
 
@@ -78,40 +81,7 @@ const OriaResultDisplay = ({ result, openApp }: { result: OriaChatOutput, openAp
 
     const handleRedirection = async (tool: string, promptForTool?: string, data?: any) => {
         if (tool === 'flux' && data) {
-            const fluxData = data as GenerateFluxOutput;
-            const appMapping: { [key in keyof GenerateFluxOutput]?: string } = {
-                projectPlan: 'maestro', personas: 'persona', ideas: 'promptor', deck: 'deck',
-                frame: 'editor', text: 'text', motion: 'motion', nexus: 'nexus',
-                code: 'editor', agenda: 'agenda',
-            };
-
-            const appsToOpen: {appId: string, props: any}[] = [];
-
-            if (fluxData.palette || fluxData.tone) {
-                appsToOpen.push({ appId: 'brand-identity', props: { initialPalette: fluxData.palette, initialTone: fluxData.tone, prompt: fluxData.projectPlan?.creativeBrief } });
-            }
-            
-            for (const key in fluxData) {
-                const typedKey = key as keyof GenerateFluxOutput;
-                if (typedKey !== 'palette' && typedKey !== 'tone' && fluxData[typedKey] && appMapping[typedKey]) {
-                    const appId = appMapping[typedKey]!;
-                    let props: Record<string, any> = { prompt: fluxData.projectPlan?.creativeBrief };
-
-                    if (typedKey === 'frame') props = { ...props, initialProjectCodes: { html: fluxData.frame!.htmlCode, css: fluxData.frame!.cssCode, js: fluxData.frame!.jsCode }};
-                    else if (typedKey === 'text') props = { ...props, initialFile: { code: fluxData.text!.text, language: 'markdown' } };
-                    else if (typedKey === 'code') props = { ...props, initialFile: { code: fluxData.code!.code, language: 'typescript' } };
-                    else props = { ...props, initialResult: fluxData[typedKey] };
-
-                    appsToOpen.push({ appId, props });
-                }
-            }
-            
-            toast({ title: "Construction de l'espace de travail (X)flux..." });
-            for (const app of appsToOpen) {
-                await new Promise(resolve => setTimeout(resolve, 300));
-                openApp(app.appId, app.props);
-            }
-            
+            launchFluxProject(data as GenerateFluxOutput, promptForTool);
         } else if (tool === 'fusion') {
             toast({ title: `Préparation de (X)fusion...`, description: "Les outils suggérés seront ajoutés à votre espace." });
             loadTools(promptForTool || '');
