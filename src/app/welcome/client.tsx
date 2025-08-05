@@ -3,7 +3,7 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Cpu, Sparkles, Layers, Folder, Download, Users, MonitorPlay } from 'lucide-react';
+import { ArrowRight, Cpu, Sparkles, Layers, Folder, Download, Users, MonitorPlay, Check } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -39,6 +39,27 @@ const whoIsItFor = [
         imageHint: "team collaborating office"
     },
 ];
+
+const productRange = [
+    {
+        greek: "Ω",
+        name: "(X)-oméga",
+        price: "1 999 €",
+        features: ["(X)OS complet", "Dual-OS Windows/macOS", "32 Go RAM", "1 To SSD", "(X)Cloud inclus"]
+    },
+     {
+        greek: "α",
+        name: "(X)-alpha",
+        price: "2 999 €",
+        features: ["(X)OS Pro", "Triple-OS + Linux", "64 Go RAM", "2 To SSD", "(X)AI intégré"]
+    },
+    {
+        greek: "φ",
+        name: "(X)-fi",
+        price: "4 499 €",
+        features: ["(X)OS Studio", "Multi-GPU dédié", "128 Go RAM", "4 To SSD", "Support prioritaire"]
+    },
+]
 
 // Helper components
 const Section = ({ children, className }: { children: React.ReactNode, className?: string }) => (
@@ -146,7 +167,7 @@ export default function WelcomeClient() {
                         className="text-xl md:text-2xl lg:text-3xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
                         L'écosystème créatif. Réinventé.
                         <br/>
-                        Découvrez-le en ligne ou téléchargez l'OS complet.
+                        Découvrez la philosophie (X)OS en ligne, ou téléchargez l'OS complet.
                     </motion.p>
                 </div>
             </div>
@@ -185,6 +206,44 @@ export default function WelcomeClient() {
                 </AnimatedSection>
             </Section>
             
+            <Section>
+            <AnimatedSection>
+                <div className="text-center container mx-auto px-6 lg:px-8">
+                    <h2 className="text-4xl font-bold tracking-tight text-center md:text-6xl">Explorez la gamme.</h2>
+                    <p className="mt-4 text-lg text-center text-muted-foreground max-w-2xl mx-auto md:text-xl">Des workstations pensées par et pour les créatifs, en parfaite symbiose avec (X)OS.</p>
+                </div>
+            </AnimatedSection>
+             <AnimatedSection>
+                <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 container mx-auto px-6 lg:px-8">
+                    {productRange.map((product, i) => (
+                         <div key={product.name} className="flex flex-col h-full text-center p-8 glass-card hover:-translate-y-2 transition-all duration-300 relative group overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                            <header className="p-0 mb-6">
+                                <div className="mx-auto text-5xl font-light text-muted-foreground mb-4">{product.greek}</div>
+                                <h3 className="text-3xl font-bold">{product.name}</h3>
+                                <p className="text-primary font-semibold mt-1">{product.price}</p>
+                            </header>
+                            <div className="p-0 flex-grow">
+                                <ul className="space-y-3 text-muted-foreground">
+                                    {product.features.map(feat => (
+                                        <li key={feat} className="flex items-center justify-center gap-3 text-sm">
+                                            <Check className="h-4 w-4 text-green-500 shrink-0" />
+                                            <span className="text-left">{feat}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <footer className="p-0 mt-8">
+                                <Button asChild className="w-full">
+                                    <Link href="/store">Voir le produit</Link>
+                                </Button>
+                            </footer>
+                        </div>
+                    ))}
+                </div>
+            </AnimatedSection>
+      </Section>
+
             {/* Final CTA Section */}
             <Section>
                 <div className="container mx-auto px-6 lg:px-8 grid md:grid-cols-2 gap-8 items-center">
