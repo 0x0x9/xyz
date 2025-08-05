@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Cpu, HardDrive, MemoryStick, CircuitBoard, CheckCircle } from 'lucide-react';
 
@@ -66,34 +66,24 @@ const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSel
         <div className="space-y-4">
             <div className="flex items-center gap-3">
                 <Icon className="h-6 w-6 text-muted-foreground" />
-                <h3 className="text-xl font-semibold">{title}</h3>
+                <p className="text-xl font-semibold">{title}</p>
             </div>
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 gap-3">
                 {options.map((option) => (
                     <button
                         key={option.name}
                         onClick={() => onSelect(type, option.name)}
                         className={cn(
-                            "text-left w-full p-4 rounded-xl border-2 transition-all duration-200",
+                            "text-left w-full p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center",
                             selected === option.name
-                                ? 'bg-primary/10 border-primary shadow-lg shadow-primary/10'
-                                : 'bg-muted/50 border-transparent hover:border-border'
+                                ? 'bg-primary/5 border-primary shadow-inner'
+                                : 'bg-muted/40 border-transparent hover:border-border'
                         )}
                     >
-                        <div className="flex justify-between items-center">
-                            <span className="font-medium">{option.name}</span>
-                            <div className="flex items-center gap-3">
-                                <span className="text-sm text-muted-foreground">
-                                    {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
-                                </span>
-                                <div className={cn(
-                                    "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200",
-                                    selected === option.name ? 'border-primary bg-primary' : 'border-muted-foreground/50'
-                                )}>
-                                    {selected === option.name && <CheckCircle className="h-5 w-5 text-primary-foreground" />}
-                                </div>
-                            </div>
-                        </div>
+                        <span className="font-medium">{option.name}</span>
+                        <span className="text-sm text-muted-foreground">
+                            {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
+                        </span>
                     </button>
                 ))}
             </div>
@@ -128,8 +118,8 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
     };
 
     return (
-        <Card className="glass-card bg-black/10 dark:bg-black/20 p-0 border-0 shadow-none">
-            <CardContent className="space-y-8 p-0">
+        <Card className="glass-card bg-transparent p-0 border-0 shadow-none">
+            <CardContent className="space-y-12 p-0">
                  {(Object.keys(options) as ComponentType[]).map((type) => (
                      <ConfiguratorSection 
                         key={type}
@@ -145,3 +135,4 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
         </Card>
     );
 }
+
