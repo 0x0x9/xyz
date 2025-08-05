@@ -1,9 +1,9 @@
 
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Cpu, Sparkles, Layers, Folder, Download, Users } from 'lucide-react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowRight, Cpu, Sparkles, Layers, Folder, Download, Users, MonitorPlay } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -144,7 +144,9 @@ export default function WelcomeClient() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="text-xl md:text-2xl lg:text-3xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
-                        Ce n’est pas un système d’exploitation. <br/> C’est une extension de votre créativité.
+                        L'écosystème créatif. Réinventé.
+                        <br/>
+                        Découvrez-le en ligne ou téléchargez l'OS complet.
                     </motion.p>
                 </div>
             </div>
@@ -154,8 +156,8 @@ export default function WelcomeClient() {
             <Section>
                 <AnimatedSection>
                     <div className="text-center container mx-auto px-6 lg:px-8">
-                        <h2 className="text-4xl font-bold tracking-tight text-center md:text-6xl">Créativité sans limites.</h2>
-                        <p className="mt-4 text-lg text-center text-muted-foreground max-w-2xl mx-auto md:text-xl">Un écosystème conçu pour amplifier vos idées, pas pour les contraindre.</p>
+                        <h2 className="text-4xl font-bold tracking-tight text-center md:text-6xl">Conçu pour la nouvelle vague de créateurs.</h2>
+                        <p className="mt-4 text-lg text-center text-muted-foreground max-w-2xl mx-auto md:text-xl">Un écosystème qui amplifie vos idées, pas qui les contraint.</p>
                     </div>
                 </AnimatedSection>
                 <AnimatedSection>
@@ -184,24 +186,37 @@ export default function WelcomeClient() {
             </Section>
             
             {/* Final CTA Section */}
-            <Section className="text-center">
-                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                    Prêt à réinventer votre workflow ?
-                </h2>
-                <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Découvrez l'écosystème complet en essayant (X)OS en ligne, ou téléchargez-le pour transformer votre machine.
-                </p>
-                <div className="mt-12 flex flex-wrap justify-center gap-4">
-                    <Button size="lg" asChild className="rounded-full text-lg">
-                        <Link href="/xos">
-                            Essayer (X)OS en ligne <ArrowRight className="ml-2 h-5 w-5" />
-                        </Link>
-                    </Button>
-                     <Button size="lg" variant="outline" asChild className="rounded-full text-lg">
-                        <Link href="/download">
-                            Télécharger (X)OS <Download className="ml-2 h-5 w-5" />
-                        </Link>
-                    </Button>
+            <Section>
+                <div className="container mx-auto px-6 lg:px-8 grid md:grid-cols-2 gap-8 items-center">
+                    <AnimatedSection className="text-center md:text-left">
+                        <div className="inline-block bg-primary/10 p-4 rounded-2xl border border-primary/20 mb-4">
+                            <MonitorPlay className="h-10 w-10 text-primary" />
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Essayez (X)OS en ligne.</h2>
+                        <p className="mt-4 text-lg text-muted-foreground max-w-xl md:mx-0 mx-auto">
+                            Plongez dans notre environnement web interactif. C'est le meilleur moyen de tester la puissance de nos outils IA et de comprendre la philosophie de (X)yzz, sans rien installer.
+                        </p>
+                        <Button size="lg" asChild className="rounded-full text-lg mt-8">
+                            <Link href="/xos">
+                                Lancer l'expérience web <ArrowRight className="ml-2 h-5 w-5" />
+                            </Link>
+                        </Button>
+                    </AnimatedSection>
+
+                    <AnimatedSection className="text-center md:text-left">
+                         <div className="inline-block bg-primary/10 p-4 rounded-2xl border border-primary/20 mb-4">
+                            <Download className="h-10 w-10 text-primary" />
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Passez à la vitesse supérieure.</h2>
+                        <p className="mt-4 text-lg text-muted-foreground max-w-xl md:mx-0 mx-auto">
+                           Installez le système d'exploitation complet (X)OS pour libérer des performances inégalées, une intégration matérielle profonde et une créativité sans aucune limite.
+                        </p>
+                        <Button size="lg" variant="outline" asChild className="rounded-full text-lg mt-8">
+                            <Link href="/download">
+                                Télécharger l'OS de bureau <ArrowRight className="ml-2 h-5 w-5" />
+                            </Link>
+                        </Button>
+                    </AnimatedSection>
                 </div>
             </Section>
         </>
