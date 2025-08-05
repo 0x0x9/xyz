@@ -89,7 +89,7 @@ export default function XosClient() {
                 ))}
             </AnimatePresence>
             
-            <XosDock windows={windows} onDockItemClick={toggleMinimize} />
+            <XosDock windows={windows} onDockItemClick={toggleMinimize} openApp={openWindow} />
         </div>
     );
 }

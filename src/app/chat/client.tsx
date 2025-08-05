@@ -19,7 +19,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { oriaChatAction } from '@/app/actions';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import Link from 'next/link';
-import Explorer from '@/components/explorer';
+import DocManager from '@/components/doc-manager';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger } from '@/components/ui/menubar';
 import { useTheme } from 'next-themes';
@@ -109,13 +109,13 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
     const [projectToDelete, setProjectToDelete] = useState<ProjectDoc | null>(null);
     const { toast } = useToast();
 
-    const calculateProgress = (tasks: ProjectPlan['tasks']) => {
+    const calculateProgress = useCallback((tasks: ProjectPlan['tasks']) => {
         if (!tasks || tasks.length === 0) return 0;
         const allChecklistItems = tasks.flatMap(task => task.checklist);
         if (allChecklistItems.length === 0) return 0;
         const completedItems = allChecklistItems.filter(item => item.completed).length;
         return (completedItems / allChecklistItems.length) * 100;
-    };
+    }, []);
 
     const handleDeleteProject = async () => {
         if (!projectToDelete) return;
@@ -192,114 +192,6 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
             </AlertDialog>
         </div>
     );
-}
-
-function ChatWindow({ partner, currentUser, chatId, onBack }: { partner: ChatPartner, currentUser: typeof mockUser, chatId: string, onBack: () => void }) {
-    const { toast } = useToast();
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [newMessage, setNewMessage] = useState('');
-    const scrollAreaRef = useRef<HTMLDivElement>(null);
-    const { pending } = useFormStatus();
-
-    useEffect(() => {
-        setLoading(true);
-        // Placeholder for fetching messages
-        setTimeout(() => {
-            setMessages([
-                { id: '1', senderId: 'other-user', text: 'Hello!', timestamp: new Date().toISOString() },
-                { id: '2', senderId: currentUser.uid, text: 'Hi there!', timestamp: new Date().toISOString() },
-            ]);
-            setLoading(false);
-        }, 1000);
-    }, [chatId, toast, currentUser.uid]);
-    
-    useEffect(() => {
-        if (scrollAreaRef.current) {
-            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
-        }
-    }, [messages]);
-    
-    const handleSendMessage = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!newMessage.trim() || !currentUser) return;
-        
-        const textToSend = newMessage;
-        setNewMessage('');
-
-        const optimisticMessage: Message = { id: Date.now().toString(), senderId: currentUser.uid, text: textToSend, timestamp: new Date().toISOString() };
-        setMessages(prev => [...prev, optimisticMessage]);
-
-        // Placeholder for sending message
-    };
-
-    if (loading) return <div className="glass-card h-full w-full"><ChatWindowSkeleton /></div>;
-    
-    return (
-        <div className="glass-card h-full flex flex-col">
-            <header className="p-4 border-b border-white/10 flex items-center gap-4 flex-shrink-0">
-                <Button variant="ghost" size="icon" onClick={onBack} className="md:hidden">
-                    <ArrowLeft />
-                </Button>
-                <Avatar>
-                    <AvatarImage src={partner.photoURL || undefined} alt={partner.displayName || 'Avatar'} />
-                    <AvatarFallback>{partner.displayName?.[0].toUpperCase()}</AvatarFallback>
-                </Avatar>
-                <div>
-                    <h3 className="font-semibold">{partner.displayName}</h3>
-                </div>
-            </header>
-            <ScrollArea className="flex-1 p-6" ref={scrollAreaRef}>
-                 <div className="space-y-6">
-                    <AnimatePresence>
-                        {messages.map(msg => (
-                            <motion.div
-                                key={msg.id}
-                                layout
-                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                transition={{ duration: 0.2, ease: "easeOut" }}
-                                className={cn("flex items-end gap-2", msg.senderId === currentUser?.uid ? 'justify-end' : 'justify-start')}
-                            >
-                                {msg.senderId !== currentUser?.uid && (
-                                    <Avatar className="h-8 w-8 self-end">
-                                        <AvatarImage src={partner.photoURL || undefined} />
-                                        <AvatarFallback>{partner.displayName?.[0].toUpperCase()}</AvatarFallback>
-                                    </Avatar>
-                                )}
-                                <div className={cn(
-                                    "max-w-xs md:max-w-md lg:max-w-lg p-3 rounded-2xl shadow-md",
-                                    msg.senderId === currentUser?.uid
-                                        ? "bg-primary/80 text-primary-foreground rounded-br-none"
-                                        : "bg-background/50 rounded-bl-none"
-                                )}>
-                                    <p className="text-sm whitespace-pre-wrap">{msg.text}</p>
-                                    {msg.timestamp && <p className={cn("text-xs opacity-70 mt-1.5", msg.senderId === currentUser?.uid ? 'text-right' : 'text-left')}>
-                                        {formatDate(msg.timestamp)}
-                                    </p>}
-                                </div>
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
-                </div>
-            </ScrollArea>
-             <div className="p-4 border-t border-white/10 shrink-0">
-                <form onSubmit={handleSendMessage} className="flex gap-4">
-                    <Input
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Écrivez votre message..."
-                        className="h-11 text-base bg-background/50 rounded-full"
-                        autoComplete="off"
-                    />
-                    <Button type="submit" size="icon" disabled={pending || !newMessage.trim()} aria-label="Envoyer le message" className="rounded-full">
-                        <Send className="h-5 w-5" />
-                    </Button>
-                </form>
-            </div>
-        </div>
-    )
 }
 
 function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartner, onBack: () => void, activeProject: ProjectDoc | null }) {
@@ -424,11 +316,12 @@ function ProjectPlanView({ project, setProject }: { project: ProjectDoc, setProj
     const { toast } = useToast();
 
     const handleChecklistChange = async (taskIndex: number, itemIndex: number, checked: boolean) => {
-        const updatedProject = { ...project };
+        const updatedProject = JSON.parse(JSON.stringify(project));
         updatedProject.tasks[taskIndex].checklist[itemIndex].completed = checked;
         setProject(updatedProject); // Optimistic update
 
-        // Placeholder for updating project
+        // In a real app, this would be an API call to persist the change.
+        // For now, it's just local state.
     };
 
     return (
@@ -455,7 +348,9 @@ function ProjectPlanView({ project, setProject }: { project: ProjectDoc, setProj
                                                         checked={item.completed}
                                                         onCheckedChange={(checked) => handleChecklistChange(project.tasks.indexOf(task), itemIndex, !!checked)}
                                                     />
-                                                    <label htmlFor={`task-${taskIndex}-item-${itemIndex}`} className="text-sm text-foreground/90 has-[:checked]:line-through has-[:checked]:text-muted-foreground">{item.text}</label>
+                                                    <label htmlFor={`task-${taskIndex}-item-${itemIndex}`} className="text-sm text-foreground/90 has-[:checked]:line-through has-[:checked]:text-muted-foreground cursor-pointer">
+                                                        {item.text}
+                                                    </label>
                                                 </div>
                                             ))}
                                         </div>
@@ -468,44 +363,6 @@ function ProjectPlanView({ project, setProject }: { project: ProjectDoc, setProj
             </div>
         </ScrollArea>
     )
-}
-
-function NavMenu({ activeView, setActiveView }: { activeView: string; setActiveView: (view: string) => void; }) {
-    const navItems = [
-        { href: "/xos", icon: AppWindow, label: "PulseStudio", view: 'chat' },
-        { href: "/account", icon: Settings, label: "Paramètres", view: 'settings' },
-    ];
-    return (
-        <TooltipProvider>
-            <nav className="glass-card flex flex-col items-center gap-4 p-3">
-                <Link href="/" aria-label="Accueil">
-                    <Home className="h-7 w-7 text-foreground" />
-                </Link>
-
-                <div className="w-full h-px bg-white/10 my-2"></div>
-
-                <div className="flex flex-col gap-2 flex-1">
-                    {navItems.map(item => (
-                        <Tooltip key={item.view}>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setActiveView(item.view)}
-                                    className={cn("h-12 w-12 rounded-2xl", activeView === item.view && "bg-primary/10 text-primary")}
-                                >
-                                    <item.icon className="h-6 w-6" />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="right">
-                                <p>{item.label}</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    ))}
-                </div>
-            </nav>
-        </TooltipProvider>
-    );
 }
 
 function TopMenuBar({ activeProject, setActiveView, onProjectDeleted, toggleSidebar }: { activeProject: ProjectDoc | null, setActiveView: (v: string) => void, onProjectDeleted: (id: string) => void, toggleSidebar: () => void }) {
@@ -577,7 +434,6 @@ export default function MessengerClient() {
     const [isStartingChat, setIsStartingChat] = useState(false);
     const [activeView, setActiveView] = useState('chat');
     const [activeProject, setActiveProject] = useState<ProjectDoc | null>(null);
-    const [activeMainView, setActiveMainView] = useState('project');
     const [showSidebar, setShowSidebar] = useState(true);
     
     const oriaPartner: ChatPartner = {
@@ -622,23 +478,6 @@ export default function MessengerClient() {
 
         return () => clearTimeout(debounce);
     }, [searchQuery, toast]);
-
-    const handleSelectUser = async (partner: ChatPartner) => {
-        setActiveView('chat');
-        if (partner.uid === 'oria-chat-bot') {
-            setActiveChat({ id: 'oria-chat-bot', partner });
-            return;
-        }
-        
-        setIsStartingChat(true);
-        // Placeholder for starting chat
-        setTimeout(() => {
-            setActiveChat({ id: 'chat123', partner });
-            setSearchQuery('');
-            setSearchResults([]);
-            setIsStartingChat(false);
-        }, 500);
-    };
     
     const clearActiveChat = () => setActiveChat(null);
 
@@ -660,13 +499,6 @@ export default function MessengerClient() {
     }
     
     const MainContent = () => {
-        if (activeChat) {
-            if (activeChat.id === 'oria-chat-bot') {
-                return <OriaChatWindow partner={oriaPartner} onBack={clearActiveChat} activeProject={activeProject} />;
-            }
-            return <ChatWindow partner={activeChat.partner} currentUser={mockUser} chatId={activeChat.id} onBack={clearActiveChat} />;
-        }
-        
         if (activeProject) {
             return (
                 <Tabs defaultValue="project" className="h-full flex flex-col">
@@ -687,8 +519,11 @@ export default function MessengerClient() {
                     <TabsContent value="project" className="flex-1 min-h-0 -mt-2">
                         <ProjectPlanView project={activeProject} setProject={updateActiveProject} />
                     </TabsContent>
-                    <TabsContent value="files" className="flex-1 min-h-0 -mt-2">
-                        <Explorer />
+                    <TabsContent value="files" className="flex-1 min-h-0 -mt-2 p-1">
+                        <DocManager onDataChange={fetchProjects} />
+                    </TabsContent>
+                    <TabsContent value="chat" className="flex-1 min-h-0 -mt-2">
+                        <OriaChatWindow partner={oriaPartner} onBack={clearActiveChat} activeProject={activeProject} />
                     </TabsContent>
                 </Tabs>
             );
@@ -719,53 +554,7 @@ export default function MessengerClient() {
                         "w-full md:w-1/3 lg:w-1/4 flex-shrink-0 flex flex-col transition-all duration-300 border-r border-white/10",
                         !showSidebar ? 'hidden' : 'flex'
                     )}>
-                        <div className="p-4 border-b border-white/10">
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input 
-                                    placeholder="Chercher un utilisateur..." 
-                                    className="bg-background/50 rounded-full pl-9"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
-                            </div>
-                        </div>
                         <ScrollArea className="flex-1">
-                            <div className="p-2">
-                                <button
-                                    onClick={() => handleSelectUser(oriaPartner)}
-                                    className={cn(
-                                        "w-full text-left p-3 rounded-xl transition-colors flex items-center gap-3",
-                                        activeChat?.id === 'oria-chat-bot' ? "bg-primary/10" : "hover:bg-muted/50"
-                                    )}
-                                >
-                                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-400 to-fuchsia-500 flex items-center justify-center shrink-0">
-                                        <Sparkles className="text-white h-5 w-5" />
-                                    </div>
-                                    <div className="overflow-hidden flex-1">
-                                        <p className="font-semibold truncate">{oriaPartner.displayName}</p>
-                                        <p className="text-sm text-muted-foreground truncate">Votre assistante IA</p>
-                                    </div>
-                                </button>
-                            </div>
-
-                            {searchQuery ? (
-                                isSearching ? <SearchResultsSkeleton /> : (
-                                    <div className="p-2">
-                                        <h3 className="px-3 text-xs font-semibold uppercase text-muted-foreground mb-1">Résultats</h3>
-                                        {searchResults.length > 0 ? (
-                                            searchResults.map(p => (
-                                                <button key={p.uid} onClick={() => handleSelectUser(p)} className="w-full text-left p-3 rounded-xl hover:bg-muted/50 flex items-center gap-3">
-                                                    <Avatar className="h-10 w-10"><AvatarImage src={p.photoURL || undefined} /><AvatarFallback>{p.displayName?.[0].toUpperCase()}</AvatarFallback></Avatar>
-                                                    <p className="font-semibold truncate">{p.displayName}</p>
-                                                    {isStartingChat && <Loader className="h-4 w-4 animate-spin ml-auto" />}
-                                                </button>
-                                            ))
-                                        ) : (<p className="text-center text-sm text-muted-foreground py-4">Aucun utilisateur trouvé.</p>)}
-                                    </div>
-                                )
-                            ) : null}
-                            <div className="w-full h-px bg-white/10 my-2"></div>
                             <ProjectTracker activeProject={activeProject} setActiveProject={setActiveProject} onProjectDeleted={onProjectDeleted} projects={projects} loading={loading} />
                         </ScrollArea>
                     </div>
@@ -778,3 +567,42 @@ export default function MessengerClient() {
         </div>
     );
 }
+
+function NavMenu({ activeView, setActiveView }: { activeView: string; setActiveView: (view: string) => void; }) {
+    const navItems = [
+        { href: "/xos", icon: AppWindow, label: "PulseStudio", view: 'chat' },
+        { href: "/account", icon: Settings, label: "Paramètres", view: 'settings' },
+    ];
+    return (
+        <TooltipProvider>
+            <nav className="glass-card flex flex-col items-center gap-4 p-3">
+                <Link href="/" aria-label="Accueil">
+                    <Home className="h-7 w-7 text-foreground" />
+                </Link>
+
+                <div className="w-full h-px bg-white/10 my-2"></div>
+
+                <div className="flex flex-col gap-2 flex-1">
+                    {navItems.map(item => (
+                        <Tooltip key={item.view}>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => setActiveView(item.view)}
+                                    className={cn("h-12 w-12 rounded-2xl", activeView === item.view && "bg-primary/10 text-primary")}
+                                >
+                                    <item.icon className="h-6 w-6" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">
+                                <p>{item.label}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    ))}
+                </div>
+            </nav>
+        </TooltipProvider>
+    );
+}
+
