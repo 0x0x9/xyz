@@ -3,11 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
 import { Cpu, HardDrive, MemoryStick, CircuitBoard, CheckCircle } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type Option = {
     name: string;
@@ -57,6 +54,54 @@ interface PCConfiguratorProps {
     onConfigChange: (config: Configuration, newPrice: number) => void;
 }
 
+const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSelect }: {
+    type: ComponentType,
+    title: string,
+    icon: React.ElementType,
+    options: Option[],
+    selected: string,
+    onSelect: (type: ComponentType, value: string) => void
+}) => {
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center gap-3">
+                <Icon className="h-6 w-6 text-muted-foreground" />
+                <h3 className="text-xl font-semibold">{title}</h3>
+            </div>
+            <div className="space-y-3">
+                {options.map((option) => (
+                    <button
+                        key={option.name}
+                        onClick={() => onSelect(type, option.name)}
+                        className={cn(
+                            "text-left w-full p-4 rounded-xl border-2 transition-all duration-200",
+                            selected === option.name
+                                ? 'bg-primary/10 border-primary shadow-lg shadow-primary/10'
+                                : 'bg-muted/50 border-transparent hover:border-border'
+                        )}
+                    >
+                        <div className="flex justify-between items-center">
+                            <span className="font-medium">{option.name}</span>
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm text-muted-foreground">
+                                    {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
+                                </span>
+                                <div className={cn(
+                                    "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200",
+                                    selected === option.name ? 'border-primary bg-primary' : 'border-muted-foreground/50'
+                                )}>
+                                    {selected === option.name && <CheckCircle className="h-5 w-5 text-primary-foreground" />}
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+
 export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProps) {
     const [config, setConfig] = useState<Configuration>({
         cpu: options.cpu[0].name,
@@ -83,63 +128,19 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
     };
 
     return (
-        <Card className="glass-card bg-black/10 dark:bg-black/20">
-            <CardHeader>
-                <CardTitle>Configurez votre station</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <Tabs defaultValue="cpu" className="w-full">
-                    <TabsList className="grid w-full grid-cols-4">
-                        {(Object.keys(options) as ComponentType[]).map(type => {
-                             const Icon = componentInfo[type].icon;
-                             return (
-                                <TabsTrigger key={type} value={type} className="flex flex-col h-auto p-2 gap-1">
-                                    <Icon className="h-5 w-5"/>
-                                    <span className="text-xs">{componentInfo[type].title}</span>
-                                </TabsTrigger>
-                            )
-                        })}
-                    </TabsList>
-
-                    {(Object.keys(options) as ComponentType[]).map(type => (
-                        <TabsContent key={type} value={type} className="mt-6">
-                             <div className="text-center mb-4">
-                                <p className="text-sm text-muted-foreground">Sélection actuelle</p>
-                                <p className="font-semibold">{config[type]}</p>
-                            </div>
-                            <Carousel opts={{ align: "start", slidesToScroll: 1 }} className="w-full">
-                                <CarouselContent className="-ml-2">
-                                    {options[type].map((option, index) => (
-                                        <CarouselItem key={index} className="basis-1/2 md:basis-1/3 pl-2">
-                                            <div className="p-1">
-                                                <Button
-                                                    variant="outline"
-                                                    onClick={() => handleSelection(type, option.name)}
-                                                    className={cn(
-                                                        "w-full h-full p-3 flex flex-col items-center justify-center text-center gap-1 rounded-xl border-2 transition-all duration-200 text-foreground",
-                                                        config[type] === option.name
-                                                            ? "border-primary bg-primary/10 ring-2 ring-primary/50"
-                                                            : "bg-card/50 border-border"
-                                                    )}
-                                                >
-                                                     {config[type] === option.name && (
-                                                        <CheckCircle className="absolute top-2 right-2 h-4 w-4 text-primary" />
-                                                    )}
-                                                    <span className="font-medium text-xs">{option.name}</span>
-                                                    <span className="text-xs text-muted-foreground">
-                                                        {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
-                                                    </span>
-                                                </Button>
-                                            </div>
-                                        </CarouselItem>
-                                    ))}
-                                </CarouselContent>
-                                <CarouselPrevious className="hidden sm:flex" />
-                                <CarouselNext className="hidden sm:flex" />
-                            </Carousel>
-                        </TabsContent>
-                    ))}
-                </Tabs>
+        <Card className="glass-card bg-black/10 dark:bg-black/20 p-0 border-0 shadow-none">
+            <CardContent className="space-y-8 p-0">
+                 {(Object.keys(options) as ComponentType[]).map((type) => (
+                     <ConfiguratorSection 
+                        key={type}
+                        type={type}
+                        title={componentInfo[type].title}
+                        icon={componentInfo[type].icon}
+                        options={options[type]}
+                        selected={config[type]}
+                        onSelect={handleSelection}
+                     />
+                 ))}
             </CardContent>
         </Card>
     );
