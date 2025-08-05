@@ -9,30 +9,12 @@ import { ShoppingCart } from "lucide-react";
 import { type Product } from '@/lib/products';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import React from 'react';
 
 export function ProductCard({ product }: { product: Product }) {
     const { addItem } = useCart();
     const { toast } = useToast();
-
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    const springConfig = { damping: 15, stiffness: 200 };
-    const rotateX = useSpring(useTransform(mouseY, [0, 1], [-10, 10]), springConfig);
-    const rotateY = useSpring(useTransform(mouseX, [0, 1], [10, -10]), springConfig);
-
-    const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        mouseX.set((event.clientX - rect.left) / rect.width);
-        mouseY.set((event.clientY - rect.top) / rect.height);
-    };
-
-    const handleMouseLeave = () => {
-        mouseX.set(0.5);
-        mouseY.set(0.5);
-    };
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault(); 
@@ -47,12 +29,11 @@ export function ProductCard({ product }: { product: Product }) {
     return (
       <Link href={`/store/${product.id}`} className="block h-full group/link">
         <motion.div
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{ rotateX, rotateY }}
-            className="transform-style-preserve-3d"
+            className="h-full"
+            whileHover={{ y: -8 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
-            <Card className="group/card flex h-full flex-col overflow-hidden transition-all duration-300 rounded-2xl bg-card/95 hover:bg-card/25 dark:bg-card/80 dark:hover:bg-card/50 border border-border hover:border-primary/30 shadow-lg hover:shadow-2xl hover:shadow-primary/10">
+            <Card className="group/card flex h-full flex-col overflow-hidden transition-all duration-300 rounded-2xl bg-card/95 dark:bg-card/80 border border-border shadow-lg hover:shadow-2xl hover:shadow-primary/10">
             <div className="relative flex-1 p-0 flex flex-col">
                 <div className="relative aspect-square">
                     <motion.div 
