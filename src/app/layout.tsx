@@ -46,7 +46,6 @@ export default function RootLayout({
                 <FusionDockProvider>
                   <PageTransitionProvider>
                     <AnimatedBackground />
-                    <PromoBanner />
                     <div className="relative z-10 flex flex-col min-h-screen">
                       {children}
                     </div>
