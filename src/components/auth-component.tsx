@@ -2,7 +2,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { onAuthStateChanged, signOut, signInWithEmailAndPassword, type User } from 'firebase/auth';
+import { onAuthStateChanged, signOut, signInWithEmailAndPassword, type User, GoogleAuthProvider, OAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -12,10 +12,15 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   handleSignIn: (email: string, pass: string) => Promise<void>;
+  handleGoogleSignIn: () => Promise<void>;
+  handleAppleSignIn: () => Promise<void>;
   handleSignOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const googleProvider = new GoogleAuthProvider();
+const appleProvider = new OAuthProvider('apple.com');
 
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -45,6 +50,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         toast({ variant: 'destructive', title: "Erreur de connexion", description });
     }
   };
+  
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      toast({ description: 'Connexion avec Google réussie !' });
+      router.push('/account');
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: 'Erreur de connexion', description: error.message });
+    }
+  };
+
+  const handleAppleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, appleProvider);
+      toast({ description: 'Connexion avec Apple réussie !' });
+      router.push('/account');
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: 'Erreur de connexion', description: error.message });
+    }
+  };
+
 
   const handleSignOut = async () => {
     try {
@@ -65,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, handleSignIn, handleSignOut }}>
+    <AuthContext.Provider value={{ user, loading, handleSignIn, handleGoogleSignIn, handleAppleSignIn, handleSignOut }}>
       {children}
     </AuthContext.Provider>
   );
