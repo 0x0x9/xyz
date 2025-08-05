@@ -13,6 +13,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PCConfigurator, type Configuration } from '@/components/ui/pc-configurator';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProductClient({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
     const { addItem } = useCart();
@@ -60,14 +61,24 @@ export default function ProductClient({ product, relatedProducts }: { product: P
             <div className="grid md:grid-cols-2 gap-12 items-start">
                 <div className="space-y-4">
                     <div className="relative aspect-square w-full rounded-2xl overflow-hidden glass-card p-4">
-                        <Image
-                            src={activeImage}
-                            alt={product.name}
-                            fill
-                            className="object-contain transition-opacity duration-300"
-                            data-ai-hint={product.hint}
-                            key={activeImage}
-                        />
+                         <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeImage}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="absolute inset-0"
+                            >
+                                <Image
+                                    src={activeImage}
+                                    alt={product.name}
+                                    fill
+                                    className="object-contain"
+                                    data-ai-hint={product.hint}
+                                />
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                     {product.images.length > 1 && (
                         <div className="grid grid-cols-5 gap-2">

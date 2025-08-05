@@ -17,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { updateProfileAction, disconnectDeviceAction } from '@/app/actions';
+import { useAuth } from '@/components/auth-component';
 
 const initialUser = {
   name: 'John Doe',
@@ -146,6 +147,7 @@ function EditProfileModal({ open, onOpenChange, user, onUserUpdate }: { open: bo
 export default function AccountClient() {
     const { theme, setTheme } = useTheme();
     const { toast } = useToast();
+    const { user: authUser } = useAuth();
     const [user, setUser] = useState(initialUser);
     const [devices, setDevices] = useState(initialDevices);
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
@@ -173,19 +175,22 @@ export default function AccountClient() {
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="w-full max-w-7xl mx-auto space-y-8"
         >
+             <h1 className="text-3xl md:text-4xl font-bold">
+                Bienvenue, {authUser?.displayName || user.name.split(' ')[0]} !
+             </h1>
             {/* Profile Section */}
             <Card className="glass-card">
                 <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
                     <div className="relative">
                         <div className="absolute -inset-2 rounded-full bg-primary/30 blur-xl animate-pulse" />
                         <Avatar className="w-24 h-24 border-4 border-primary/20 relative z-10">
-                            <AvatarImage src={user.avatar} data-ai-hint="person portrait" />
-                            <AvatarFallback>{user.name.substring(0,2).toUpperCase()}</AvatarFallback>
+                            <AvatarImage src={authUser?.photoURL || user.avatar} data-ai-hint="person portrait" />
+                            <AvatarFallback>{(authUser?.displayName || user.name).substring(0,2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                     </div>
                     <div className="flex-1 text-center sm:text-left">
-                        <h2 className="text-2xl font-bold">{user.name}</h2>
-                        <p className="text-muted-foreground">{user.email}</p>
+                        <h2 className="text-2xl font-bold">{authUser?.displayName || user.name}</h2>
+                        <p className="text-muted-foreground">{authUser?.email || user.email}</p>
                     </div>
                     <Button variant="outline" onClick={() => setEditModalOpen(true)}>
                         <Edit className="mr-2 h-4 w-4" />

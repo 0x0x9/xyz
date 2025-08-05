@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -13,16 +13,38 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { products, type Product } from '@/lib/products';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 
 function ProductCard({ product }: { product: Product }) {
     const { addItem } = useCart();
     const { toast } = useToast();
 
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
+    const cardRef = useRef<HTMLDivElement>(null);
+
+    const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+        if (!cardRef.current) return;
+        const { left, top, width, height } = cardRef.current.getBoundingClientRect();
+        mouseX.set(event.clientX - left);
+        mouseY.set(event.clientY - top);
+    };
+
+    const handleMouseLeave = () => {
+        mouseX.set(0);
+        mouseY.set(0);
+    };
+
+    const springConfig = { damping: 20, stiffness: 150, mass: 0.1 };
+    const rotateX = useSpring(useTransform(mouseY, [0, 300], [10, -10]), springConfig);
+    const rotateY = useSpring(useTransform(mouseX, [0, 300], [-10, 10]), springConfig);
+
+
     const handleAddToCart = (e: React.MouseEvent) => {
-        e.preventDefault(); // Prevent link navigation
-        e.stopPropagation(); // Stop event bubbling
+        e.preventDefault(); 
+        e.stopPropagation(); 
         addItem({ ...product, image: product.images[0] });
         toast({
             title: "Ajouté au panier",
@@ -31,31 +53,44 @@ function ProductCard({ product }: { product: Product }) {
     };
   
     return (
-      <Link href={`/store/${product.id}`} className="block h-full">
-       <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 rounded-2xl bg-card/95 hover:bg-card/25 dark:bg-card/80 dark:hover:bg-card/50 border border-border hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/10 hover:backdrop-blur-xl">
-          <CardContent className="relative flex-1 p-0">
+      <Link href={`/store/${product.id}`} className="block h-full group/link">
+        <motion.div
+            ref={cardRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ transformStyle: 'preserve-3d', rotateX, rotateY }}
+            className="group/card flex h-full flex-col overflow-hidden transition-all duration-300 rounded-2xl bg-card/95 hover:bg-card/25 dark:bg-card/80 dark:hover:bg-card/50 border border-border hover:border-primary/30 shadow-lg hover:shadow-2xl hover:shadow-primary/10"
+        >
+          <div style={{ transform: 'translateZ(20px)' }} className="relative flex-1 p-0 flex flex-col">
             <div className="relative aspect-square">
-                <Image
-                    src={product.images[0]}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-500"
-                    data-ai-hint={product.hint}
-                />
+                <motion.div 
+                     initial={{ opacity: 0, scale: 0.95 }}
+                     whileInView={{ opacity: 1, scale: 1 }}
+                     viewport={{ once: true }}
+                     transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                >
+                    <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        data-ai-hint={product.hint}
+                    />
+                </motion.div>
             </div>
-            <div className="p-6">
+            <div className="p-6 flex flex-col flex-grow">
                 <h3 className="text-xl font-bold text-foreground">{product.name}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{product.description}</p>
+                <p className="mt-2 text-sm text-muted-foreground flex-grow">{product.description}</p>
             </div>
-          </CardContent>
-          <div className="mt-auto flex items-center justify-between p-6 pt-0">
+          </div>
+          <div style={{ transform: 'translateZ(40px)' }} className="mt-auto flex items-center justify-between p-6 pt-0">
             <p className="text-2xl font-semibold text-foreground">{product.price.toFixed(2)}€</p>
-            <Button size="icon" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full aspect-square transition-transform group-hover:scale-110" onClick={handleAddToCart}>
+            <Button size="icon" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full aspect-square transition-transform group-hover/card:scale-110" onClick={handleAddToCart}>
                 <ShoppingCart className="h-5 w-5" />
                 <span className="sr-only">Ajouter au panier</span>
             </Button>
           </div>
-        </Card>
+        </motion.div>
       </Link>
     )
 }

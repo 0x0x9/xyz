@@ -10,6 +10,7 @@ import { UIStateProvider } from '@/hooks/use-ui-state';
 import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { AuthProvider } from '@/components/auth-component';
+import PromoBanner from '@/components/layout/promo-banner';
 
 const fontBody = Inter({
   subsets: ['latin'],
@@ -45,6 +46,7 @@ export default function RootLayout({
                 <FusionDockProvider>
                   <PageTransitionProvider>
                     <AnimatedBackground />
+                    <PromoBanner />
                     <div className="relative z-10 flex flex-col min-h-screen">
                       {children}
                     </div>
