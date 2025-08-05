@@ -372,14 +372,9 @@ export function Header() {
                     </Button>
                 </>
             ) : (
-                <>
-                    <Button variant="ghost" className="rounded-full" asChild>
-                        <Link href="/login">Connexion</Link>
-                    </Button>
-                    <Button className="rounded-full" asChild>
-                        <Link href="/subscribe">S'abonner</Link>
-                    </Button>
-                </>
+                <Button className="rounded-full" asChild>
+                    <Link href="/login">Accéder à mon espace</Link>
+                </Button>
             )}
           </div>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -490,14 +485,9 @@ export function Header() {
                        <Button onClick={handleSignOut} className="text-lg h-12 rounded-full">Déconnexion</Button>
                    </>
                 ) : (
-                    <>
-                        <Button variant="outline" className="text-lg h-12 rounded-full" asChild>
-                            <Link href="/login">Connexion</Link>
-                        </Button>
-                        <Button className="text-lg h-12 rounded-full" asChild>
-                            <Link href="/subscribe">S'abonner</Link>
-                        </Button>
-                    </>
+                    <Button className="text-lg h-12 rounded-full" asChild>
+                        <Link href="/login">Accéder à mon espace</Link>
+                    </Button>
                 )}
               </div>
             </SheetContent>
