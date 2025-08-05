@@ -121,45 +121,46 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                         <ShoppingCart className="mr-2 h-5 w-5" />
                         Ajouter au panier
                     </Button>
-                    
-                    <Separator className="bg-border" />
-                    
-                    {product.features && (
-                        <div className="space-y-3">
-                            <h3 className="text-lg font-semibold">Caractéristiques principales</h3>
-                            <ul className="space-y-2">
-                                {product.features.map((feature, i) => (
-                                    <li key={i} className="flex items-center gap-3 text-muted-foreground">
-                                        <Check className="h-5 w-5 text-green-500" />
-                                        <span>{feature}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                    
-                    <Accordion type="single" collapsible className="w-full">
-                        <AccordionItem value="item-1">
-                            <AccordionTrigger>Livraison & Retours</AccordionTrigger>
-                            <AccordionContent>
-                                Livraison gratuite en 24/48h dans toute l'Europe. Retours gratuits sous 30 jours. Tous nos emballages sont 100% recyclés et recyclables.
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-2">
-                            <AccordionTrigger>Garantie & Support</AccordionTrigger>
-                            <AccordionContent>
-                                Ce produit est couvert par une garantie constructeur de 2 ans. Notre support technique est disponible 24/7 pour vous assister en cas de besoin.
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-3">
-                            <AccordionTrigger>Spécifications Techniques</AccordionTrigger>
-                            <AccordionContent>
-                                Les spécifications détaillées sont disponibles dans le manuel utilisateur. Pour toute question technique, n'hésitez pas à contacter notre support expert.
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-
                 </div>
+            </div>
+
+            <div className="mt-16 max-w-4xl mx-auto space-y-12">
+                {product.features && (
+                    <div className="space-y-4">
+                        <h3 className="text-2xl font-bold text-center">Caractéristiques principales</h3>
+                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                            {product.features.map((feature, i) => (
+                                <li key={i} className="flex items-center gap-3 text-foreground">
+                                    <Check className="h-5 w-5 text-green-500 shrink-0" />
+                                    <span>{feature}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+                
+                <Separator />
+                
+                <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="item-1">
+                        <AccordionTrigger>Livraison & Retours</AccordionTrigger>
+                        <AccordionContent>
+                            Livraison gratuite en 24/48h dans toute l'Europe. Retours gratuits sous 30 jours. Tous nos emballages sont 100% recyclés et recyclables.
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-2">
+                        <AccordionTrigger>Garantie & Support</AccordionTrigger>
+                        <AccordionContent>
+                            Ce produit est couvert par une garantie constructeur de 2 ans. Notre support technique est disponible 24/7 pour vous assister en cas de besoin.
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-3">
+                        <AccordionTrigger>Spécifications Techniques</AccordionTrigger>
+                        <AccordionContent>
+                            Les spécifications détaillées sont disponibles dans le manuel utilisateur. Pour toute question technique, n'hésitez pas à contacter notre support expert.
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
             </div>
 
             {relatedProducts.length > 0 && (
