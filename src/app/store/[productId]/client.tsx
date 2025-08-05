@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, CheckCircle, Shield, Truck, ArrowRight } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Shield, Truck, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
 import { type Product } from '@/lib/products';
@@ -65,6 +65,14 @@ export default function ProductClient({ product, relatedProducts }: { product: P
     return (
         <div className="space-y-24 md:space-y-36">
             <section className="container mx-auto px-4 md:px-6 text-center pt-16 md:pt-24">
+                <div className="mb-12 text-left">
+                    <Button asChild variant="ghost" className="text-muted-foreground">
+                        <Link href="/store">
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            Retour à la boutique
+                        </Link>
+                    </Button>
+                </div>
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -127,11 +135,6 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                     <PCConfigurator 
                         basePrice={product.price} 
                         onConfigChange={handleConfigChange} 
-                        onImageSelect={(imageIndex) => {
-                            if (product.images[imageIndex]) {
-                                // This part is for future use if we want to change main image from configurator
-                            }
-                        }}
                     />
                      <div className="mt-16 flex flex-col items-center gap-6 text-center">
                         <div>
