@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
 import { Cpu, HardDrive, MemoryStick, CircuitBoard, CheckCircle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type Option = {
     name: string;
@@ -36,6 +37,13 @@ const options: Record<ComponentType, Option[]> = {
         { name: '4TB NVMe SSD', priceModifier: 400 },
     ],
 };
+
+const componentInfo: Record<ComponentType, { title: string; icon: React.ElementType }> = {
+    cpu: { title: "Processeur", icon: Cpu },
+    gpu: { title: "Carte Graphique", icon: CircuitBoard },
+    ram: { title: "Mémoire", icon: MemoryStick },
+    storage: { title: "Stockage", icon: HardDrive },
+}
 
 export type Configuration = {
     cpu: string;
@@ -79,59 +87,60 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
             <CardHeader>
                 <CardTitle>Configurez votre station</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-8">
-                <ConfigSection icon={Cpu} title="Processeur (CPU)" type="cpu" value={config.cpu} onSelect={handleSelection} />
-                <ConfigSection icon={CircuitBoard} title="Carte Graphique (GPU)" type="gpu" value={config.gpu} onSelect={handleSelection} />
-                <ConfigSection icon={MemoryStick} title="Mémoire (RAM)" type="ram" value={config.ram} onSelect={handleSelection} />
-                <ConfigSection icon={HardDrive} title="Stockage" type="storage" value={config.storage} onSelect={handleSelection} />
+            <CardContent className="space-y-6">
+                <Tabs defaultValue="cpu" className="w-full">
+                    <TabsList className="grid w-full grid-cols-4">
+                        {(Object.keys(options) as ComponentType[]).map(type => {
+                             const Icon = componentInfo[type].icon;
+                             return (
+                                <TabsTrigger key={type} value={type} className="flex flex-col h-auto p-2 gap-1">
+                                    <Icon className="h-5 w-5"/>
+                                    <span className="text-xs">{componentInfo[type].title}</span>
+                                </TabsTrigger>
+                            )
+                        })}
+                    </TabsList>
+
+                    {(Object.keys(options) as ComponentType[]).map(type => (
+                        <TabsContent key={type} value={type} className="mt-6">
+                             <div className="text-center mb-4">
+                                <p className="text-sm text-muted-foreground">Sélection actuelle</p>
+                                <p className="font-semibold">{config[type]}</p>
+                            </div>
+                            <Carousel opts={{ align: "start", slidesToScroll: 1 }} className="w-full">
+                                <CarouselContent className="-ml-2">
+                                    {options[type].map((option, index) => (
+                                        <CarouselItem key={index} className="basis-1/2 md:basis-1/3 pl-2">
+                                            <div className="p-1">
+                                                <Button
+                                                    variant="outline"
+                                                    onClick={() => handleSelection(type, option.name)}
+                                                    className={cn(
+                                                        "w-full h-full p-3 flex flex-col items-center justify-center text-center gap-1 rounded-xl border-2 transition-all duration-200 text-foreground",
+                                                        config[type] === option.name
+                                                            ? "border-primary bg-primary/10 ring-2 ring-primary/50"
+                                                            : "bg-card/50 border-border"
+                                                    )}
+                                                >
+                                                     {config[type] === option.name && (
+                                                        <CheckCircle className="absolute top-2 right-2 h-4 w-4 text-primary" />
+                                                    )}
+                                                    <span className="font-medium text-xs">{option.name}</span>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
+                                                    </span>
+                                                </Button>
+                                            </div>
+                                        </CarouselItem>
+                                    ))}
+                                </CarouselContent>
+                                <CarouselPrevious className="hidden sm:flex" />
+                                <CarouselNext className="hidden sm:flex" />
+                            </Carousel>
+                        </TabsContent>
+                    ))}
+                </Tabs>
             </CardContent>
         </Card>
     );
-}
-
-function ConfigSection({ icon: Icon, title, type, value, onSelect }: {
-    icon: React.ElementType,
-    title: string,
-    type: ComponentType,
-    value: string,
-    onSelect: (type: ComponentType, value: string) => void
-}) {
-    return (
-        <div>
-            <h3 className="text-lg font-semibold flex items-center gap-2 mb-3">
-                <Icon className="h-5 w-5 text-primary" />
-                {title}
-            </h3>
-            <Carousel opts={{ align: "start", slidesToScroll: 1 }} className="w-full">
-                <CarouselContent>
-                    {options[type].map((option, index) => (
-                        <CarouselItem key={index} className="basis-1/2 md:basis-1/3">
-                            <div className="p-1">
-                                <Button
-                                    variant="outline"
-                                    onClick={() => onSelect(type, option.name)}
-                                    className={cn(
-                                        "w-full h-full p-4 flex flex-col items-center justify-center text-center gap-2 rounded-xl border-2 transition-all duration-200 text-foreground",
-                                        value === option.name
-                                            ? "border-primary bg-primary/10 ring-2 ring-primary/50"
-                                            : "bg-card/50 border-border"
-                                    )}
-                                >
-                                    {value === option.name && (
-                                        <CheckCircle className="absolute top-2 right-2 h-5 w-5 text-primary" />
-                                    )}
-                                    <span className="font-medium text-sm">{option.name}</span>
-                                    <span className="text-xs text-muted-foreground">
-                                        {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
-                                    </span>
-                                </Button>
-                            </div>
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-                <CarouselPrevious className="hidden sm:flex" />
-                <CarouselNext className="hidden sm:flex" />
-            </Carousel>
-        </div>
-    )
 }
