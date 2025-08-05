@@ -4,14 +4,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Check } from 'lucide-react';
+import { ShoppingCart, Check, Shield, Truck } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
 import { type Product } from '@/lib/products';
 import { PCConfigurator, type Configuration } from '@/components/ui/pc-configurator';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { AnimatePresence, motion } from 'framer-motion';
 import { ProductCard } from '@/components/product-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -22,6 +21,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel"
+import { Separator } from '@/components/ui/separator';
 
 export default function ProductClient({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
     const { addItem } = useCart();
@@ -101,6 +101,18 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                         <p className="text-lg text-muted-foreground">{product.description}</p>
                     </div>
 
+                    <div className="space-y-3 pt-4">
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                            <Truck className="h-5 w-5 text-primary"/>
+                            <span>Livraison gratuite en 24/48h et retours sous 30 jours.</span>
+                        </div>
+                         <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                            <Shield className="h-5 w-5 text-primary"/>
+                            <span>Garantie constructeur de 2 ans et support 24/7.</span>
+                        </div>
+                    </div>
+                    <Separator className="bg-border" />
+                    
                     <Button size="lg" className="w-full md:w-auto bg-accent hover:bg-accent/90 text-accent-foreground" onClick={handleAddToCart}>
                         <ShoppingCart className="mr-2 h-5 w-5" />
                         Ajouter au panier
@@ -113,14 +125,12 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                     <PCConfigurator basePrice={product.price} onConfigChange={handleConfigChange} />
                 )}
 
-                 <Tabs defaultValue="features" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="features">Caractéristiques</TabsTrigger>
-                        <TabsTrigger value="shipping">Livraison & Retours</TabsTrigger>
-                        <TabsTrigger value="warranty">Garantie & Support</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="features" className="mt-6">
-                         {product.features && (
+                 {product.features && (
+                    <Tabs defaultValue="features" className="w-full">
+                        <TabsList className="grid w-full grid-cols-1">
+                            <TabsTrigger value="features">Caractéristiques</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="features" className="mt-6">
                             <div className="space-y-4 glass-card p-8">
                                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                                     {product.features.map((feature, i) => (
@@ -131,19 +141,9 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                                     ))}
                                 </ul>
                             </div>
-                        )}
-                    </TabsContent>
-                    <TabsContent value="shipping" className="mt-6">
-                         <div className="space-y-4 glass-card p-8">
-                           <p className="text-muted-foreground">Livraison gratuite en 24/48h dans toute l'Europe. Retours gratuits sous 30 jours. Tous nos emballages sont 100% recyclés et recyclables.</p>
-                        </div>
-                    </TabsContent>
-                    <TabsContent value="warranty" className="mt-6">
-                         <div className="space-y-4 glass-card p-8">
-                            <p className="text-muted-foreground">Ce produit est couvert par une garantie constructeur de 2 ans. Notre support technique est disponible 24/7 pour vous assister en cas de besoin.</p>
-                        </div>
-                    </TabsContent>
-                </Tabs>
+                        </TabsContent>
+                    </Tabs>
+                )}
             </div>
 
             {relatedProducts.length > 0 && (
