@@ -113,6 +113,21 @@ const generatorTools = [
 function CartSheet() {
   const { items, removeItem, total, itemCount, addItem, decreaseItem } =
     useCart();
+  const isClient = useIsClient();
+
+  if (!isClient) {
+    return (
+        <Button
+            variant="ghost"
+            size="icon"
+            className="relative text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full"
+            disabled
+        >
+          <ShoppingCart className="h-6 w-6" />
+        </Button>
+    )
+  }
+
   return (
     <Sheet>
       <SheetTrigger asChild>
