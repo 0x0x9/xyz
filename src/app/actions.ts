@@ -2,7 +2,8 @@
 'use server';
 
 import { v4 as uuidv4 } from 'uuid';
-import type { Doc, GenerateFluxOutput, GenerateMuseOutput, ProjectPlan, GenerateIdeasOutput, VideoScript, Nexus, GeneratePaletteOutput, GeneratePersonaOutput, GenerateSoundOutput, Frame, GenerateToneOutput, GenerateCodeOutput, GenerateDeckOutput, GenerateTextOutput, GenerateVoiceOutput, OriaChatOutput, ExplainCodeOutput, DebugCodeOutput, AgendaEvent, ReformatTextWithPromptOutput } from '@/ai/types';
+import { z } from 'zod';
+import type { Doc, GenerateFluxOutput, GenerateMuseOutput, ProjectPlan, GenerateIdeasOutput, VideoScript, Nexus, GeneratePaletteOutput, GeneratePersonaOutput, GenerateSoundOutput, Frame, GenerateToneOutput, GenerateCodeOutput, GenerateDeckOutput, GenerateTextOutput, GenerateVoiceOutput, OriaChatOutput, ExplainCodeOutput, DebugCodeOutput, AgendaEvent, ReformatTextWithPromptOutput, GenerateCodeInput, ExplainCodeInput, RefactorCodeInput } from '@/ai/types';
 
 // AI Flow Imports
 import { generateFrame } from '@/ai/flows/generate-frame';
@@ -247,16 +248,61 @@ export async function generateToneAction(prevState: any, formData: FormData): Pr
     }
 }
 
+const CodeActionSchema = z.object({
+    prompt: z.string().min(1),
+    language: z.string().min(1)
+});
+
+const ExplainCodeActionSchema = z.object({
+    code: z.string().min(1),
+    language: z.string().min(1)
+});
+
+const RefactorCodeActionSchema = z.object({
+    prompt: z.string().min(1),
+    code: z.string().min(1),
+    language: z.string().min(1)
+});
+
 export async function generateCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null }> {
+    const parse = CodeActionSchema.safeParse({
+        prompt: formData.get('prompt'),
+        language: formData.get('language'),
+    });
+    if (!parse.success) {
+        return { id: prevState.id + 1, result: null, error: "Prompt et langage sont requis." };
+    }
     return codeActions.generateCodeAction(prevState, formData);
 }
 export async function explainCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: ExplainCodeOutput | null, error: string | null }> {
+    const parse = ExplainCodeActionSchema.safeParse({
+        code: formData.get('code'),
+        language: formData.get('language'),
+    });
+    if (!parse.success) {
+        return { id: prevState.id + 1, result: null, error: "Code et langage sont requis." };
+    }
     return codeActions.explainCodeAction(prevState, formData);
 }
 export async function debugCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: DebugCodeOutput | null, error: string | null }> {
+    const parse = ExplainCodeActionSchema.safeParse({
+        code: formData.get('code'),
+        language: formData.get('language'),
+    });
+    if (!parse.success) {
+        return { id: prevState.id + 1, result: null, error: "Code et langage sont requis." };
+    }
     return codeActions.debugCodeAction(prevState, formData);
 }
 export async function refactorCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null }> {
+    const parse = RefactorCodeActionSchema.safeParse({
+        prompt: formData.get('prompt'),
+        code: formData.get('code'),
+        language: formData.get('language'),
+    });
+    if (!parse.success) {
+        return { id: prevState.id + 1, result: null, error: "Prompt, code et langage sont requis." };
+    }
     return codeActions.refactorCodeAction(prevState, formData);
 }
 

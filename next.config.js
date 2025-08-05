@@ -1,6 +1,7 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
   experimental: {
     serverComponentsExternalPackages: ['@genkit-ai/core', '@genkit-ai/firebase']
   },
