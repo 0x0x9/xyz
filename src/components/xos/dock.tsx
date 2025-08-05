@@ -3,19 +3,18 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { WindowInstance } from '@/components/xos/client';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import DockAnimation from '@/components/ui/dock-animation';
 import HeaderLogo from '@/components/layout/header-logo';
 import { Progress } from '../ui/progress';
+import { WindowInstance } from '@/hooks/use-window-manager';
 
 interface XosDockProps {
     windows: WindowInstance[];
     onDockItemClick: (id: number) => void;
-    openApp: (appId: string) => void;
 }
 
-export default function XosDock({ windows, onDockItemClick, openApp }: XosDockProps) {
+export default function XosDock({ windows, onDockItemClick }: XosDockProps) {
     
     return (
         <TooltipProvider>

@@ -1,42 +1,8 @@
 
 'use client';
 
-import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import OriaAnimation from '../ui/oria-animation';
-
-const OriaIconAnimation = ({ className }: { className?: string }) => (
-    <div className={cn("relative rounded-full overflow-hidden", className)}>
-        <OriaAnimation />
-    </div>
-);
-
-const getAppsConfig = () => [
-    { id: 'oria', name: 'Oria', icon: OriaIconAnimation },
-    { id: 'cloud', name: '(X)cloud', icon: Cloud },
-    { id: 'explorer', name: '(X)plorer', icon: Folder },
-    { id: 'fusion', name: '(X)fusion', icon: Zap },
-    { id: 'flux', name: '(X)flux', icon: Wand2 },
-    { id: 'maestro', name: 'Maestro', icon: BrainCircuit },
-    { id: 'image', name: 'Image', icon: ImageIconLucide },
-    { id: 'brand-identity', name: '(X)brand', icon: Layers },
-    { id: 'promptor', name: '(X)promptor', icon: Lightbulb },
-    { id: 'motion', name: '(X)motion', icon: Film },
-    { id: 'voice', name: '(X)voice', icon: AudioLines },
-    { id: 'text', name: 'Texte', icon: FileText },
-    { id: 'editor', name: '(X).alpha', icon: SquareTerminal },
-    { id: 'frame', name: '(X)frame', icon: LayoutTemplate },
-    { id: 'terminal', name: '(X)term', icon: Terminal },
-    { id: 'agenda', name: '(X)agenda', icon: Calendar },
-    { id: 'nexus', name: '(X)nexus', icon: Network },
-    { id: 'muse', name: '(X)muse', icon: Guitar },
-    { id: 'sound', name: '(X)sound', icon: Music },
-    { id: 'palette', name: '(X)palette', icon: Palette },
-    { id: 'tone', name: '(X)tone', icon: Mic },
-    { id: 'persona', name: '(X)persona', icon: Users },
-    { id: 'deck', name: 'Présentation', icon: Presentation },
-    { id: 'code', name: '(X)code', icon: CodeXml },
-];
+import { ALL_APPS_CONFIG } from "@/lib/apps-config";
 
 const DESKTOP_APP_IDS = [
     'oria', 'cloud', 'explorer', 'fusion', 
@@ -52,8 +18,9 @@ interface DesktopIconsProps {
 }
 
 export default function DesktopIcons({ isBooting, onOpenApp }: DesktopIconsProps) {
-    const ALL_APPS_CONFIG = getAppsConfig();
-    const desktopApps = DESKTOP_APP_IDS.map(id => ALL_APPS_CONFIG.find(app => app.id === id)).filter(Boolean) as (typeof ALL_APPS_CONFIG[0])[];
+    const desktopApps = DESKTOP_APP_IDS
+        .map(id => ALL_APPS_CONFIG.find(app => app.id === id))
+        .filter(Boolean) as (typeof ALL_APPS_CONFIG[0])[];
 
     return (
         <div className="p-8 z-1 relative">

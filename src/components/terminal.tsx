@@ -8,6 +8,7 @@ import { Terminal as TerminalIcon, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { oriaChatAction } from '@/app/actions';
 import type { OriaChatOutput, OriaHistoryMessage } from '@/ai/types';
+import { ALL_APPS_CONFIG } from '@/lib/apps-config';
 
 type Line = {
     type: 'input' | 'output' | 'system' | 'ai-result';
@@ -17,13 +18,11 @@ type Line = {
 
 const HELP_TEXT = `
 Bienvenue sur (X)term, votre terminal assisté par Oria.
-Vous pouvez poser des questions ou donner des commandes directes.
-
-Exemples :
-  > Écris un poème sur un chat dans l'espace.
-  > Crée une palette de couleurs pour un site de tech.
-  > Génère une fonction javascript pour trier un tableau.
-  > clear - pour effacer l'écran.
+Commandes disponibles:
+  > open <app_id>    - Ouvre une application (ex: open cloud, open editor)
+  > clear              - Efface l'écran.
+  > help               - Affiche ce message d'aide.
+Vous pouvez aussi discuter normalement avec Oria.
 `;
 
 const OriaResultDisplay = ({ result }: { result: OriaChatOutput }) => {
@@ -68,11 +67,33 @@ export default function Terminal({ openApp }: { openApp?: (appId: string) => voi
         const prompt = formData.get('prompt') as string;
         if (!prompt.trim()) return initialState;
 
-        if (prompt.trim().toLowerCase() === 'clear') {
+        const [command, ...args] = prompt.trim().toLowerCase().split(' ');
+
+        if (command === 'clear') {
             setLines([]);
             formRef.current?.reset();
             return initialState;
         }
+
+        if (command === 'help') {
+            setLines(prev => [...prev, { type: 'input', text: prompt }, { type: 'system', text: HELP_TEXT }]);
+            formRef.current?.reset();
+            return initialState;
+        }
+
+        if (command === 'open' && args[0] && openApp) {
+            const appId = args[0];
+            const appConfig = ALL_APPS_CONFIG.find(app => app.id.toLowerCase() === appId);
+            if (appConfig) {
+                 setLines(prev => [...prev, { type: 'input', text: prompt }, { type: 'output', text: `Ouverture de ${appConfig.name}...` }]);
+                 openApp(appConfig.id);
+            } else {
+                 setLines(prev => [...prev, { type: 'input', text: prompt }, { type: 'output', text: `Erreur: Application '${appId}' non trouvée.` }]);
+            }
+            formRef.current?.reset();
+            return initialState;
+        }
+
 
         const history: OriaHistoryMessage[] = lines.filter(l => l.type === 'input' || l.type === 'ai-result').map(l => ({
             role: l.type === 'input' ? 'user' : 'model',
