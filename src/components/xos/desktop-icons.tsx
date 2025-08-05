@@ -3,13 +3,14 @@
 
 import { cn } from "@/lib/utils";
 import { ALL_APPS_CONFIG } from "@/lib/apps-config";
+import { View } from "lucide-react";
 
 const DESKTOP_APP_IDS = [
     'chat', 'cloud', 'explorer', 'fusion', 
     'flux', 'maestro', 'promptor', 'brand-identity', 'agenda', 'nexus',
     'text', 'image', 'motion', 'voice',
     'muse', 'sound',
-    'editor', 'frame', 'terminal',
+    'editor', 'frame', 'terminal', 'reality',
     'store', 'gallery', 'collaborations', 'careers', 'contact',
     'format', 'convert',
     'google-drive', 'google-docs', 'google-sheets', 'google-slides'

@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Wand2, BrainCircuit, Layers, Lightbulb, Calendar, Network,
   Film, Image as ImageIconLucide, AudioLines, FileText,
-  Guitar, Music, SquareTerminal, LayoutTemplate, Terminal, CodeXml, ArrowRight
+  Guitar, Music, SquareTerminal, LayoutTemplate, Terminal, CodeXml, ArrowRight, View
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -122,6 +122,12 @@ const toolCategories = [
         description: 'Esquissez des interfaces et des wireframes.',
         href: '/xos?open=frame',
         icon: LayoutTemplate,
+      },
+      {
+        title: '(X)reality',
+        description: 'Prévisualisez vos créations en réalité augmentée et virtuelle.',
+        href: '/reality',
+        icon: View,
       },
     ]
   },

@@ -2,7 +2,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star, ShoppingCart, Paintbrush, Briefcase, Phone, Cpu, MessageSquare, FileKey } from "lucide-react";
+import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star, ShoppingCart, Paintbrush, Briefcase, Phone, Cpu, MessageSquare, FileKey, View } from "lucide-react";
 import OriaIconAnimation from '@/components/ui/oria-animation';
 
 // App Components (Dynamically Imported)
@@ -21,7 +21,7 @@ const LazyVoice = dynamic(() => import('@/components/voice-generator'));
 const LazyText = dynamic(() => import('@/components/text-generator'));
 const LazyEditor = dynamic(() => import('@/components/code-editor'));
 const LazyFrame = dynamic(() => import('@/components/frame-generator'));
-const LazyTerminal = dynamic(() => import('@/app/terminal/client'));
+const LazyTerminal = dynamic(() => import('@/components/terminal'));
 const LazyAgenda = dynamic(() => import('@/app/agenda/client'));
 const LazyNexus = dynamic(() => import('@/components/nexus-generator'));
 const LazyMuse = dynamic(() => import('@/components/muse-generator'));
@@ -40,6 +40,7 @@ const LazyContactApp = dynamic(() => import('@/components/contact-app'));
 const LazyFormatApp = dynamic(() => import('@/components/format-app'));
 const LazyConvertApp = dynamic(() => import('@/components/convert-app'));
 const LazyChatApp = dynamic(() => import('@/app/chat/client'));
+const LazyRealityApp = dynamic(() => import('@/components/reality-app'));
 const LazyGoogleDriveApp = dynamic(() => import('@/components/google/drive-app'));
 const LazyGoogleDocsApp = dynamic(() => import('@/components/google/docs-app'));
 const LazyGoogleSheetsApp = dynamic(() => import('@/components/google/sheets-app'));
@@ -112,6 +113,7 @@ export const ALL_APPS_CONFIG = [
     { id: 'persona', name: '(X)persona', icon: Users, component: (props: any) => <LazyPersona {...props} />, defaultPos: { x: 260, y: 260}, defaultSize: { width: 800, height: 700 } },
     { id: 'deck', name: 'Présentation', icon: Presentation, component: (props: any) => <LazyDeck {...props} />, defaultPos: { x: 280, y: 280}, defaultSize: { width: 900, height: 700 } },
     { id: 'code', name: '(X)code', icon: CodeXml, component: (props: any) => <LazyCode {...props} />, defaultPos: { x: 300, y: 300}, defaultSize: { width: 800, height: 700 } },
+    { id: 'reality', name: '(X)reality', icon: View, component: (props: any) => <LazyRealityApp {...props} />, defaultPos: { x: 320, y: 320}, defaultSize: { width: 900, height: 600 } },
     { id: 'store', name: 'Boutique', icon: ShoppingCart, component: (props: any) => <LazyStoreApp {...props} />, defaultPos: { x: 100, y: 100 }, defaultSize: { width: 1200, height: 800 } },
     { id: 'checkout', name: 'Panier', icon: ShoppingCart, component: (props: any) => <LazyCheckoutApp {...props} />, defaultPos: { x: 120, y: 120 }, defaultSize: { width: 1000, height: 750 } },
     { id: 'gallery', name: 'Galerie', icon: Paintbrush, component: (props: any) => <LazyGalleryApp {...props} />, defaultPos: { x: 140, y: 140 }, defaultSize: { width: 1100, height: 800 } },
