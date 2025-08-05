@@ -4,24 +4,39 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { ShoppingCart, CheckCircle, Shield, Truck, Check } from 'lucide-react';
+import { ShoppingCart, Check, ArrowRight } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
 import { type Product } from '@/lib/products';
 import { PCConfigurator, type Configuration } from '@/components/ui/pc-configurator';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ProductCard } from '@/components/product-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel"
 
 export default function ProductClient({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
     const { addItem } = useCart();
     const { toast } = useToast();
     const [configuration, setConfiguration] = useState<Configuration | null>(null);
     const [totalPrice, setTotalPrice] = useState(product.price);
-    const [activeImage, setActiveImage] = useState(product.images[0]);
+    const [api, setApi] = useState<CarouselApi>()
+    const [current, setCurrent] = useState(0)
+
+    useEffect(() => {
+        if (!api) return
+        setCurrent(api.selectedScrollSnap() + 1)
+        api.on("select", () => setCurrent(api.selectedScrollSnap() + 1))
+    }, [api])
+
 
     const handleAddToCart = () => {
         const productToAdd = {
@@ -29,7 +44,7 @@ export default function ProductClient({ product, relatedProducts }: { product: P
             price: totalPrice,
             name: configuration ? `${product.name} (Configuré)` : product.name,
             configuration: configuration ?? undefined,
-            image: activeImage,
+            image: product.images[0],
         };
         addItem(productToAdd);
         toast({
@@ -41,65 +56,38 @@ export default function ProductClient({ product, relatedProducts }: { product: P
     const handleConfigChange = (newConfig: Configuration, newPrice: number) => {
         setConfiguration(newConfig);
         setTotalPrice(newPrice);
-        // Change image based on config
-        const configKeys = Object.keys(newConfig);
-        const changedKey = configKeys.find(key => newConfig[key as keyof Configuration] !== (configuration?.[key as keyof Configuration] ?? ''));
-        
-        if (changedKey) {
-            const optionsMap: Record<string, number> = {
-                'gpu': 1, 'ram': 2, 'storage': 3, 'cpu': 0,
-            };
-            const component = changedKey as keyof typeof optionsMap;
-            const imageIndex = optionsMap[component] || 0;
-            if (product.images[imageIndex]) {
-                setActiveImage(product.images[imageIndex]);
-            }
-        }
     }
 
     return (
         <div className="container mx-auto px-4 md:px-6 py-28 md:py-36">
             <div className="grid md:grid-cols-2 gap-12 items-start">
                 <div className="space-y-4">
-                    <div className="relative aspect-square w-full rounded-2xl overflow-hidden glass-card p-4">
-                         <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activeImage}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="absolute inset-0"
-                            >
-                                <Image
-                                    src={activeImage}
-                                    alt={product.name}
-                                    fill
-                                    className="object-contain"
-                                    data-ai-hint={product.hint}
-                                />
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
-                    {product.images.length > 1 && (
-                        <div className="grid grid-cols-5 gap-2">
+                     <Carousel setApi={setApi} className="w-full">
+                        <CarouselContent>
                             {product.images.map((img, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => setActiveImage(img)}
-                                    className={cn(
-                                        "relative aspect-square w-full rounded-lg overflow-hidden border-2 transition-all",
-                                        activeImage === img ? "border-primary" : "border-transparent hover:border-primary/50"
-                                    )}
-                                >
-                                    <Image
-                                        src={img}
-                                        alt={`${product.name} - vue ${idx + 1}`}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                </button>
+                                <CarouselItem key={idx}>
+                                    <div className="relative aspect-square w-full rounded-2xl overflow-hidden glass-card p-4">
+                                        <Image
+                                            src={img}
+                                            alt={`${product.name} - vue ${idx + 1}`}
+                                            fill
+                                            className="object-contain"
+                                            data-ai-hint={product.hint}
+                                        />
+                                    </div>
+                                </CarouselItem>
                             ))}
+                        </CarouselContent>
+                        {product.images.length > 1 && (
+                            <>
+                                <CarouselPrevious />
+                                <CarouselNext />
+                            </>
+                        )}
+                    </Carousel>
+                    {product.images.length > 1 && (
+                        <div className="text-center text-sm text-muted-foreground">
+                            {current} / {product.images.length}
                         </div>
                     )}
                 </div>

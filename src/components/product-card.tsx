@@ -35,7 +35,7 @@ export function ProductCard({ product }: { product: Product }) {
         >
             <Card className="group/card flex h-full flex-col overflow-hidden transition-all duration-300 rounded-2xl glass-card hover:bg-white/5 dark:hover:bg-black/10 hover:border-primary/30">
             <div className="relative flex-1 p-0 flex flex-col">
-                <div className="relative aspect-square">
+                <div className="relative aspect-square bg-white/5 dark:bg-black/10">
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
