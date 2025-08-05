@@ -2,7 +2,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { onAuthStateChanged, signOut, signInWithEmailAndPassword, type User, GoogleAuthProvider, OAuthProvider, signInWithPopup } from 'firebase/auth';
+import { onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile, type User, GoogleAuthProvider, OAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,8 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   handleSignIn: (email: string, pass: string) => Promise<void>;
+  handleSignUp: (name: string, email: string, pass: string) => Promise<void>;
+  handlePasswordReset: (email: string) => Promise<void>;
   handleGoogleSignIn: () => Promise<void>;
   handleAppleSignIn: () => Promise<void>;
   handleSignOut: () => Promise<void>;
@@ -50,6 +52,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         toast({ variant: 'destructive', title: "Erreur de connexion", description });
     }
   };
+
+  const handleSignUp = async (name: string, email: string, pass: string) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+      await updateProfile(userCredential.user, { displayName: name });
+       setUser(auth.currentUser); // Refresh user state
+      toast({ description: "Inscription réussie ! Bienvenue." });
+      router.push('/account');
+    } catch (error: any) {
+        let description = "Une erreur est survenue.";
+        if (error.code === 'auth/email-already-in-use') {
+            description = "Cette adresse e-mail est déjà utilisée.";
+        } else if (error.code === 'auth/weak-password') {
+            description = "Le mot de passe doit contenir au moins 6 caractères.";
+        }
+        toast({ variant: 'destructive', title: "Erreur d'inscription", description });
+    }
+  };
+
+  const handlePasswordReset = async (email: string) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast({ description: "Un e-mail de réinitialisation a été envoyé." });
+      router.push('/login');
+    } catch (error: any) {
+        let description = "Une erreur est survenue.";
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
+            description = "Aucun utilisateur trouvé avec cette adresse e-mail.";
+        }
+        toast({ variant: 'destructive', title: "Erreur", description });
+    }
+  };
   
   const handleGoogleSignIn = async () => {
     try {
@@ -71,7 +105,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -91,7 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, handleSignIn, handleGoogleSignIn, handleAppleSignIn, handleSignOut }}>
+    <AuthContext.Provider value={{ user, loading, handleSignIn, handleSignUp, handlePasswordReset, handleGoogleSignIn, handleAppleSignIn, handleSignOut }}>
       {children}
     </AuthContext.Provider>
   );

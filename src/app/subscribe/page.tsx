@@ -23,7 +23,7 @@ const plans = [
         ],
         buttonText: "Commencer gratuitement",
         buttonVariant: "outline",
-        href: "/login",
+        href: "/signup",
         isFeatured: false,
     },
     {
@@ -41,7 +41,7 @@ const plans = [
         ],
         buttonText: "Choisir le plan Pro",
         buttonVariant: "default",
-        href: "/login?plan=pro",
+        href: "/signup?plan=pro",
         isFeatured: true,
     },
     {
