@@ -1,8 +1,7 @@
-
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star } from "lucide-react";
+import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star, ShoppingCart, Paintbrush, Briefcase, Phone } from "lucide-react";
 import OriaIconAnimation from '@/components/ui/oria-animation';
 
 // App Components (Dynamically Imported)
@@ -31,6 +30,14 @@ const LazyTone = dynamic(() => import('@/components/tone-generator'));
 const LazyPersona = dynamic(() => import('@/components/persona-generator'));
 const LazyDeck = dynamic(() => import('@/components/deck-generator'));
 const LazyCode = dynamic(() => import('@/components/code-generator'));
+const LazyStoreApp = dynamic(() => import('@/components/store-app'));
+const LazyCheckoutApp = dynamic(() => import('@/components/checkout-app'));
+const LazyGalleryApp = dynamic(() => import('@/components/gallery-app'));
+const LazyCollaborationsApp = dynamic(() => import('@/components/collaborations-app'));
+const LazyCareersApp = dynamic(() => import('@/components/careers-app'));
+const LazyContactApp = dynamic(() => import('@/components/contact-app'));
+const LazyFormatApp = dynamic(() => import('@/components/format-app'));
+const LazyConvertApp = dynamic(() => import('@/components/convert-app'));
 
 
 export const ALL_APPS_CONFIG = [
@@ -59,4 +66,12 @@ export const ALL_APPS_CONFIG = [
     { id: 'persona', name: '(X)persona', icon: Users, component: (props: any) => <LazyPersona {...props} />, defaultPos: { x: 260, y: 260}, defaultSize: { width: 800, height: 700 } },
     { id: 'deck', name: 'Présentation', icon: Presentation, component: (props: any) => <LazyDeck {...props} />, defaultPos: { x: 280, y: 280}, defaultSize: { width: 900, height: 700 } },
     { id: 'code', name: '(X)code', icon: CodeXml, component: (props: any) => <LazyCode {...props} />, defaultPos: { x: 300, y: 300}, defaultSize: { width: 800, height: 700 } },
+    { id: 'store', name: 'Boutique', icon: ShoppingCart, component: (props: any) => <LazyStoreApp {...props} />, defaultPos: { x: 100, y: 100 }, defaultSize: { width: 1200, height: 800 } },
+    { id: 'checkout', name: 'Panier', icon: ShoppingCart, component: (props: any) => <LazyCheckoutApp {...props} />, defaultPos: { x: 120, y: 120 }, defaultSize: { width: 1000, height: 750 } },
+    { id: 'gallery', name: 'Galerie', icon: Paintbrush, component: (props: any) => <LazyGalleryApp {...props} />, defaultPos: { x: 140, y: 140 }, defaultSize: { width: 1100, height: 800 } },
+    { id: 'collaborations', name: 'Collaborations', icon: Users, component: (props: any) => <LazyCollaborationsApp {...props} />, defaultPos: { x: 160, y: 160 }, defaultSize: { width: 1000, height: 700 } },
+    { id: 'careers', name: 'Carrières', icon: Briefcase, component: (props: any) => <LazyCareersApp {...props} />, defaultPos: { x: 180, y: 180 }, defaultSize: { width: 1000, height: 800 } },
+    { id: 'contact', name: 'Contact', icon: Phone, component: (props: any) => <LazyContactApp {...props} />, defaultPos: { x: 200, y: 200 }, defaultSize: { width: 800, height: 600 } },
+    { id: 'format', name: '(X)format', icon: FilePenLine, component: (props: any) => <LazyFormatApp {...props} />, defaultPos: { x: 220, y: 220 }, defaultSize: { width: 900, height: 700 } },
+    { id: 'convert', name: '(X)change', icon: Sparkles, component: (props: any) => <LazyConvertApp {...props} />, defaultPos: { x: 240, y: 240 }, defaultSize: { width: 900, height: 700 } },
 ];

@@ -2,14 +2,16 @@
 'use client';
 
 import { cn } from "@/lib/utils";
-import { ALL_APPS_CONFIG } from "@/lib/apps-config.tsx";
+import { ALL_APPS_CONFIG } from "@/lib/apps-config";
 
 const DESKTOP_APP_IDS = [
     'oria', 'cloud', 'explorer', 'fusion', 
     'flux', 'maestro', 'promptor', 'brand-identity', 'agenda', 'nexus',
     'text', 'image', 'motion', 'voice',
     'muse', 'sound',
-    'editor', 'frame', 'terminal'
+    'editor', 'frame', 'terminal',
+    'store', 'gallery', 'collaborations', 'careers', 'contact',
+    'format', 'convert'
 ];
 
 interface DesktopIconsProps {
