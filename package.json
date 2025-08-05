@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "concurrently \"npm:genkit:watch\" \"npm:genkit:dev\"",
     "build": "genkit-cli build && next build",
-    "start": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next start -p 9002",
+    "start": "next start -p 9002",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "genkit:watch": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json ts-node -r tsconfig-paths/register --transpileOnly src/ai/dev.ts",
-    "genkit:dev": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next dev -p 9002"
+    "genkit:watch": "ts-node -r tsconfig-paths/register --transpileOnly src/ai/dev.ts",
+    "genkit:dev": "next dev -p 9002"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.2",
