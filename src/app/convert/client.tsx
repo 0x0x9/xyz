@@ -9,11 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
-import { Upload, X, FileKey, Sparkles, Download, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Upload, X, FileKey, Sparkles, Download, Image as ImageIcon, Loader2, FileText, Music } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { ConvertImageOutput } from '@/ai/types';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 
 function SubmitButton() {
@@ -32,7 +33,6 @@ function SubmitButton() {
 function ImageConverter() {
     const initialState = { message: '', error: null, result: null, id: 0 };
     const [state, formAction] = useFormState(convertImageAction, initialState);
-    const { toast } = useToast();
     
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -61,75 +61,67 @@ function ImageConverter() {
 
     return (
         <form action={formAction} className="space-y-8">
-            <Card className="glass-card">
-                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><ImageIcon className="h-5 w-5 text-primary" /> Convertisseur d'Image</CardTitle>
-                    <CardDescription>Envoyez une image pour la convertir dans un autre format.</CardDescription>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                    <div className="space-y-4">
-                        <input
-                            type="file"
-                            name="imageFile"
-                            accept="image/png, image/jpeg, image/webp"
-                            onChange={handleFileChange}
-                            ref={fileInputRef}
-                            className="hidden"
-                        />
-                        <input type="hidden" name="image" value={imagePreview || ''} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div className="space-y-4">
+                    <input
+                        type="file"
+                        name="imageFile"
+                        accept="image/png, image/jpeg, image/webp"
+                        onChange={handleFileChange}
+                        ref={fileInputRef}
+                        className="hidden"
+                    />
+                    <input type="hidden" name="image" value={imagePreview || ''} />
 
-                        {imagePreview ? (
-                            <div className="relative group w-full aspect-square rounded-lg border-2 border-dashed border-border flex items-center justify-center">
-                                <Image src={imagePreview} alt="Aperçu de l'image" layout="fill" objectFit="contain" className="p-2"/>
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    size="icon"
-                                    className="absolute top-2 right-2 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                                    onClick={() => setImagePreview(null)}
-                                >
-                                    <X className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        ) : (
-                            <button
+                    {imagePreview ? (
+                        <div className="relative group w-full aspect-square rounded-lg border-2 border-dashed border-border flex items-center justify-center">
+                            <Image src={imagePreview} alt="Aperçu de l'image" layout="fill" objectFit="contain" className="p-2"/>
+                            <Button
                                 type="button"
-                                onClick={() => fileInputRef.current?.click()}
-                                className="w-full aspect-square rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center text-muted-foreground hover:bg-accent hover:border-primary transition-colors"
+                                variant="destructive"
+                                size="icon"
+                                className="absolute top-2 right-2 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => setImagePreview(null)}
                             >
-                                <Upload className="h-10 w-10 mb-2" />
-                                <span>Cliquez pour choisir une image</span>
-                            </button>
-                        )}
-                    </div>
-                    
-                    <div className="space-y-6">
-                        <div>
-                            <Label htmlFor="outputFormat">Format de sortie</Label>
-                            <Select name="outputFormat" defaultValue="jpeg" required>
-                                <SelectTrigger id="outputFormat" className="mt-1"><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="jpeg">JPEG</SelectItem>
-                                    <SelectItem value="png">PNG</SelectItem>
-                                    <SelectItem value="webp">WEBP</SelectItem>
-                                </SelectContent>
-                            </Select>
+                                <X className="h-4 w-4" />
+                            </Button>
                         </div>
-                        <div className="flex items-center space-x-2">
-                           <Checkbox id="removeTransparency" name="removeTransparency" />
-                           <Label htmlFor="removeTransparency">Supprimer la transparence (fond blanc)</Label>
-                        </div>
-                         <SubmitButton />
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-full aspect-square rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center text-muted-foreground hover:bg-accent/10 hover:border-primary/50 transition-colors"
+                        >
+                            <Upload className="h-10 w-10 mb-2" />
+                            <span>Cliquez pour choisir une image</span>
+                        </button>
+                    )}
+                </div>
+                
+                <div className="space-y-6">
+                    <div>
+                        <Label htmlFor="outputFormat">Format de sortie</Label>
+                        <Select name="outputFormat" defaultValue="jpeg" required>
+                            <SelectTrigger id="outputFormat" className="mt-1"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="jpeg">JPEG</SelectItem>
+                                <SelectItem value="png">PNG</SelectItem>
+                                <SelectItem value="webp">WEBP</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
-                </CardContent>
-            </Card>
+                    <div className="flex items-center space-x-2">
+                       <Checkbox id="removeTransparency" name="removeTransparency" />
+                       <Label htmlFor="removeTransparency">Supprimer la transparence (fond blanc)</Label>
+                    </div>
+                     <SubmitButton />
+                </div>
+            </div>
 
             {state.result && (
-                 <Card className="glass-card">
-                    <CardHeader>
-                        <CardTitle>Résultat de la Conversion</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-col items-center gap-4">
+                 <div className="pt-8">
+                    <h3 className="text-lg font-semibold mb-4">Résultat de la Conversion</h3>
+                    <div className="flex flex-col items-center gap-4">
                         <div className="relative w-full max-w-sm aspect-square rounded-lg border-2 border-dashed bg-muted/20">
                              <Image src={(state.result as ConvertImageOutput).convertedImageUri} alt="Image convertie" layout="fill" objectFit="contain" className="p-2"/>
                         </div>
@@ -137,18 +129,57 @@ function ImageConverter() {
                             <Download className="mr-2 h-4 w-4" />
                             Télécharger l'image convertie
                         </Button>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
             )}
         </form>
     )
 }
 
+const PlaceholderConverter = ({ title, comingSoon = true }: { title: string, comingSoon?: boolean }) => (
+    <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-center text-muted-foreground p-8">
+        <h3 className="text-2xl font-semibold mb-2">{title}</h3>
+        {comingSoon && (
+            <>
+                <p>Ce convertisseur arrive bientôt dans (X)change.</p>
+                <div className="mt-4 px-4 py-1 text-xs bg-blue-500/10 text-blue-300 rounded-full border border-blue-500/20">Prochainement</div>
+            </>
+        )}
+    </div>
+);
+
 
 export default function ConvertClient() {
   return (
-    <div className="space-y-12">
-      <ImageConverter />
-    </div>
+    <Card className="glass-card max-w-4xl mx-auto">
+      <CardHeader>
+        <CardTitle>Convertisseur Universel</CardTitle>
+        <CardDescription>
+          Choisissez un type de fichier pour commencer la conversion.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="image" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="image"><ImageIcon className="mr-2 h-4 w-4"/>Image</TabsTrigger>
+                <TabsTrigger value="document" disabled><FileText className="mr-2 h-4 w-4"/>Document</TabsTrigger>
+                <TabsTrigger value="audio" disabled><Music className="mr-2 h-4 w-4"/>Audio</TabsTrigger>
+                <TabsTrigger value="3d" disabled><FileKey className="mr-2 h-4 w-4"/>3D</TabsTrigger>
+            </TabsList>
+            <TabsContent value="image" className="py-6">
+                <ImageConverter />
+            </TabsContent>
+            <TabsContent value="document" className="py-6">
+                 <PlaceholderConverter title="Convertisseur de Documents" />
+            </TabsContent>
+             <TabsContent value="audio" className="py-6">
+                 <PlaceholderConverter title="Convertisseur Audio" />
+            </TabsContent>
+             <TabsContent value="3d" className="py-6">
+                 <PlaceholderConverter title="Convertisseur 3D" />
+            </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,13 +1,10 @@
 
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import ConvertClient from "./client";
 import { FileKey } from "lucide-react";
 
 const ConvertPage = () => {
   return (
     <>
-      <Header />
       <main className="flex-1">
         <section className="container mx-auto px-4 md:px-6 py-28 md:py-36">
            <div className="text-center space-y-4 mb-16">
@@ -24,7 +21,6 @@ const ConvertPage = () => {
           <ConvertClient />
         </section>
       </main>
-      <Footer />
     </>
   );
 }
