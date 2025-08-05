@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Centralized Zod schemas and TypeScript types for all AI flows.
  * This file does not contain the 'use server' directive and can be safely
@@ -409,6 +410,31 @@ export const CopilotLyricsOutputSchema = z.object({
 });
 export type CopilotLyricsOutput = z.infer<typeof CopilotLyricsOutputSchema>;
 
+// From: src/ai/flows/reformat-text-with-prompt.ts
+export const ReformatTextWithPromptInputSchema = z.object({
+  text: z.string().describe('The text to be reformatted.'),
+  prompt: z.string().describe('The prompt to guide the reformatting process.'),
+});
+export type ReformatTextWithPromptInput = z.infer<typeof ReformatTextWithPromptInputSchema>;
+
+export const ReformatTextWithPromptOutputSchema = z.object({
+  reformattedText: z.string().describe('The reformatted text.'),
+});
+export type ReformatTextWithPromptOutput = z.infer<typeof ReformatTextWithPromptOutputSchema>;
+
+// From: src/ai/flows/convert-image.ts
+export const ConvertImageInputSchema = z.object({
+    image: z.string().describe("The input image as a data URI."),
+    outputFormat: z.enum(['jpeg', 'png', 'webp']).describe("The desired output format."),
+    removeTransparency: z.boolean().optional().describe("Whether to remove transparency and fill with a white background."),
+});
+export type ConvertImageInput = z.infer<typeof ConvertImageInputSchema>;
+
+export const ConvertImageOutputSchema = z.object({
+    convertedImageUri: z.string().describe("The converted image as a data URI."),
+    originalMimeType: z.string().describe("The MIME type of the original image.")
+});
+export type ConvertImageOutput = z.infer<typeof ConvertImageOutputSchema>;
 
 // IMPORTANT: The Oria schemas must be defined LAST, after all the schemas
 // they might reference in their `data` union type.

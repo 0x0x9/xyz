@@ -24,6 +24,8 @@ import { generateSound } from '@/ai/flows/generate-sound';
 import { generateTone } from '@/ai/flows/generate-tone';
 import { generateDeck } from '@/ai/flows/generate-deck';
 import { generateVoice } from '@/ai/flows/generate-voice';
+import { reformatTextWithPrompt } from '@/ai/flows/reformat-text-with-prompt';
+import { convertImage } from '@/ai/flows/convert-image';
 import * as codeActions from '@/ai/flows/code-actions';
 
 
@@ -278,6 +280,32 @@ export async function generateVoiceAction(prevState: any, formData: FormData): P
     } catch (e: any) {
         console.error('Error in generateVoiceAction:', e);
         return { ...prevState, message: 'error', result: null, error: e.message, text, voice };
+    }
+}
+
+export async function reformatTextAction(prevState: any, formData: FormData) {
+    const text = formData.get('text') as string;
+    const prompt = formData.get('prompt') as string;
+    try {
+        const result = await reformatTextWithPrompt({ text, prompt });
+        return { ...prevState, message: 'success', result, error: null };
+    } catch(e: any) {
+        console.error('Error in reformatTextAction:', e);
+        return { ...prevState, message: 'error', result: null, error: e.message };
+    }
+}
+
+export async function convertImageAction(prevState: any, formData: FormData) {
+    const image = formData.get('image') as string;
+    const outputFormat = formData.get('outputFormat') as 'jpeg' | 'png' | 'webp';
+    const removeTransparency = formData.get('removeTransparency') === 'on';
+
+    try {
+        const result = await convertImage({ image, outputFormat, removeTransparency });
+        return { ...prevState, message: 'success', result, error: null };
+    } catch(e: any) {
+        console.error('Error in convertImageAction:', e);
+        return { ...prevState, message: 'error', result: null, error: e.message };
     }
 }
 

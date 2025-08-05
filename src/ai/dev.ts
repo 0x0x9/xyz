@@ -1,3 +1,4 @@
+
 import { config } from 'dotenv';
 config();
 
@@ -26,3 +27,4 @@ import '@/ai/flows/explain-code.ts';
 import '@/ai/flows/refactor-code.ts';
 import '@/ai/flows/code-actions.ts';
 import '@/ai/flows/reformat-text-with-prompt.ts';
+import '@/ai/flows/convert-image.ts';

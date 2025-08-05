@@ -43,6 +43,7 @@ import {
   Paintbrush,
   Terminal,
   FilePenLine,
+  FileKey,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -93,6 +94,7 @@ const generatorTools = [
     { href: "/muse", label: "(X)muse", icon: Guitar },
     { href: "/text", label: "Texte", icon: FileText },
     { href: "/format", label: "(X)format", icon: FilePenLine },
+    { href: "/convert", label: "(X)change", icon: FileKey },
     { href: "/sound", label: "(X)sound", icon: Music },
     { href: "/voice", label: "(X)voice", icon: AudioLines },
     { href: "/editor", label: "(X).alpha", icon: SquareTerminal },
