@@ -2,7 +2,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star, ShoppingCart, Paintbrush, Briefcase, Phone, FileKey, Cpu, MessageSquare } from "lucide-react";
+import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star, ShoppingCart, Paintbrush, Briefcase, Phone, Cpu, MessageSquare, FileKey } from "lucide-react";
 import OriaIconAnimation from '@/components/ui/oria-animation';
 
 // App Components (Dynamically Imported)
@@ -40,6 +40,50 @@ const LazyContactApp = dynamic(() => import('@/components/contact-app'));
 const LazyFormatApp = dynamic(() => import('@/components/format-app'));
 const LazyConvertApp = dynamic(() => import('@/components/convert-app'));
 const LazyChatApp = dynamic(() => import('@/app/chat/client'));
+const LazyGoogleDriveApp = dynamic(() => import('@/components/google/drive-app'));
+const LazyGoogleDocsApp = dynamic(() => import('@/components/google/docs-app'));
+const LazyGoogleSheetsApp = dynamic(() => import('@/components/google/sheets-app'));
+const LazyGoogleSlidesApp = dynamic(() => import('@/components/google/slides-app'));
+
+
+// Google Suite Icons
+const GoogleDriveIcon = (props: any) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.7451 22.2498L15.4902 9.74976L23.2353 22.2498L15.4902 22.2498L7.7451 22.2498Z" fill="#34A853"/>
+    <path d="M0.764707 7.74976L8.50981 7.74976L16.2549 20.2498L8.50981 20.2498C4.34314 20.2498 0.764707 16.6713 0.764707 12.4998C0.764707 10.6664 1.45098 9.00957 2.60784 7.74976H0.764707Z" fill="#188038"/>
+    <path d="M16.2549 20.2498L24 7.74976H8.50977L16.2549 20.2498Z" fill="#FFC107"/>
+    <path d="M12.3725 1.75L2.60781 18.2547C1.45095 16.9949 0.764677 15.338 0.764677 13.5047C0.764677 9.33303 4.34311 5.75466 8.50977 5.75466H21.2941L12.3725 1.75Z" fill="#4285F4"/>
+    <path d="M21.2941 5.75466H8.50978C8.50978 5.75466 17.647 5.75466 17.647 5.75466L21.2941 5.75466L24 1.75H12.3725L8.50978 7.74976H22.902L21.2941 5.75466Z" fill="#EA4335"/>
+    <path d="M12.3725 1.75L21.2941 5.75466L17.647 5.75466L12.3725 1.75Z" fill="#1E88E5"/>
+  </svg>
+);
+
+const GoogleDocsIcon = (props: any) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z" fill="#4285F4"/>
+    <path d="M13 9H18L13 3V9Z" fill="#1967D2"/>
+    <path d="M16 13H8V15H16V13Z" fill="white"/>
+    <path d="M16 17H8V19H16V17Z" fill="white"/>
+    <path d="M12 9H8V11H12V9Z" fill="white"/>
+  </svg>
+);
+
+const GoogleSheetsIcon = (props: any) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z" fill="#34A853"/>
+    <path d="M13 9H18L13 3V9Z" fill="#1E8E3E"/>
+    <path d="M15 13H12V16H9V13H6V11H9V8H12V11H15V13Z" fill="white"/>
+  </svg>
+);
+
+const GoogleSlidesIcon = (props: any) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z" fill="#FFC107"/>
+    <path d="M13 9H18L13 3V9Z" fill="#F9AB00"/>
+    <rect x="7" y="12" width="10" height="6" rx="1" fill="white"/>
+  </svg>
+);
+
 
 
 export const ALL_APPS_CONFIG = [
@@ -76,4 +120,9 @@ export const ALL_APPS_CONFIG = [
     { id: 'contact', name: 'Contact', icon: Phone, component: (props: any) => <LazyContactApp {...props} />, defaultPos: { x: 200, y: 200 }, defaultSize: { width: 800, height: 600 } },
     { id: 'format', name: '(X)format', icon: FilePenLine, component: (props: any) => <LazyFormatApp {...props} />, defaultPos: { x: 220, y: 220 }, defaultSize: { width: 900, height: 700 } },
     { id: 'convert', name: '(X)change', icon: FileKey, component: (props: any) => <LazyConvertApp {...props} />, defaultPos: { x: 240, y: 240 }, defaultSize: { width: 900, height: 700 } },
+    // Google Suite Apps
+    { id: 'google-drive', name: 'Google Drive', icon: GoogleDriveIcon, component: (props: any) => <LazyGoogleDriveApp {...props} />, defaultPos: { x: 300, y: 100 }, defaultSize: { width: 1000, height: 700 } },
+    { id: 'google-docs', name: 'Google Docs', icon: GoogleDocsIcon, component: (props: any) => <LazyGoogleDocsApp {...props} />, defaultPos: { x: 320, y: 120 }, defaultSize: { width: 900, height: 700 } },
+    { id: 'google-sheets', name: 'Google Sheets', icon: GoogleSheetsIcon, component: (props: any) => <LazyGoogleSheetsApp {...props} />, defaultPos: { x: 340, y: 140 }, defaultSize: { width: 900, height: 700 } },
+    { id: 'google-slides', name: 'Google Slides', icon: GoogleSlidesIcon, component: (props: any) => <LazyGoogleSlidesApp {...props} />, defaultPos: { x: 360, y: 160 }, defaultSize: { width: 900, height: 700 } },
 ];

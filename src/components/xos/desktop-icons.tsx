@@ -2,7 +2,7 @@
 'use client';
 
 import { cn } from "@/lib/utils";
-import { ALL_APPS_CONFIG } from "@/lib/apps-config.tsx";
+import { ALL_APPS_CONFIG } from "@/lib/apps-config";
 
 const DESKTOP_APP_IDS = [
     'chat', 'cloud', 'explorer', 'fusion', 
@@ -11,7 +11,8 @@ const DESKTOP_APP_IDS = [
     'muse', 'sound',
     'editor', 'frame', 'terminal',
     'store', 'gallery', 'collaborations', 'careers', 'contact',
-    'format', 'convert'
+    'format', 'convert',
+    'google-drive', 'google-docs', 'google-sheets', 'google-slides'
 ];
 
 interface DesktopIconsProps {
