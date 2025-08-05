@@ -46,6 +46,10 @@ import {
   FilePenLine,
   FileKey,
   Cpu,
+  View,
+  Palette,
+  Mic,
+  Presentation,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -91,22 +95,27 @@ const ecosystemTools = [
 const generatorTools = [
     { href: "/flux", label: "(X)flux", icon: Wand2 },
     { href: "/maestro", label: "Maestro", icon: BrainCircuit },
-    { href: "/brand-identity", label: "(X)brand", icon: Layers },
     { href: "/promptor", label: "(X)promptor", icon: Lightbulb },
-    { href: "/motion", label: "(X)motion", icon: Film },
-    { href: "/image", label: "Image", icon: ImageIconLucide },
-    { href: "/muse", label: "(X)muse", icon: Guitar },
+    { href: "/brand-identity", label: "(X)brand", icon: Layers },
+    { href: "/persona", label: '(X)persona', icon: Users },
+    { href: "/nexus", label: '(X)nexus', icon: Network },
+    { href: "/agenda", label: '(X)agenda', icon: Calendar },
+    { href: "/deck", label: "(X)deck", icon: Presentation },
     { href: "/text", label: "Texte", icon: FileText },
-    { href: "/format", label: "(X)format", icon: FilePenLine },
-    { href: "/convert", label: "(X)change", icon: FileKey },
+    { href: "/image", label: "Image", icon: ImageIconLucide },
+    { href: "/motion", label: "(X)motion", icon: Film },
+    { href: "/muse", label: "(X)muse", icon: Guitar },
     { href: "/sound", label: "(X)sound", icon: Music },
     { href: "/voice", label: "(X)voice", icon: AudioLines },
     { href: "/editor", label: "(X).alpha", icon: SquareTerminal },
     { href: "/frame", label: "(X)frame", icon: LayoutTemplate },
     { href: "/terminal", label: "(X)term", icon: Terminal },
     { href: "/code", label: '(X)code', icon: Code2 },
-    { href: "/nexus", label: '(X)nexus', icon: Network },
-    { href: "/agenda", label: '(X)agenda', icon: Calendar },
+    { href: "/format", label: "(X)format", icon: FilePenLine },
+    { href: "/convert", label: "(X)change", icon: FileKey },
+    { href: "/reality", label: "(X)reality", icon: View },
+    { href: "/palette", label: '(X)palette', icon: Palette },
+    { href: "/tone", label: '(X)tone', icon: Mic },
 ]
 
 
