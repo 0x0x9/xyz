@@ -1,3 +1,5 @@
+
+'use client';
 import StorePageClient from './client';
 
 const StorePage = () => {

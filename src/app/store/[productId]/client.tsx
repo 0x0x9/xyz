@@ -9,11 +9,11 @@ import { ShoppingCart, CheckCircle, Shield, Truck } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
 import { type Product } from '@/lib/products';
-import { Card, CardContent } from '@/components/ui/card';
 import { PCConfigurator, type Configuration } from '@/components/ui/pc-configurator';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ProductCard } from '@/components/product-card';
 
 export default function ProductClient({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
     const { addItem } = useCart();
@@ -145,25 +145,7 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                     <h2 className="text-3xl font-bold text-center mb-12">Vous pourriez aussi aimer</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {relatedProducts.map(related => (
-                             <Link href={`/store/${related.id}`} key={related.id}>
-                               <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 rounded-2xl bg-card/95 hover:bg-card/25 dark:bg-card/80 dark:hover:bg-card/50 border border-border hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/10 hover:backdrop-blur-xl">
-                                  <CardContent className="relative flex-1 p-0">
-                                    <div className="relative aspect-square">
-                                        <Image
-                                            src={related.images[0]}
-                                            alt={related.name}
-                                            fill
-                                            className="object-cover transition-transform duration-500"
-                                            data-ai-hint={related.hint}
-                                        />
-                                    </div>
-                                    <div className="p-6">
-                                        <h3 className="font-bold text-foreground">{related.name}</h3>
-                                        <p className="mt-2 text-xl font-semibold text-foreground">{related.price.toFixed(2)}€</p>
-                                    </div>
-                                  </CardContent>
-                                </Card>
-                              </Link>
+                             <ProductCard key={related.id} product={related} />
                         ))}
                     </div>
                 </div>

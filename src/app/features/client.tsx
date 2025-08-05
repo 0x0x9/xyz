@@ -2,10 +2,10 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Cpu, Zap, Layers, Folder, Check, ArrowRight, Sparkles, Users, CheckCircle } from 'lucide-react';
+import { Cpu, Zap, Layers, Folder, Check, ArrowRight, Sparkles, Users, CheckCircle, MonitorPlay, Download } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { products } from '@/lib/products';
@@ -17,7 +17,7 @@ const features = [
     { title: "Gestion de fichiers unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys' },
 ];
 
-const hardwareProducts = products.filter(p => p.category === 'Matériel' && p.name.includes('(X)-'));
+const hardwareProducts = products.filter(p => p.category === 'Matériel' && p.name.startsWith('(X)-'));
 
 function StickyScrollSection() {
     const targetRef = useRef<HTMLDivElement>(null);
@@ -214,7 +214,7 @@ export default function FeaturesClient() {
                                 <h3 className="text-4xl md:text-5xl font-bold">{product.name}</h3>
                                 <p className="mt-4 text-lg text-muted-foreground">{product.description}</p>
                                 <div className="mt-8 space-y-3">
-                                  {(product as any).features?.map((feature: string) => (
+                                  {(product.features ?? []).map((feature: string) => (
                                     <div key={feature} className="flex items-center gap-3">
                                       <CheckCircle className="h-5 w-5 text-primary"/>
                                       <span>{feature}</span>
@@ -237,21 +237,38 @@ export default function FeaturesClient() {
       </Section>
 
       <Section>
-        <AnimatedSection className="text-center">
-          <h2 className="section-title">Prêt à transformer votre machine ?</h2>
-          <p className="section-subtitle">Téléchargez (X)OS ou découvrez la Station X-1, le matériel conçu pour l'exécuter à la perfection.</p>
-          <div 
-            className="mt-12 flex flex-wrap justify-center gap-4"
-          >
-              <Button size="lg" asChild className="rounded-full text-lg">
-                <Link href="/download">Télécharger (X)OS</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild className="rounded-full text-lg">
-                <Link href="/hardware">Explorer la Station X-1</Link>
-              </Button>
-          </div>
-        </AnimatedSection>
-      </Section>
+        <div className="container mx-auto px-6 lg:px-8 grid md:grid-cols-2 gap-8 items-center">
+            <AnimatedSection className="text-center md:text-left">
+                <div className="inline-block bg-primary/10 p-4 rounded-2xl border border-primary/20 mb-4">
+                    <MonitorPlay className="h-10 w-10 text-primary" />
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Essayez (X)OS en ligne.</h2>
+                <p className="mt-4 text-lg text-muted-foreground max-w-xl md:mx-0 mx-auto">
+                    Plongez dans notre environnement web interactif. C'est le meilleur moyen de tester la puissance de nos outils IA et de comprendre la philosophie de (X)yzz, sans rien installer.
+                </p>
+                <Button size="lg" asChild className="rounded-full text-lg mt-8">
+                    <Link href="/xos">
+                        Lancer l'expérience web <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                </Button>
+            </AnimatedSection>
+
+            <AnimatedSection className="text-center md:text-left">
+                    <div className="inline-block bg-primary/10 p-4 rounded-2xl border border-primary/20 mb-4">
+                    <Download className="h-10 w-10 text-primary" />
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Passez à la vitesse supérieure.</h2>
+                <p className="mt-4 text-lg text-muted-foreground max-w-xl md:mx-0 mx-auto">
+                    Installez le système d'exploitation complet (X)OS pour libérer des performances inégalées, une intégration matérielle profonde et une créativité sans aucune limite.
+                </p>
+                <Button size="lg" variant="outline" asChild className="rounded-full text-lg mt-8">
+                    <Link href="/download">
+                        Télécharger l'OS de bureau <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                </Button>
+            </AnimatedSection>
+        </div>
+    </Section>
     </>
   );
 }
@@ -262,4 +279,3 @@ const Section = ({ children, className }: { children: React.ReactNode, className
       {children}
     </section>
   );
-
