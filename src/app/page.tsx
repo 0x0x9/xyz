@@ -1,5 +1,8 @@
-import HomePageClient from '@/components/homepage-client';
-import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+
+const HomePageClient = dynamic(() => import('@/components/homepage-client'), {
+  ssr: false, 
+});
 
 const Home = () => {
   return (
