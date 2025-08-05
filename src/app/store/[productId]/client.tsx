@@ -101,10 +101,6 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                         <p className="text-lg text-muted-foreground">{product.description}</p>
                     </div>
 
-                    {product.configurable && (
-                        <PCConfigurator basePrice={product.price} onConfigChange={handleConfigChange} />
-                    )}
-
                     <Button size="lg" className="w-full md:w-auto bg-accent hover:bg-accent/90 text-accent-foreground" onClick={handleAddToCart}>
                         <ShoppingCart className="mr-2 h-5 w-5" />
                         Ajouter au panier
@@ -113,6 +109,10 @@ export default function ProductClient({ product, relatedProducts }: { product: P
             </div>
 
             <div className="mt-20 max-w-5xl mx-auto space-y-12">
+                 {product.configurable && (
+                    <PCConfigurator basePrice={product.price} onConfigChange={handleConfigChange} />
+                )}
+
                  <Tabs defaultValue="features" className="w-full">
                     <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="features">Caractéristiques</TabsTrigger>

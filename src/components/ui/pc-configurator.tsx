@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Cpu, HardDrive, MemoryStick, CircuitBoard, CheckCircle } from 'lucide-react';
 
@@ -64,11 +64,8 @@ const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSel
 }) => {
     return (
         <div className="space-y-4">
-            <div className="flex items-center gap-3">
-                <Icon className="h-6 w-6 text-muted-foreground" />
-                <p className="text-xl font-semibold">{title}</p>
-            </div>
-            <div className="grid grid-cols-1 gap-3">
+            <h3 className="text-xl font-semibold text-foreground/80">{title}</h3>
+            <div className="space-y-3">
                 {options.map((option) => (
                     <button
                         key={option.name}
@@ -76,7 +73,7 @@ const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSel
                         className={cn(
                             "text-left w-full p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center",
                             selected === option.name
-                                ? 'bg-primary/5 border-primary shadow-inner'
+                                ? 'bg-primary/10 border-primary shadow-inner'
                                 : 'bg-muted/40 border-transparent hover:border-border'
                         )}
                     >
@@ -90,7 +87,6 @@ const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSel
         </div>
     );
 };
-
 
 export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProps) {
     const [config, setConfig] = useState<Configuration>({
@@ -118,21 +114,22 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
     };
 
     return (
-        <Card className="glass-card bg-transparent p-0 border-0 shadow-none">
-            <CardContent className="space-y-12 p-0">
-                 {(Object.keys(options) as ComponentType[]).map((type) => (
-                     <ConfiguratorSection 
-                        key={type}
-                        type={type}
-                        title={componentInfo[type].title}
-                        icon={componentInfo[type].icon}
-                        options={options[type]}
-                        selected={config[type]}
-                        onSelect={handleSelection}
-                     />
-                 ))}
-            </CardContent>
-        </Card>
+        <div className="space-y-12">
+            <div className="text-center">
+                <h2 className="text-3xl font-bold">Configurez votre Station X-1</h2>
+                <p className="text-muted-foreground mt-2">Personnalisez les composants pour qu'ils répondent parfaitement à vos besoins.</p>
+            </div>
+            {(Object.keys(options) as ComponentType[]).map((type) => (
+                <ConfiguratorSection 
+                    key={type}
+                    type={type}
+                    title={componentInfo[type].title}
+                    icon={componentInfo[type].icon}
+                    options={options[type]}
+                    selected={config[type]}
+                    onSelect={handleSelection}
+                />
+            ))}
+        </div>
     );
 }
-
