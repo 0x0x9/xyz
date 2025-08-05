@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npx genkit-cli dev --port 9002 --hostname 0.0.0.0",
+    "dev": "npx genkit-cli dev",
     "build": "genkit-cli build && next build",
     "start": "GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json next start -p 9002",
     "lint": "next lint",
