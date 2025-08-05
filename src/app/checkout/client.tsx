@@ -11,6 +11,7 @@ import { Trash2, ShoppingCart, ArrowLeft, Lock, CreditCard, Plus, Minus, Truck }
 import Image from "next/image";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function CheckoutClient() {
     const { items, total, itemCount, removeItem, addItem, decreaseItem } = useCart();
@@ -120,9 +121,18 @@ export default function CheckoutClient() {
                                             <div className="flex-1">
                                                 <h3 className="font-semibold text-sm">{item.name}</h3>
                                                 <p className="text-xs text-muted-foreground">{item.configuration ? 'Configuré' : 'Standard'}</p>
-                                                <p className="text-xs text-muted-foreground">Qté: {item.quantity}</p>
+                                                <div className="flex items-center gap-2 mt-1">
+                                                     <Button size="icon" variant="outline" className="h-6 w-6" onClick={() => decreaseItem(item.cartItemId)}><Minus className="h-3 w-3" /></Button>
+                                                     <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
+                                                     <Button size="icon" variant="outline" className="h-6 w-6" onClick={() => addItem(item)}><Plus className="h-3 w-3" /></Button>
+                                                </div>
                                             </div>
-                                            <p className="font-semibold text-sm">{(item.price * item.quantity).toFixed(2)}€</p>
+                                            <div className="text-right">
+                                                <p className="font-semibold text-sm">{(item.price * item.quantity).toFixed(2)}€</p>
+                                                <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive mt-1" onClick={() => removeItem(item.cartItemId)}>
+                                                    <Trash2 className="h-3.5 w-3.5" />
+                                                </Button>
+                                            </div>
                                         </div>
                                     ))}
                                     </div>
@@ -167,6 +177,3 @@ export default function CheckoutClient() {
         </div>
     );
 }
-
-// Added ScrollArea to client component for cart items
-import { ScrollArea } from "@/components/ui/scroll-area";
