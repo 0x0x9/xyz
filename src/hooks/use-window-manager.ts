@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { ALL_APPS_CONFIG } from '@/lib/apps-config';
+import { ALL_APPS_CONFIG } from '@/lib/apps-config.tsx';
 
 export type WindowInstance = {
     id: number;
