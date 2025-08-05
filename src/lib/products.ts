@@ -28,6 +28,7 @@ export const products: Product[] = [
     category: 'Matériel',
     isFeatured: true,
     configurable: true,
+    features: ["Processeur Neural X-Core de dernière génération", "Alliance Multi-GPU (NVIDIA & AMD)", "Jusqu'à 256Go de Mémoire Unifiée Adaptative", "Connectivité ultra-rapide Thunderbolt 5", "Système de refroidissement Cryo-Silencieux"],
   },
    {
     id: 8,
@@ -39,6 +40,7 @@ export const products: Product[] = [
     category: 'Matériel',
     isFeatured: true,
     configurable: false,
+    features: ["Écran Liquid Retina XDR 14 pouces", "Puce (X)OS Fusion A1 avec Neural Engine", "Jusqu'à 18h d'autonomie", "Clavier Magique rétroéclairé", "Châssis unibody en aluminium recyclé"],
   },
   {
     id: 9,
@@ -92,6 +94,7 @@ export const products: Product[] = [
     category: 'Logiciel',
     isFeatured: true,
     configurable: false,
+    features: ["Accès à la suite complète d'outils IA", "1 To de stockage (X)cloud sécurisé", "Mises à jour majeures incluses", "Support technique prioritaire"],
   },
   {
     id: 3,
@@ -103,6 +106,7 @@ export const products: Product[] = [
     category: 'Accessoire',
     isFeatured: true,
     configurable: false,
+    features: ["8192 niveaux de pression", "Détection de l'inclinaison à 60°", "Pointe de précision interchangeable", "Connexion magnétique au X-Book"],
   },
   {
     id: 4,
@@ -114,6 +118,7 @@ export const products: Product[] = [
     category: 'Accessoire',
     isFeatured: false,
     configurable: false,
+    features: ["Audio spatial avec suivi dynamique de la tête", "Transducteurs haute-fidélité de 40mm", "Réduction de bruit active de pointe", "Mode Transparence adaptatif"],
   },
   {
     id: 5,
@@ -125,6 +130,7 @@ export const products: Product[] = [
     category: 'Matériel',
     isFeatured: false,
     configurable: false,
+    features: ["Dalle IPS 32 pouces avec résolution 4K", "Couverture 99% DCI-P3", "Luminosité de 600 nits", "Calibrage d'usine Delta E < 2"],
   },
   {
     id: 6,

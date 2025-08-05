@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ShoppingCart, CheckCircle, Shield, Truck } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Shield, Truck, Check } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
 import { type Product } from '@/lib/products';
@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProductCard } from '@/components/product-card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 export default function ProductClient({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
     const { addItem } = useCart();
@@ -122,21 +123,42 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                     </Button>
                     
                     <Separator className="bg-border" />
+                    
+                    {product.features && (
+                        <div className="space-y-3">
+                            <h3 className="text-lg font-semibold">Caractéristiques principales</h3>
+                            <ul className="space-y-2">
+                                {product.features.map((feature, i) => (
+                                    <li key={i} className="flex items-center gap-3 text-muted-foreground">
+                                        <Check className="h-5 w-5 text-green-500" />
+                                        <span>{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    
+                    <Accordion type="single" collapsible className="w-full">
+                        <AccordionItem value="item-1">
+                            <AccordionTrigger>Livraison & Retours</AccordionTrigger>
+                            <AccordionContent>
+                                Livraison gratuite en 24/48h dans toute l'Europe. Retours gratuits sous 30 jours. Tous nos emballages sont 100% recyclés et recyclables.
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-2">
+                            <AccordionTrigger>Garantie & Support</AccordionTrigger>
+                            <AccordionContent>
+                                Ce produit est couvert par une garantie constructeur de 2 ans. Notre support technique est disponible 24/7 pour vous assister en cas de besoin.
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-3">
+                            <AccordionTrigger>Spécifications Techniques</AccordionTrigger>
+                            <AccordionContent>
+                                Les spécifications détaillées sont disponibles dans le manuel utilisateur. Pour toute question technique, n'hésitez pas à contacter notre support expert.
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
 
-                    <div className="space-y-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-3">
-                            <CheckCircle className="h-5 w-5 text-green-400" />
-                            <span>En stock et prêt à être expédié.</span>
-                        </div>
-                         <div className="flex items-center gap-3">
-                            <Truck className="h-5 w-5 text-blue-400" />
-                            <span>Livraison gratuite et rapide en 24/48h.</span>
-                        </div>
-                         <div className="flex items-center gap-3">
-                            <Shield className="h-5 w-5 text-amber-400" />
-                            <span>Garantie constructeur de 2 ans incluse.</span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
