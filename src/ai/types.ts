@@ -113,7 +113,7 @@ export type VideoScript = z.infer<typeof VideoScriptSchema>;
 export const GenerateMotionOutputSchema = VideoScriptSchema.extend({
   // The motion flow itself only returns the script. Image generation is separate.
 });
-export type GenerateMotionOutput = zinfer<typeof GenerateMotionOutputSchema>;
+export type GenerateMotionOutput = z.infer<typeof GenerateMotionOutputSchema>;
 
 
 // From: src/ai/flows/generate-nexus.ts
