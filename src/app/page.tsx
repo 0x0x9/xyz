@@ -3,9 +3,7 @@ import { Suspense } from 'react';
 
 const Home = () => {
   return (
-    <Suspense>
       <HomePageClient />
-    </Suspense>
   );
 };
 

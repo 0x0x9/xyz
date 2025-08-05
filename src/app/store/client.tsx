@@ -152,7 +152,7 @@ const StorePageClient = () => {
             </div>
         </section>
 
-        <section className="container mx-auto px-4 md:px-6 space-y-20">
+        <section className="container mx-auto px-4 md:px-6 space-y-20 pb-20">
             <div>
                 <h2 className="text-3xl font-bold mb-8 text-center">Produits Phares</h2>
                 <FeaturedCarousel />

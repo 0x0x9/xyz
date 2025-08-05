@@ -209,7 +209,7 @@ export default function WelcomeClient() {
             <Section>
             <AnimatedSection>
                 <div className="text-center container mx-auto px-6 lg:px-8">
-                    <h2 className="text-4xl font-bold tracking-tight text-center md:text-6xl">Explorez la gamme.</h2>
+                    <h2 className="text-4xl font-bold tracking-tight text-center md:text-6xl">Explorez la Gamme</h2>
                     <p className="mt-4 text-lg text-center text-muted-foreground max-w-2xl mx-auto md:text-xl">Des workstations pensées par et pour les créatifs, en parfaite symbiose avec (X)OS.</p>
                 </div>
             </AnimatedSection>

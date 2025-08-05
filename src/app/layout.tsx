@@ -9,6 +9,7 @@ import { NotificationsProvider } from '@/hooks/use-notifications';
 import { UIStateProvider } from '@/hooks/use-ui-state';
 import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
+import { AuthProvider } from '@/components/auth-component';
 
 const fontBody = Inter({
   subsets: ['latin'],
@@ -40,15 +41,17 @@ export default function RootLayout({
         >
           <UIStateProvider>
             <NotificationsProvider>
-              <FusionDockProvider>
-                <PageTransitionProvider>
-                  <AnimatedBackground />
-                  <div className="relative z-10 flex flex-col min-h-screen">
-                    {children}
-                  </div>
-                  <Toaster />
-                </PageTransitionProvider>
-              </FusionDockProvider>
+              <AuthProvider>
+                <FusionDockProvider>
+                  <PageTransitionProvider>
+                    <AnimatedBackground />
+                    <div className="relative z-10 flex flex-col min-h-screen">
+                      {children}
+                    </div>
+                    <Toaster />
+                  </PageTransitionProvider>
+                </FusionDockProvider>
+              </AuthProvider>
             </NotificationsProvider>
           </UIStateProvider>
         </ThemeProvider>

@@ -8,13 +8,14 @@ export type Product = {
   hint: string;
   category: 'Matériel' | 'Logiciel' | 'Accessoire';
   isFeatured: boolean;
+  configurable?: boolean;
 };
 
 export const products: Product[] = [
   {
     id: 1,
     name: "Station de Création X-1",
-    description: "La puissance brute pour l'IA, la 3D et la vidéo 8K. Le summum de la performance.",
+    description: "La puissance brute pour l'IA, la 3D et la vidéo 8K. Le summum de la performance, entièrement configurable.",
     price: 3499.00,
     images: [
         "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80",
@@ -25,11 +26,23 @@ export const products: Product[] = [
     hint: "powerful desktop computer",
     category: 'Matériel',
     isFeatured: true,
+    configurable: true,
+  },
+   {
+    id: 8,
+    name: "Laptop de Création X-Book",
+    description: "La puissance d'une station de travail dans un format portable et élégant, pour créer n'importe où.",
+    price: 2899.00,
+    images: ["https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80"],
+    hint: "sleek laptop",
+    category: 'Matériel',
+    isFeatured: true,
+    configurable: false,
   },
   {
     id: 9,
     name: "(X)-oméga",
-    description: "La porte d'entrée vers l'écosystème (X)yzz. Idéal pour les créatifs et développeurs qui veulent la puissance et la flexibilité du Dual-OS.",
+    description: "La porte d'entrée vers l'écosystème (X)yzz. Idéal pour les créatifs et développeurs qui veulent la puissance et la flexibilité.",
     price: 1999.00,
     images: [
         "https://images.unsplash.com/photo-1618384887924-c9b0b4597d95?auto=format&fit=crop&w=800&q=80",
@@ -38,6 +51,7 @@ export const products: Product[] = [
     hint: "sleek modern desktop computer",
     category: 'Matériel',
     isFeatured: true,
+    configurable: false,
   },
   {
     id: 10,
@@ -51,6 +65,7 @@ export const products: Product[] = [
     hint: "professional high-end computer",
     category: 'Matériel',
     isFeatured: true,
+    configurable: false,
   },
   {
     id: 11,
@@ -64,16 +79,18 @@ export const products: Product[] = [
     hint: "ultimate performance computer",
     category: 'Matériel',
     isFeatured: true,
+    configurable: false,
   },
   {
     id: 2,
-    name: "Suite Logicielle XOS Pro",
-    description: "Un an d'accès à tous nos outils créatifs. Mises à jour incluses.",
+    name: "Abonnement XOS Pro",
+    description: "Un an d'accès à tous nos outils créatifs IA, au cloud et aux mises à jour exclusives.",
     price: 299.00,
     images: ["https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80"],
     hint: "software box interface",
     category: 'Logiciel',
     isFeatured: true,
+    configurable: false,
   },
   {
     id: 3,
@@ -84,6 +101,7 @@ export const products: Product[] = [
     hint: "graphics tablet",
     category: 'Accessoire',
     isFeatured: true,
+    configurable: false,
   },
   {
     id: 4,
@@ -94,6 +112,7 @@ export const products: Product[] = [
     hint: "studio headphones",
     category: 'Accessoire',
     isFeatured: false,
+    configurable: false,
   },
   {
     id: 5,
@@ -104,6 +123,7 @@ export const products: Product[] = [
     hint: "computer monitor",
     category: 'Matériel',
     isFeatured: false,
+    configurable: false,
   },
   {
     id: 6,
@@ -114,6 +134,7 @@ export const products: Product[] = [
     hint: "software plugin interface",
     category: 'Logiciel',
     isFeatured: false,
+    configurable: false,
   },
    {
     id: 7,
@@ -124,15 +145,6 @@ export const products: Product[] = [
     hint: "mechanical keyboard",
     category: 'Accessoire',
     isFeatured: false,
-  },
-  {
-    id: 8,
-    name: "Laptop de Création X-Book",
-    description: "La puissance d'une station de travail dans un format portable et élégant.",
-    price: 2899.00,
-    images: ["https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80"],
-    hint: "sleek laptop",
-    category: 'Matériel',
-    isFeatured: true,
+    configurable: false,
   },
 ];
