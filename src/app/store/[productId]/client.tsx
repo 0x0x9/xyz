@@ -101,7 +101,7 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                         <p className="text-lg text-muted-foreground">{product.description}</p>
                     </div>
 
-                    {product.id === 1 && (
+                    {(product.id === 1 || product.id >= 9) && (
                         <PCConfigurator basePrice={product.price} onConfigChange={handleConfigChange} />
                     )}
 

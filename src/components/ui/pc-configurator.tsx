@@ -107,7 +107,7 @@ function ConfigSection({ icon: Icon, title, type, value, onSelect }: {
                 {options[type].map(option => (
                     <Label
                         key={option.name}
-                        htmlFor={`${type}-${option.name}`}
+                        htmlFor={`${type}-${option.name.replace(/\s/g, '-')}`}
                         className={cn(
                             "flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all duration-300",
                             "bg-card/95 dark:bg-card/80 border-border shadow-md",
@@ -120,7 +120,7 @@ function ConfigSection({ icon: Icon, title, type, value, onSelect }: {
                             <span className="text-sm text-muted-foreground">
                                 {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
                             </span>
-                            <RadioGroupItem value={option.name} id={`${type}-${option.name}`} className="border-white/50" />
+                            <RadioGroupItem value={option.name} id={`${type}-${option.name.replace(/\s/g, '-')}`} className="border-white/50" />
                         </div>
                     </Label>
                 ))}
