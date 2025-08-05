@@ -2,58 +2,50 @@
 'use client';
 
 import { useState } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowRight, Sparkles, Copy, Loader2 } from 'lucide-react';
+import { Sparkles, Copy, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { reformatTextWithPrompt, type ReformatTextWithPromptOutput } from '@/ai/flows/reformat-text-with-prompt';
+import { reformatTextAction } from '@/app/actions';
+import type { ReformatTextWithPromptOutput } from '@/ai/types';
 import { motion } from 'framer-motion';
 
+function SubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" size="lg" className="w-full" disabled={pending}>
+            {pending ? (
+                <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Transformation...
+                </>
+            ) : (
+                <>
+                    Lancer la magie <Sparkles className="ml-2 h-5 w-5" />
+                </>
+            )}
+        </Button>
+    )
+}
+
 export default function FormatClient() {
-    const [text, setText] = useState('');
-    const [prompt, setPrompt] = useState('');
-    const [result, setResult] = useState<ReformatTextWithPromptOutput | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const initialState = { message: '', error: null, result: null, id: 0 };
+    const [state, formAction] = useFormState(reformatTextAction, initialState);
     const { toast } = useToast();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!text.trim() || !prompt.trim()) {
-            toast({
-                variant: 'destructive',
-                title: 'Champs requis',
-                description: 'Veuillez fournir un texte et un prompt.',
-            });
-            return;
-        }
-        setIsLoading(true);
-        setResult(null);
-        try {
-            const response = await reformatTextWithPrompt({ text, prompt });
-            setResult(response);
-        } catch (error: any) {
-            toast({
-                variant: 'destructive',
-                title: 'Erreur de l\'IA',
-                description: error.message || "Une erreur est survenue lors du reformatage.",
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     const handleCopy = () => {
-        if (!result?.reformattedText) return;
-        navigator.clipboard.writeText(result.reformattedText);
+        if (!state.result?.reformattedText) return;
+        navigator.clipboard.writeText(state.result.reformattedText);
         toast({
             title: 'Copié !',
-            description: 'Le texte reformaté a été copié dans le presse-papiers.',
+            description: 'Le texte transformé a été copié dans le presse-papiers.',
         });
     };
-
+    
     return (
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form action={formAction} className="space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                 <Card className="glass-card">
                     <CardHeader>
@@ -61,9 +53,8 @@ export default function FormatClient() {
                     </CardHeader>
                     <CardContent>
                         <Textarea
+                            name="text"
                             placeholder="Collez ou écrivez votre texte ici..."
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
                             rows={15}
                             className="bg-background/50 text-base"
                             required
@@ -76,58 +67,46 @@ export default function FormatClient() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <Textarea
+                            name="prompt"
                             placeholder="Ex: Transforme ce texte en une liste à puces. / Résume en 3 points clés. / Adopte un ton plus professionnel."
-                            value={prompt}
-                            onChange={(e) => setPrompt(e.target.value)}
                             rows={5}
                             className="bg-background/50 text-base"
                             required
                         />
-                        <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
-                            {isLoading ? (
-                                <>
-                                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                    Transformation...
-                                </>
-                            ) : (
-                                <>
-                                    Lancer la magie <Sparkles className="ml-2 h-5 w-5" />
-                                </>
-                            )}
-                        </Button>
+                        <SubmitButton />
                     </CardContent>
                 </Card>
             </div>
 
-            {(isLoading || result) && (
+            {(state.id > 0) && (
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <Card className="glass-card">
+                    <Card className="glass-card bg-background/30">
                         <CardHeader className="flex flex-row justify-between items-center">
                             <CardTitle>3. Résultat Transformé</CardTitle>
-                            {result && (
+                            {state.result && (
                                 <Button variant="outline" size="icon" onClick={handleCopy}>
                                     <Copy className="h-4 w-4" />
                                 </Button>
                             )}
                         </CardHeader>
-                        <CardContent className="min-h-[300px]">
-                            {isLoading ? (
+                        <CardContent className="min-h-[200px]">
+                             {state.result ? (
+                                <Textarea
+                                    readOnly
+                                    value={state.result?.reformattedText || ''}
+                                    rows={15}
+                                    className="bg-background/50 text-base"
+                                />
+                             ) : (
                                 <div className="flex items-center justify-center h-full text-muted-foreground">
                                     <Loader2 className="mr-4 h-8 w-8 animate-spin text-primary" />
                                     L'IA est en train de réécrire...
                                 </div>
-                            ) : (
-                                <Textarea
-                                    readOnly
-                                    value={result?.reformattedText || ''}
-                                    rows={15}
-                                    className="bg-background/50 text-base"
-                                />
-                            )}
+                             )}
                         </CardContent>
                     </Card>
                 </motion.div>

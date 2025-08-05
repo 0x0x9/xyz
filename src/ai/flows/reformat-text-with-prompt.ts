@@ -8,18 +8,7 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const ReformatTextWithPromptInputSchema = z.object({
-  text: z.string().describe('The text to be reformatted.'),
-  prompt: z.string().describe('The prompt to guide the reformatting process.'),
-});
-export type ReformatTextWithPromptInput = z.infer<typeof ReformatTextWithPromptInputSchema>;
-
-const ReformatTextWithPromptOutputSchema = z.object({
-  reformattedText: z.string().describe('The reformatted text.'),
-});
-export type ReformatTextWithPromptOutput = z.infer<typeof ReformatTextWithPromptOutputSchema>;
+import {ReformatTextWithPromptInputSchema, ReformatTextWithPromptOutputSchema, type ReformatTextWithPromptInput, type ReformatTextWithPromptOutput } from '@/ai/types';
 
 export async function reformatTextWithPrompt(input: ReformatTextWithPromptInput): Promise<ReformatTextWithPromptOutput> {
   return reformatTextWithPromptFlow(input);
@@ -29,12 +18,19 @@ const prompt = ai.definePrompt({
   name: 'reformatTextWithPromptPrompt',
   input: {schema: ReformatTextWithPromptInputSchema},
   output: {schema: ReformatTextWithPromptOutputSchema},
-  prompt: `Reformat the following text according to the prompt.
+  prompt: `You are a text transformation expert. Your task is to reformat the given text based *only* on the provided prompt, without adding any extra conversational text or explanations.
 
-Text: {{{text}}}
-Prompt: {{{prompt}}}
+Text to transform:
+---
+{{{text}}}
+---
 
-Reformatted Text:`, 
+Transformation instruction:
+---
+{{{prompt}}}
+---
+
+Return *only* the transformed text in the 'reformattedText' field of the JSON output.`,
 });
 
 const reformatTextWithPromptFlow = ai.defineFlow(
@@ -45,6 +41,9 @@ const reformatTextWithPromptFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    if (!output) {
+      throw new Error("L'IA n'a pas pu reformater le texte.");
+    }
+    return output;
   }
 );

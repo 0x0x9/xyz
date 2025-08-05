@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview Centralized Zod schemas and TypeScript types for all AI flows.
  * This file does not contain the 'use server' directive and can be safely
@@ -112,7 +113,7 @@ export type VideoScript = z.infer<typeof VideoScriptSchema>;
 export const GenerateMotionOutputSchema = VideoScriptSchema.extend({
   // The motion flow itself only returns the script. Image generation is separate.
 });
-export type GenerateMotionOutput = z.infer<typeof GenerateMotionOutputSchema>;
+export type GenerateMotionOutput = zinfer<typeof GenerateMotionOutputSchema>;
 
 
 // From: src/ai/flows/generate-nexus.ts
@@ -410,6 +411,7 @@ export const CopilotLyricsOutputSchema = z.object({
 });
 export type CopilotLyricsOutput = z.infer<typeof CopilotLyricsOutputSchema>;
 
+
 // From: src/ai/flows/reformat-text-with-prompt.ts
 export const ReformatTextWithPromptInputSchema = z.object({
   text: z.string().describe('The text to be reformatted.'),
@@ -421,6 +423,7 @@ export const ReformatTextWithPromptOutputSchema = z.object({
   reformattedText: z.string().describe('The reformatted text.'),
 });
 export type ReformatTextWithPromptOutput = z.infer<typeof ReformatTextWithPromptOutputSchema>;
+
 
 // From: src/ai/flows/convert-image.ts
 export const ConvertImageInputSchema = z.object({
