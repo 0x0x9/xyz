@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -18,6 +19,7 @@ import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { updateProfileAction, disconnectDeviceAction } from '@/app/actions';
 import { useAuth } from '@/components/auth-component';
+import { useIsClient } from '@/hooks/use-is-client';
 
 const initialUser = {
   name: 'John Doe',
@@ -152,6 +154,7 @@ export default function AccountClient() {
     const [devices, setDevices] = useState(initialDevices);
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const isClient = useIsClient();
     
     const handleUserUpdate = (data: Partial<typeof initialUser>) => {
         setUser(prev => ({...prev, ...data}));
@@ -231,15 +234,17 @@ export default function AccountClient() {
                         <div className="flex items-center justify-between py-2">
                              <div>
                                 <p className="font-medium flex items-center gap-2">
-                                    {theme === 'dark' ? <Moon className="h-4 w-4"/> : <Sun className="h-4 w-4"/>}
+                                    {isClient && (theme === 'dark' ? <Moon className="h-4 w-4"/> : <Sun className="h-4 w-4"/>)}
                                     Thème
                                 </p>
                             </div>
-                            <Switch
-                                checked={theme === 'dark'}
-                                onCheckedChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                                aria-label="Changer de thème"
-                            />
+                            {isClient && (
+                                <Switch
+                                    checked={theme === 'dark'}
+                                    onCheckedChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                                    aria-label="Changer de thème"
+                                />
+                            )}
                         </div>
                         <InfoRow 
                             label="Langue" 

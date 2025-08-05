@@ -64,6 +64,7 @@ import {
 } from "@/components/ui/accordion";
 import { Separator } from "./ui/separator";
 import { useAuth } from './auth-component';
+import { useIsClient } from '@/hooks/use-is-client';
 
 const navLinks = [
   { href: "/store", label: "Boutique" },
@@ -257,6 +258,7 @@ const DropdownMenuLinkItem = ({ href, label, description, icon: Icon }: { href: 
 export function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { user, handleSignOut } = useAuth();
+  const isClient = useIsClient();
   
   return (
     <header className="fixed top-0 left-0 right-0 z-50 p-4">
@@ -359,24 +361,26 @@ export function Header() {
 
         </nav>
         <div className="flex items-center gap-2">
-          <div className="hidden lg:flex items-center gap-2">
-            <ThemeToggle />
-            <CartSheet />
-            {user ? (
-                <>
-                    <Button variant="ghost" className="rounded-full" asChild>
-                      <Link href="/account">Mon Compte</Link>
-                    </Button>
-                    <Button variant="outline" className="rounded-full" onClick={handleSignOut}>
-                      Déconnexion
-                    </Button>
-                </>
-            ) : (
-                <Button className="rounded-full" asChild>
-                    <Link href="/login">Accéder à mon espace</Link>
-                </Button>
+            {isClient && (
+                <div className="hidden lg:flex items-center gap-2">
+                    <ThemeToggle />
+                    <CartSheet />
+                    {user ? (
+                        <>
+                            <Button variant="ghost" className="rounded-full" asChild>
+                            <Link href="/account">Mon Compte</Link>
+                            </Button>
+                            <Button variant="outline" className="rounded-full" onClick={handleSignOut}>
+                            Déconnexion
+                            </Button>
+                        </>
+                    ) : (
+                        <Button className="rounded-full" asChild>
+                            <Link href="/login">Accéder à mon espace</Link>
+                        </Button>
+                    )}
+                </div>
             )}
-          </div>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button
@@ -476,18 +480,22 @@ export function Header() {
                   <span className="text-muted-foreground">Thème</span>
                   <ThemeToggle />
                 </div>
-                <CartSheet />
-                {user ? (
-                   <>
-                      <Button asChild variant="outline" className="text-lg h-12 rounded-full">
-                        <Link href="/account">Mon Compte</Link>
-                      </Button>
-                       <Button onClick={handleSignOut} className="text-lg h-12 rounded-full">Déconnexion</Button>
-                   </>
-                ) : (
-                    <Button className="text-lg h-12 rounded-full" asChild>
-                        <Link href="/login">Accéder à mon espace</Link>
-                    </Button>
+                {isClient && (
+                    <>
+                        <CartSheet />
+                        {user ? (
+                        <>
+                            <Button asChild variant="outline" className="text-lg h-12 rounded-full">
+                                <Link href="/account">Mon Compte</Link>
+                            </Button>
+                            <Button onClick={handleSignOut} className="text-lg h-12 rounded-full">Déconnexion</Button>
+                        </>
+                        ) : (
+                            <Button className="text-lg h-12 rounded-full" asChild>
+                                <Link href="/login">Accéder à mon espace</Link>
+                            </Button>
+                        )}
+                    </>
                 )}
               </div>
             </SheetContent>
