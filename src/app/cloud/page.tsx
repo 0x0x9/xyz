@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
@@ -9,7 +10,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { listDocumentsAction } from '@/app/actions';
 import type { Doc } from '@/ai/types';
 
-const CloudClient = dynamic(() => import('./client')); // This is now the Dashboard
+// Use dynamic imports to code-split each tab's content
+const CloudDashboard = dynamic(() => import('./client'));
 const SharingClient = dynamic(() => import('./sharing/client'));
 const DocManager = dynamic(() => import('@/components/doc-manager'));
 const ActivityClient = dynamic(() => import('./activity/client'));
@@ -56,17 +58,17 @@ function CloudPageContent() {
             case 'files':
                 return <DocManager onDataChange={fetchDocs} />;
             case 'sharing':
-                return <SharingClient docs={docs} onDataChange={fetchDocs} />;
+                return <div className="overflow-y-auto h-full no-scrollbar"><SharingClient docs={docs} onDataChange={fetchDocs} /></div>;
             case 'activity':
-                return <ActivityClient docs={docs} loading={loading} />;
+                return <div className="overflow-y-auto h-full no-scrollbar"><ActivityClient docs={docs} loading={loading} /></div>;
             case 'dashboard':
             default:
-                return <CloudClient docs={docs} loading={loading} onDataChange={fetchDocs} />;
+                return <div className="overflow-y-auto h-full no-scrollbar"><CloudDashboard docs={docs} loading={loading} onDataChange={fetchDocs} /></div>;
         }
     }
 
     return (
-        <div className="flex-1 p-6 pt-0 flex flex-col h-full">
+        <div className="flex-1 pt-0 flex flex-col h-full">
             {renderContent()}
         </div>
     );

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo, useState, useRef, useCallback } from 'react';
@@ -77,7 +78,7 @@ const DashboardSkeleton = () => (
     </div>
 );
 
-export default function CloudClient({ docs, loading, onDataChange }: { docs: Doc[], loading: boolean, onDataChange: () => void }) {
+export default function CloudDashboard({ docs, loading, onDataChange }: { docs: Doc[], loading: boolean, onDataChange: () => void }) {
     const { usedStorage, totalStorage, storagePercentage } = useMemo(() => {
         const used = docs.reduce((acc, doc) => acc + (doc.size || 0), 0);
         const total = 15 * 1024 * 1024 * 1024;

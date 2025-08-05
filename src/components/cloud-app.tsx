@@ -4,7 +4,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import CloudClient from '@/app/cloud/client'; // This is now the Dashboard
+import CloudDashboard from '@/app/cloud/client';
 import SharingClient from '@/app/cloud/sharing/client';
 import DocManager from '@/components/doc-manager';
 import ActivityClient from '@/app/cloud/activity/client';
@@ -77,7 +77,9 @@ export default function CloudApp() {
             
             <div className="flex-1 min-h-0">
                 <TabsContent value="dashboard" className="w-full h-full mt-0 data-[state=inactive]:hidden flex flex-col">
-                    <CloudClient docs={docs} loading={loading} onDataChange={fetchDocs} />
+                    <div className="overflow-y-auto h-full no-scrollbar">
+                        <CloudDashboard docs={docs} loading={loading} onDataChange={fetchDocs} />
+                    </div>
                 </TabsContent>
                 <TabsContent value="files" className="w-full h-full mt-0 data-[state=inactive]:hidden flex flex-col">
                     <DocManager onDataChange={fetchDocs} />
