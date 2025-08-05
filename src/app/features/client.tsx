@@ -117,9 +117,14 @@ export default function FeaturesClient() {
     <>
       <div className="relative h-screen">
           <div className="absolute inset-0 bg-background/80">
-             <video autoPlay loop muted playsInline className="w-full h-full object-cover" poster="https://images.unsplash.com/photo-1618423484838-b7a4aa4d8523?auto=format&fit=crop&w=1600&q=80">
-                 <source src="https://cdn.xyzz.ai/videos/xos_intro.mp4" type="video/mp4" />
-             </video>
+             <iframe
+                src="https://www.youtube.com/embed/tXFEiw1aJTw?autoplay=1&mute=1&loop=1&playlist=tXFEiw1aJTw&controls=0&showinfo=0&autohide=1&wmode=transparent"
+                title="Hero Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full object-cover scale-[1.5]"
+            ></iframe>
              <div className="absolute inset-0 bg-black/50"></div>
           </div>
           <div className="relative h-full flex flex-col items-center justify-center text-center text-white px-4">
