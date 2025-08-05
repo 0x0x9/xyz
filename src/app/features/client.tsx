@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Cpu, Zap, Layers, Folder, Check, ArrowRight, Sparkles, Users } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { products } from '@/lib/products';
 
 const features = [
     { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw' },
@@ -85,28 +86,9 @@ const AnimatedSection = ({ children, className }: { children: React.ReactNode, c
 
 
 export default function FeaturesClient() {
-  const productRange = [
-    {
-        greek: "Ω",
-        name: "(X)-oméga",
-        price: "1 999 €",
-        features: ["(X)OS complet", "Dual-OS Windows/macOS", "32 Go RAM", "1 To SSD", "(X)Cloud inclus"]
-    },
-     {
-        greek: "α",
-        name: "(X)-alpha",
-        price: "2 999 €",
-        features: ["(X)OS Pro", "Triple-OS + Linux", "64 Go RAM", "2 To SSD", "(X)AI intégré"]
-    },
-    {
-        greek: "φ",
-        name: "(X)-fi",
-        price: "4 499 €",
-        features: ["(X)OS Studio", "Multi-GPU dédié", "128 Go RAM", "4 To SSD", "Support prioritaire"]
-    },
-]
-
-const whoIsItFor = [
+  const hardwareProducts = products.filter(p => p.category === 'Matériel' && p.name.includes('(X)-'));
+  
+  const whoIsItFor = [
     {
         title: "Pour les créatifs",
         description: "Une suite d'outils IA intégrés qui comprennent votre vision et vous aident à la réaliser plus rapidement que jamais.",
@@ -187,7 +169,7 @@ const whoIsItFor = [
                 </p>
             </AnimatedSection>
             <AnimatedSection className="mt-16">
-                <div className="glass-card p-2 md:p-3 max-w-6xl mx-auto rounded-2xl">
+                <div className="glass-card p-2 md:p-3 max-wxl mx-auto rounded-2xl">
                     <div className="aspect-video w-full">
                         <iframe
                         src="https://www.youtube.com/embed/SqJGQ25sc8Q?si=279cRsOPl_dffifa&autoplay=1&mute=1&loop=1&playlist=SqJGQ25sc8Q&controls=0&showinfo=0"
@@ -209,35 +191,38 @@ const whoIsItFor = [
                     <p className="section-subtitle">Des workstations pensées par et pour les créatifs.</p>
                 </div>
             </AnimatedSection>
-             <AnimatedSection>
-                <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 container mx-auto px-6 lg:px-8">
-                    {productRange.map((product, i) => (
-                         <div key={product.name} className="flex flex-col h-full text-center p-8 glass-card hover:-translate-y-2 transition-all duration-300 relative group overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
-                            <header className="p-0 mb-6">
-                                <div className="mx-auto text-5xl font-light text-muted-foreground mb-4">{product.greek}</div>
-                                <h3 className="text-3xl font-bold">{product.name}</h3>
-                                <p className="text-primary font-semibold mt-1">{product.price}</p>
-                            </header>
-                            <div className="p-0 flex-grow">
-                                <ul className="space-y-3 text-muted-foreground">
-                                    {product.features.map(feat => (
-                                        <li key={feat} className="flex items-center gap-3 text-sm">
-                                            <Check className="h-4 w-4 text-green-500 shrink-0" />
-                                            <span className="text-left">{feat}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+            <div className="mt-20 container mx-auto px-6 lg:px-8 space-y-24">
+                {hardwareProducts.map((product, i) => (
+                    <AnimatedSection key={product.id}>
+                        <div className={cn(
+                            "grid grid-cols-1 md:grid-cols-2 gap-12 items-center",
+                            i % 2 !== 0 && "md:grid-flow-row-dense"
+                        )}>
+                            <div className={cn("text-center md:text-left", i % 2 !== 0 && "md:col-start-2")}>
+                                <h3 className="text-4xl md:text-5xl font-bold">{product.name}</h3>
+                                <p className="mt-4 text-lg text-muted-foreground">{product.description}</p>
+                                <div className="mt-8 flex gap-4 justify-center md:justify-start">
+                                    <Button asChild size="lg" className="rounded-full">
+                                        <Link href={`/store/${product.id}`}>Acheter</Link>
+                                    </Button>
+                                    <Button asChild variant="outline" size="lg" className="rounded-full">
+                                        <Link href={`/store/${product.id}`}>En savoir plus <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                                    </Button>
+                                </div>
                             </div>
-                            <footer className="p-0 mt-8">
-                                <Button asChild className="w-full">
-                                    <Link href="/store">Choisir</Link>
-                                </Button>
-                            </footer>
+                            <div className="relative aspect-video">
+                                <Image 
+                                    src={product.images[0]} 
+                                    alt={product.name} 
+                                    fill 
+                                    className="object-contain" 
+                                    data-ai-hint={product.hint}
+                                />
+                            </div>
                         </div>
-                    ))}
-                </div>
-            </AnimatedSection>
+                    </AnimatedSection>
+                ))}
+            </div>
       </Section>
 
       <Section>
@@ -266,5 +251,6 @@ const Section = ({ children, className }: { children: React.ReactNode, className
       {children}
     </section>
   );
+
 
 
