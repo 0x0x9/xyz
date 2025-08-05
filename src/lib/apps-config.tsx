@@ -1,7 +1,8 @@
+
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star, ShoppingCart, Paintbrush, Briefcase, Phone } from "lucide-react";
+import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star, ShoppingCart, Paintbrush, Briefcase, Phone, FileKey } from "lucide-react";
 import OriaIconAnimation from '@/components/ui/oria-animation';
 
 // App Components (Dynamically Imported)
@@ -73,5 +74,5 @@ export const ALL_APPS_CONFIG = [
     { id: 'careers', name: 'Carrières', icon: Briefcase, component: (props: any) => <LazyCareersApp {...props} />, defaultPos: { x: 180, y: 180 }, defaultSize: { width: 1000, height: 800 } },
     { id: 'contact', name: 'Contact', icon: Phone, component: (props: any) => <LazyContactApp {...props} />, defaultPos: { x: 200, y: 200 }, defaultSize: { width: 800, height: 600 } },
     { id: 'format', name: '(X)format', icon: FilePenLine, component: (props: any) => <LazyFormatApp {...props} />, defaultPos: { x: 220, y: 220 }, defaultSize: { width: 900, height: 700 } },
-    { id: 'convert', name: '(X)change', icon: Sparkles, component: (props: any) => <LazyConvertApp {...props} />, defaultPos: { x: 240, y: 240 }, defaultSize: { width: 900, height: 700 } },
+    { id: 'convert', name: '(X)change', icon: FileKey, component: (props: any) => <LazyConvertApp {...props} />, defaultPos: { x: 240, y: 240 }, defaultSize: { width: 900, height: 700 } },
 ];
