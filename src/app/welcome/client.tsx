@@ -1,282 +1,150 @@
 
 'use client';
 
-import { useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, BrainCircuit, Wand2, Zap, Film, Image as ImageIcon, Layers, Cpu, Sparkles, Download, Apple, AppWindow, Terminal } from 'lucide-react';
-import Image from 'next/image';
+import { useRef, useEffect, useState } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Cpu, Sparkles, Layers, Folder, Download } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useUIState } from '@/hooks/use-ui-state';
 
-function FeatureCard({ icon, title, description, href }: { icon: React.ElementType; title: string; description: string; href: string }) {
-    const Icon = icon;
-    return (
-        <Link href={href} className="block h-full">
-            <motion.div 
-                whileHover={{ y: -8, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="glass-card p-6 md:p-8 flex flex-col items-center text-center h-full border-2 border-transparent hover:border-primary/30"
-            >
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 mb-6">
-                    <Icon className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl md:text-2xl font-bold mb-2">{title}</h3>
-                <p className="text-muted-foreground text-base flex-grow">{description}</p>
-            </motion.div>
-        </Link>
-    );
-}
-
-function Section({ children, className }: { children: React.ReactNode, className?: string }) {
-    const ref = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start end", "end start"]
-    });
-    const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
-
-    return (
-        <section ref={ref} className={cn("relative container mx-auto px-4 md:px-6 py-24 md:py-36 min-h-screen flex flex-col justify-center", className)}>
-             <motion.div style={{ y }}>
-                {children}
-            </motion.div>
-        </section>
-    );
-}
-
-function AnimatedText({ children, className }: { children: React.ReactNode, className?: string }) {
-    const ref = useRef(null);
-     const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start 0.9", "start 0.5"]
-    });
-    
-    return (
-        <motion.div ref={ref} style={{ opacity: scrollYProgress, y: useTransform(scrollYProgress, [0, 1], [30, 0])}} className={className}>
-            {children}
-        </motion.div>
-    )
-}
+const features = [
+    {
+        title: "Un OS. Tous les univers.",
+        description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.",
+        icon: Layers,
+        videoId: "YUEb23FQVhA"
+    },
+    {
+        title: "Oria, l'IA au coeur du système.",
+        description: "Notre assistant IA est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.",
+        icon: Sparkles,
+        videoId: "crtsXQdtqbw"
+    },
+    {
+        title: "Performances sans précédent.",
+        description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite pleinement la puissance de votre machine pour des rendus et des compilations ultra-rapides.",
+        icon: Cpu,
+        videoId: "wLiwRGYaVnw"
+    },
+    {
+        title: "Gestion de fichiers unifiée.",
+        description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.",
+        icon: Folder,
+        videoId: "ozGQ2q4l4ys"
+    },
+];
 
 export default function WelcomeClient() {
-    const { isBannerVisible } = useUIState();
     const targetRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: targetRef,
-        offset: ["start start", "end end"],
-    });
+    const { scrollYProgress } = useScroll({ target: targetRef });
 
-    const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.5, 2]);
-    const imageOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 1, 0]);
+    const [activeFeatureIndex, setActiveFeatureIndex] = useState(0);
 
-    const features = [
-        { href: "/xos?open=fusion", icon: Zap, title: "(X)fusion", description: "Votre toile créative unifiée. Combinez les outils pour un workflow sans limites." },
-        { href: "/xos?open=maestro", icon: BrainCircuit, title: "Maestro", description: "Orchestrez vos projets de A à Z avec l'aide de l'IA." },
-        { href: "/xos?open=flux", icon: Wand2, title: "(X)flux", description: "Transformez une simple idée en un projet complet et structuré." },
-        { href: "/xos?open=brand-identity", icon: Layers, title: "(X)brand", description: "Définissez une identité de marque cohérente, des couleurs à la voix." },
-        { href: "/xos?open=motion", icon: Film, title: "(X)motion", description: "Générez des scripts et des storyboards vidéo en quelques secondes." },
-        { href: "/xos?open=image", icon: ImageIcon, title: "Image IA", description: "Créez des visuels époustouflants à partir d'une simple description textuelle." },
-    ];
+    // This effect maps scroll progress to the active feature
+    useEffect(() => {
+        return scrollYProgress.on("change", (latest) => {
+            const index = Math.min(Math.floor(latest * features.length), features.length - 1);
+            setActiveFeatureIndex(index);
+        });
+    }, [scrollYProgress]);
 
     return (
-        <div ref={targetRef}>
-            
+        <>
             {/* Hero Section */}
-            <div className="h-[200vh] relative">
-                <div className="sticky top-0 h-screen flex flex-col items-center justify-center text-center overflow-hidden">
-                    <motion.div style={{ scale: imageScale, opacity: imageOpacity }} className="absolute inset-0">
-                        <div className="absolute inset-0 w-full h-full">
-                            <iframe
-                                src="https://www.youtube.com/embed/9Ks_dCYhX4o?si=tjzSrLtkM4EKlje-&t=9&autoplay=1&mute=1&loop=1&playlist=9Ks_dCYhX4o&controls=0&showinfo=0&autohide=1"
-                                title="YouTube video player"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="w-full h-full scale-[1.5]"
-                            ></iframe>
-                        </div>
-                         <div className="absolute inset-0 bg-black/40"></div>
-                    </motion.div>
-                   
-                    <motion.div 
-                         style={{ opacity: useTransform(scrollYProgress, [0, 0.3], [1, 0]) }}
-                         className="relative z-10 px-4 space-y-6"
-                    >
-                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white [text-shadow:0_4px_20px_rgba(0,0,0,0.5)]">
-                            (X)OS
-                        </h1>
-                        <p className="text-xl md:text-2xl lg:text-3xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
-                            Ce n’est pas un système d’exploitation. <br/> C’est une extension de votre créativité.
-                        </p>
-                         <div className="pt-4 flex flex-wrap justify-center gap-4">
-                            <Button size="lg" asChild className="rounded-full text-lg">
-                                <Link href="/xos">
-                                    Découvrir (X)OS en ligne <ArrowRight className="ml-2 h-5 w-5" />
-                                </Link>
-                            </Button>
-                            <Button size="lg" variant="outline" asChild className="rounded-full text-lg">
-                                <Link href="/download">
-                                    Télécharger pour Desktop <Download className="ml-2 h-5 w-5" />
-                                </Link>
-                            </Button>
-                        </div>
-                    </motion.div>
+            <div className="h-screen flex flex-col items-center justify-center text-center relative overflow-hidden">
+                <div className="absolute inset-0 w-full h-full">
+                    <iframe
+                        src="https://www.youtube.com/embed/9Ks_dCYhX4o?si=tjzSrLtkM4EKlje-&t=9&autoplay=1&mute=1&loop=1&playlist=9Ks_dCYhX4o&controls=0&showinfo=0&autohide=1"
+                        title="Hero Video"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full object-cover scale-[1.5]"
+                    ></iframe>
+                     <div className="absolute inset-0 bg-black/40"></div>
+                </div>
+                <div className="relative z-10 px-4 space-y-6">
+                    <motion.h1 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white [text-shadow:0_4px_20px_rgba(0,0,0,0.5)]">
+                        (X)OS
+                    </motion.h1>
+                    <motion.p 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        className="text-xl md:text-2xl lg:text-3xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
+                        Ce n’est pas un système d’exploitation. <br/> C’est une extension de votre créativité.
+                    </motion.p>
                 </div>
             </div>
 
-            {/* Hardware Section */}
-             <Section>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <AnimatedText>
-                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                           Le matériel réinventé pour la création.
-                        </h2>
-                        <p className="mt-6 text-lg md:text-xl text-muted-foreground">
-                            La Station de Création X-1 n'est pas un simple ordinateur. C'est une machine conçue pour une seule chose : libérer votre potentiel. Chaque composant est optimisé pour (X)OS, créant une synergie parfaite entre le matériel et le logiciel.
-                        </p>
-                         <div className="mt-8">
-                            <Button size="lg" asChild className="rounded-full text-lg">
-                                <Link href="/hardware">
-                                    Découvrir le matériel <Cpu className="ml-2 h-5 w-5" />
-                                </Link>
-                            </Button>
-                        </div>
-                    </AnimatedText>
-                    <div className="relative aspect-square">
-                         <AnimatedText>
-                             <Image
-                                src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80"
-                                alt="Station de Création X-1"
-                                fill
-                                className="object-contain"
-                                data-ai-hint="powerful desktop computer"
-                            />
-                         </AnimatedText>
-                    </div>
+            {/* Sticky Features Section */}
+            <div ref={targetRef} className="h-[400vh] relative">
+                <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
+                    <AnimatePresence mode="wait">
+                        {features.map((feature, index) => {
+                             if (index === activeFeatureIndex) {
+                                return (
+                                    <motion.div
+                                        key={feature.videoId}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="absolute inset-0 w-full h-full"
+                                    >
+                                        <div className="absolute inset-0 w-full h-full">
+                                            <iframe
+                                                src={`https://www.youtube.com/embed/${feature.videoId}?autoplay=1&mute=1&loop=1&playlist=${feature.videoId}&controls=0&showinfo=0&autohide=1`}
+                                                title={feature.title}
+                                                frameBorder="0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                                className="w-full h-full object-cover scale-[1.5]"
+                                            ></iframe>
+                                            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+                                        </div>
+                                         <div className="relative z-10 h-full flex flex-col justify-center items-center text-center text-white p-8">
+                                            <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 mb-6">
+                                                <feature.icon className="w-8 h-8 text-white" />
+                                            </div>
+                                            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{feature.title}</h2>
+                                            <p className="text-lg md:text-xl text-white/80 max-w-2xl">{feature.description}</p>
+                                        </div>
+                                    </motion.div>
+                                );
+                            }
+                            return null;
+                        })}
+                    </AnimatePresence>
                 </div>
-            </Section>
-
-            {/* Multi-OS Section */}
-            <Section className="text-center">
-                <AnimatedText>
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                        Un OS. Tous les OS.
-                    </h2>
-                    <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                        (X)OS est le premier système d'exploitation qui vous permet d'exécuter macOS, Windows et Linux simultanément, sans compromis. Passez d'un environnement à l'autre instantanément, et combinez la puissance de chaque univers.
-                    </p>
-                </AnimatedText>
-                <AnimatedText className="mt-16">
-                    <Image 
-                        src="https://images.unsplash.com/photo-1618423484838-b7a4aa4d8523?auto=format&fit=crop&w=1200&q=80"
-                        alt="Illustration de plusieurs systèmes d'exploitation fonctionnant ensemble"
-                        width={1200}
-                        height={600}
-                        className="rounded-2xl mx-auto"
-                        data-ai-hint="multiple operating systems interface"
-                    />
-                </AnimatedText>
-            </Section>
-
-            {/* AI Core Section */}
-            <Section>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <div className="relative aspect-square">
-                         <AnimatedText>
-                             <Image
-                                src="https://images.unsplash.com/photo-1620712943543-959651a7e23a?auto=format&fit=crop&w=800&q=80"
-                                alt="Illustration de l'IA Oria"
-                                fill
-                                className="object-contain"
-                                data-ai-hint="abstract AI core"
-                            />
-                         </AnimatedText>
-                    </div>
-                    <AnimatedText>
-                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                           Oria. L'IA au cœur de votre écosystème.
-                        </h2>
-                        <p className="mt-6 text-lg md:text-xl text-muted-foreground">
-                            (X)cloud n'est pas qu'un simple espace de stockage. C'est un espace de travail intelligent où Oria, notre IA d'orchestration, comprend vos objectifs, anticipe vos besoins et synchronise vos projets entre (X)OS natif et (X)OS en ligne.
-                        </p>
-                         <div className="mt-8">
-                            <Button size="lg" asChild className="rounded-full text-lg" variant="outline">
-                                <Link href="/xos?open=oria">
-                                    Discuter avec Oria <Sparkles className="ml-2 h-5 w-5" />
-                                </Link>
-                            </Button>
-                        </div>
-                    </AnimatedText>
-                </div>
-            </Section>
+            </div>
             
-            {/* Video Section */}
-            <Section>
-                <AnimatedText className="text-center">
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                        La création, réinventée.
-                    </h2>
-                    <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                        Voyez comment notre suite d'outils et notre système d'exploitation unifié transforment votre processus créatif.
-                    </p>
-                </AnimatedText>
-                <AnimatedText className="mt-16">
-                    <div className="glass-card p-2 md:p-3 max-w-6xl mx-auto rounded-2xl">
-                        <div className="aspect-video w-full">
-                            <iframe
-                            src="https://www.youtube.com/embed/SqJGQ25sc8Q?si=279cRsOPl_dffifa&autoplay=1&mute=1&loop=1&playlist=SqJGQ25sc8Q&controls=0&showinfo=0"
-                            title="YouTube video player"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="w-full h-full rounded-lg"
-                            ></iframe>
-                        </div>
-                    </div>
-                </AnimatedText>
-            </Section>
-
-            {/* Features Section */}
-            <Section className="text-center">
-                 <AnimatedText>
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                        (X)OS en ligne. <br/>La puissance créative, partout.
-                    </h2>
-                    <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                        Accédez à notre suite complète d'outils créatifs IA depuis n'importe quel navigateur. Votre projet vous suit partout, synchronisé en temps réel avec votre station de travail grâce à (X)cloud.
-                    </p>
-                </AnimatedText>
-                <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {features.map((feature, i) => (
-                        <AnimatedText key={i}>
-                            <FeatureCard {...feature} />
-                        </AnimatedText>
-                    ))}
+            {/* Final CTA Section */}
+            <div className="h-screen flex flex-col items-center justify-center text-center relative px-4">
+                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+                    Prêt à réinventer votre workflow ?
+                </h2>
+                <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Découvrez l'écosystème complet en essayant (X)OS en ligne, ou téléchargez-le pour transformer votre machine.
+                </p>
+                <div className="mt-12 flex flex-wrap justify-center gap-4">
+                    <Button size="lg" asChild className="rounded-full text-lg">
+                        <Link href="/xos">
+                            Essayer (X)OS en ligne <ArrowRight className="ml-2 h-5 w-5" />
+                        </Link>
+                    </Button>
+                     <Button size="lg" variant="outline" asChild className="rounded-full text-lg">
+                        <Link href="/download">
+                            Télécharger (X)OS <Download className="ml-2 h-5 w-5" />
+                        </Link>
+                    </Button>
                 </div>
-            </Section>
-
-             {/* Final CTA Section */}
-             <Section className="text-center">
-                <AnimatedText>
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                        Prêt à réinventer votre workflow ?
-                    </h2>
-                     <div className="mt-8 flex flex-wrap justify-center gap-4">
-                        <Button size="lg" asChild className="rounded-full text-lg">
-                            <Link href="/xos">
-                                Essayer (X)OS en ligne <ArrowRight className="ml-2 h-5 w-5" />
-                            </Link>
-                        </Button>
-                         <Button size="lg" variant="outline" asChild className="rounded-full text-lg">
-                            <Link href="/hardware">
-                                Découvrir le matériel <Cpu className="ml-2 h-5 w-5" />
-                            </Link>
-                        </Button>
-                    </div>
-                </AnimatedText>
-            </Section>
-        </div>
+            </div>
+        </>
     );
 }
