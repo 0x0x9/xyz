@@ -11,7 +11,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Check } from 'lucide-react';
 
 export function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
@@ -27,6 +27,43 @@ export function ProductCard({ product }: { product: Product }) {
       description: `"${product.name}" est maintenant dans votre panier.`,
     });
   };
+
+  if (product.category === 'Logiciel') {
+    return (
+      <Link href={`/store/${product.id}`} className="block h-full group/link">
+         <motion.div
+          className="h-full"
+          whileHover={{ y: -5 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        >
+           <Card className={cn(
+            "group/card flex h-full flex-col overflow-hidden transition-all duration-300 p-6 text-left",
+            "glass-card hover:bg-white/5 dark:hover:bg-black/10 hover:border-primary/30"
+          )}>
+            <div className="flex-grow">
+              <h3 className="text-xl font-bold text-foreground">{product.name}</h3>
+              <p className="text-sm text-muted-foreground mt-1">{product.description}</p>
+              <ul className="space-y-3 mt-6 text-sm">
+                {(product.features ?? []).map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <Check className="h-4 w-4 text-green-500 shrink-0" />
+                    <span className="text-muted-foreground">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-8 text-center">
+              <p className="text-2xl font-bold text-foreground mb-4">{product.price.toFixed(2)}€</p>
+               <Button variant="secondary" className="w-full rounded-full" onClick={handleAddToCart}>
+                  <ShoppingCart className="mr-2 h-4 w-4" />
+                  Acheter
+                </Button>
+            </div>
+           </Card>
+        </motion.div>
+      </Link>
+    )
+  }
 
   return (
     <Link href={`/store/${product.id}`} className="block h-full group/link">
