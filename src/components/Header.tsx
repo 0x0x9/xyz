@@ -26,30 +26,32 @@ import {
   SquareTerminal,
   LayoutTemplate,
   Music,
-  Code2,
-  Network,
+  CodeXml,
+  ArrowRight,
+  View,
+  Cpu,
+  Sparkles,
+  BookOpen,
+  Paintbrush,
+  Users,
+  Palette,
+  Mic,
+  Presentation,
+  Terminal,
   Calendar,
-  Guitar,
+  Network,
   Wand2,
-  AppWindow,
   Cloud,
-  Zap,
+  Guitar,
   Star,
   Plus,
   Minus,
   Download,
   MessageSquare,
-  BookOpen,
-  Users,
-  Paintbrush,
-  Terminal,
   FilePenLine,
   FileKey,
-  Cpu,
-  View,
-  Palette,
-  Mic,
-  Presentation,
+  Briefcase,
+  Phone,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -110,7 +112,7 @@ const generatorTools = [
     { href: "/editor", label: "(X).alpha", icon: SquareTerminal },
     { href: "/frame", label: "(X)frame", icon: LayoutTemplate },
     { href: "/terminal", label: "(X)term", icon: Terminal },
-    { href: "/code", label: '(X)code', icon: Code2 },
+    { href: "/code", label: '(X)code', icon: CodeXml },
     { href: "/format", label: "(X)format", icon: FilePenLine },
     { href: "/convert", label: "(X)change", icon: FileKey },
     { href: "/reality", label: "(X)reality", icon: View },
@@ -500,12 +502,12 @@ export function Header() {
                 </nav>
               </ScrollArea>
               <div className="p-6 mt-auto border-t border-border flex flex-col gap-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Thème</span>
-                  <ThemeToggle />
-                </div>
                 {isClient && (
                     <>
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">Thème</span>
+                          <ThemeToggle />
+                        </div>
                         <CartSheet />
                         {user ? (
                         <>
