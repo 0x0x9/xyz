@@ -9,6 +9,7 @@ export type Product = {
   category: 'Matériel' | 'Logiciel' | 'Accessoire';
   isFeatured: boolean;
   configurable?: boolean;
+  features?: string[];
 };
 
 export const products: Product[] = [
@@ -46,12 +47,12 @@ export const products: Product[] = [
     price: 1999.00,
     images: [
         "https://images.unsplash.com/photo-1618384887924-c9b0b4597d95?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1555618423-69b008b88ea2?auto=format&fit=crop&w=800&q=80",
     ],
     hint: "sleek modern desktop computer",
     category: 'Matériel',
     isFeatured: true,
     configurable: false,
+    features: ["(X)OS complet", "Dual-OS Windows/macOS", "32 Go RAM", "1 To SSD", "(X)Cloud inclus"],
   },
   {
     id: 10,
@@ -60,12 +61,12 @@ export const products: Product[] = [
     price: 2999.00,
     images: [
         "https://images.unsplash.com/photo-1629227845354-952936a70703?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1599494029284-14a01c4a29a3?auto=format&fit=crop&w=800&q=80",
     ],
     hint: "professional high-end computer",
     category: 'Matériel',
     isFeatured: true,
     configurable: false,
+    features: ["(X)OS Pro", "Triple-OS + Linux", "64 Go RAM", "2 To SSD", "(X)AI intégré"],
   },
   {
     id: 11,
@@ -74,12 +75,12 @@ export const products: Product[] = [
     price: 4499.00,
     images: [
         "https://images.unsplash.com/photo-1603792013941-2c13e639a03f?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1601925698619-8de3b3f7893c?auto=format&fit=crop&w=800&q=80",
     ],
     hint: "ultimate performance computer",
     category: 'Matériel',
     isFeatured: true,
     configurable: false,
+    features: ["(X)OS Studio", "Multi-GPU dédié", "128 Go RAM", "4 To SSD", "Support prioritaire"],
   },
   {
     id: 2,

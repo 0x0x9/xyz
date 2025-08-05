@@ -5,7 +5,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Cpu, Zap, Layers, Folder, Check, ArrowRight, Sparkles, Users } from 'lucide-react';
+import { Cpu, Zap, Layers, Folder, Check, ArrowRight, Sparkles, Users, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { products } from '@/lib/products';
@@ -16,6 +16,8 @@ const features = [
     { title: "Performances sans précédent", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite pleinement la puissance de votre Station X-1 pour des rendus et des compilations ultra-rapides.", icon: Zap, videoId: 'YUEb23FQVhA' },
     { title: "Gestion de fichiers unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys' },
 ];
+
+const hardwareProducts = products.filter(p => p.category === 'Matériel' && p.name.includes('(X)-'));
 
 function StickyScrollSection() {
     const targetRef = useRef<HTMLDivElement>(null);
@@ -86,7 +88,6 @@ const AnimatedSection = ({ children, className }: { children: React.ReactNode, c
 
 
 export default function FeaturesClient() {
-  const hardwareProducts = products.filter(p => p.category === 'Matériel' && p.name.includes('(X)-'));
   
   const whoIsItFor = [
     {
@@ -169,7 +170,7 @@ export default function FeaturesClient() {
                 </p>
             </AnimatedSection>
             <AnimatedSection className="mt-16">
-                <div className="glass-card p-2 md:p-3 max-wxl mx-auto rounded-2xl">
+                <div className="glass-card p-2 md:p-3 max-w-5xl mx-auto rounded-2xl">
                     <div className="aspect-video w-full">
                         <iframe
                         src="https://www.youtube.com/embed/SqJGQ25sc8Q?si=279cRsOPl_dffifa&autoplay=1&mute=1&loop=1&playlist=SqJGQ25sc8Q&controls=0&showinfo=0"
@@ -191,16 +192,30 @@ export default function FeaturesClient() {
                     <p className="section-subtitle">Des workstations pensées par et pour les créatifs.</p>
                 </div>
             </AnimatedSection>
-            <div className="mt-20 container mx-auto px-6 lg:px-8 space-y-24">
+            <div className="mt-20 container mx-auto px-6 lg:px-8 space-y-8">
                 {hardwareProducts.map((product, i) => (
                     <AnimatedSection key={product.id}>
-                        <div className={cn(
-                            "grid grid-cols-1 md:grid-cols-2 gap-12 items-center",
-                            i % 2 !== 0 && "md:grid-flow-row-dense"
-                        )}>
-                            <div className={cn("text-center md:text-left", i % 2 !== 0 && "md:col-start-2")}>
+                        <div className="glass-card grid grid-cols-1 md:grid-cols-2 gap-8 items-center p-8 rounded-2xl overflow-hidden">
+                            <div className="relative aspect-square">
+                                <Image 
+                                    src={product.images[0]} 
+                                    alt={product.name} 
+                                    fill 
+                                    className="object-contain" 
+                                    data-ai-hint={product.hint}
+                                />
+                            </div>
+                            <div className={cn("text-center md:text-left")}>
                                 <h3 className="text-4xl md:text-5xl font-bold">{product.name}</h3>
                                 <p className="mt-4 text-lg text-muted-foreground">{product.description}</p>
+                                <div className="mt-8 space-y-3">
+                                  {(product as any).features?.map((feature: string) => (
+                                    <div key={feature} className="flex items-center gap-3">
+                                      <CheckCircle className="h-5 w-5 text-primary"/>
+                                      <span>{feature}</span>
+                                    </div>
+                                  ))}
+                                </div>
                                 <div className="mt-8 flex gap-4 justify-center md:justify-start">
                                     <Button asChild size="lg" className="rounded-full">
                                         <Link href={`/store/${product.id}`}>Acheter</Link>
@@ -209,15 +224,6 @@ export default function FeaturesClient() {
                                         <Link href={`/store/${product.id}`}>En savoir plus <ArrowRight className="ml-2 h-4 w-4" /></Link>
                                     </Button>
                                 </div>
-                            </div>
-                            <div className="relative aspect-video">
-                                <Image 
-                                    src={product.images[0]} 
-                                    alt={product.name} 
-                                    fill 
-                                    className="object-contain" 
-                                    data-ai-hint={product.hint}
-                                />
                             </div>
                         </div>
                     </AnimatedSection>
@@ -251,6 +257,4 @@ const Section = ({ children, className }: { children: React.ReactNode, className
       {children}
     </section>
   );
-
-
 
