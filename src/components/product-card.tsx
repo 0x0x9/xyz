@@ -11,6 +11,7 @@ import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import React from 'react';
+import { cn } from '@/lib/utils';
 
 export function ProductCard({ product }: { product: Product }) {
     const { addItem } = useCart();
@@ -28,29 +29,24 @@ export function ProductCard({ product }: { product: Product }) {
   
     return (
       <Link href={`/store/${product.id}`} className="block h-full group/link">
-        <motion.div
+         <motion.div
             className="h-full"
             whileHover={{ y: -5 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
-            <Card className="group/card flex h-full flex-col overflow-hidden transition-all duration-300 rounded-2xl glass-card hover:bg-white/5 dark:hover:bg-black/10 hover:border-primary/30">
+            <Card className={cn(
+                "group/card flex h-full flex-col overflow-hidden transition-all duration-300", 
+                "glass-card hover:bg-white/5 dark:hover:bg-black/10 hover:border-primary/30"
+            )}>
             <div className="relative flex-1 p-0 flex flex-col">
                 <div className="relative aspect-square bg-white/5 dark:bg-black/10">
-                    <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-                        className="w-full h-full"
-                    >
-                        <Image
-                            src={product.images[0]}
-                            alt={product.name}
-                            fill
-                            className="object-contain p-4 transition-transform duration-500 group-hover/link:scale-105"
-                            data-ai-hint={product.hint}
-                        />
-                    </motion.div>
+                    <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        className="object-contain p-4 transition-transform duration-500 group-hover/link:scale-105"
+                        data-ai-hint={product.hint}
+                    />
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
                     <h3 className="text-xl font-bold text-foreground">{product.name}</h3>
