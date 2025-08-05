@@ -10,16 +10,22 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useUIState } from '@/hooks/use-ui-state';
 
-function FeatureCard({ icon, title, description }: { icon: React.ElementType, title: string, description: string }) {
+function FeatureCard({ icon, title, description, href }: { icon: React.ElementType; title: string; description: string; href: string }) {
     const Icon = icon;
     return (
-        <div className="glass-card p-6 md:p-8 flex flex-col items-center text-center h-full">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 mb-6">
-                <Icon className="h-8 w-8 text-primary" />
-            </div>
-            <h3 className="text-xl md:text-2xl font-bold mb-2">{title}</h3>
-            <p className="text-muted-foreground text-base flex-grow">{description}</p>
-        </div>
+        <Link href={href} className="block h-full">
+            <motion.div 
+                whileHover={{ y: -8, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className="glass-card p-6 md:p-8 flex flex-col items-center text-center h-full border-2 border-transparent hover:border-primary/30"
+            >
+                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 mb-6">
+                    <Icon className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold mb-2">{title}</h3>
+                <p className="text-muted-foreground text-base flex-grow">{description}</p>
+            </motion.div>
+        </Link>
     );
 }
 
@@ -66,12 +72,12 @@ export default function WelcomeClient() {
     const imageOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 1, 0]);
 
     const features = [
-        { icon: Zap, title: "(X)fusion", description: "Votre toile créative unifiée. Combinez les outils pour un workflow sans limites." },
-        { icon: BrainCircuit, title: "Maestro", description: "Orchestrez vos projets de A à Z avec l'aide de l'IA." },
-        { icon: Wand2, title: "(X)flux", description: "Transformez une simple idée en un projet complet et structuré." },
-        { icon: Layers, title: "(X)brand", description: "Définissez une identité de marque cohérente, des couleurs à la voix." },
-        { icon: Film, title: "(X)motion", description: "Générez des scripts et des storyboards vidéo en quelques secondes." },
-        { icon: ImageIcon, title: "Image IA", description: "Créez des visuels époustouflants à partir d'une simple description textuelle." },
+        { href: "/xos?open=fusion", icon: Zap, title: "(X)fusion", description: "Votre toile créative unifiée. Combinez les outils pour un workflow sans limites." },
+        { href: "/xos?open=maestro", icon: BrainCircuit, title: "Maestro", description: "Orchestrez vos projets de A à Z avec l'aide de l'IA." },
+        { href: "/xos?open=flux", icon: Wand2, title: "(X)flux", description: "Transformez une simple idée en un projet complet et structuré." },
+        { href: "/xos?open=brand-identity", icon: Layers, title: "(X)brand", description: "Définissez une identité de marque cohérente, des couleurs à la voix." },
+        { href: "/xos?open=motion", icon: Film, title: "(X)motion", description: "Générez des scripts et des storyboards vidéo en quelques secondes." },
+        { href: "/xos?open=image", icon: ImageIcon, title: "Image IA", description: "Créez des visuels époustouflants à partir d'une simple description textuelle." },
     ];
 
     return (
