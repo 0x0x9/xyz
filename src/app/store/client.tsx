@@ -7,15 +7,15 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Cpu, Sparkles } from "lucide-react";
+import { ArrowRight, Cpu, Sparkles, ChevronRight } from "lucide-react";
 import { products } from '@/lib/products';
 import { motion } from 'framer-motion';
 import { ProductCard } from '@/components/product-card';
 
 const StorePageClient = () => {
-    const categories = [...new Set(products.map(p => p.category))];
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const filteredProducts = selectedCategory ? products.filter(p => p.category === selectedCategory) : products;
+    const categories = ['Tout', ...new Set(products.map(p => p.category))];
+    const [selectedCategory, setSelectedCategory] = useState<string>('Tout');
+    const filteredProducts = selectedCategory === 'Tout' ? products : products.filter(p => p.category === selectedCategory);
 
   return (
     <>
@@ -73,12 +73,22 @@ const StorePageClient = () => {
             </div>
         </section>
 
-        <section className="container mx-auto px-4 md:px-6 space-y-20 pb-20">
+        <section className="container mx-auto px-4 md:px-6 space-y-16 pb-20">
              <div>
-                <h2 className="text-3xl font-bold mb-8 text-center">Tous nos produits</h2>
+                <div className="mb-12">
+                     <div className="flex items-center text-sm text-muted-foreground mb-4">
+                        <Link href="/store" className="hover:text-foreground">Boutique</Link>
+                        {selectedCategory !== 'Tout' && (
+                            <>
+                                <ChevronRight className="h-4 w-4 mx-1" />
+                                <span className="text-foreground">{selectedCategory}</span>
+                            </>
+                        )}
+                    </div>
+                    <h2 className="text-3xl font-bold text-center">Tous nos produits</h2>
+                </div>
                  <div className="flex flex-wrap justify-center gap-2 mb-12">
-                     <Button variant={!selectedCategory ? 'secondary' : 'glass'} onClick={() => setSelectedCategory(null)} className="rounded-full">Tous</Button>
-                    {categories.map(category => (
+                     {categories.map(category => (
                         <Button key={category} variant={selectedCategory === category ? 'secondary' : 'glass'} onClick={() => setSelectedCategory(category)} className="rounded-full">
                             {category}
                         </Button>

@@ -30,10 +30,10 @@ export function ProductCard({ product }: { product: Product }) {
       <Link href={`/store/${product.id}`} className="block h-full group/link">
         <motion.div
             className="h-full"
-            whileHover={{ y: -8 }}
+            whileHover={{ y: -5 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
-            <Card className="group/card flex h-full flex-col overflow-hidden transition-all duration-300 rounded-2xl bg-card/95 dark:bg-card/80 border border-border shadow-lg hover:shadow-2xl hover:shadow-primary/10">
+            <Card className="group/card flex h-full flex-col overflow-hidden transition-all duration-300 rounded-2xl glass-card hover:bg-white/5 dark:hover:bg-black/10 hover:border-primary/30">
             <div className="relative flex-1 p-0 flex flex-col">
                 <div className="relative aspect-square">
                     <motion.div 
@@ -47,7 +47,7 @@ export function ProductCard({ product }: { product: Product }) {
                             src={product.images[0]}
                             alt={product.name}
                             fill
-                            className="object-contain p-4"
+                            className="object-contain p-4 transition-transform duration-500 group-hover/link:scale-105"
                             data-ai-hint={product.hint}
                         />
                     </motion.div>
