@@ -371,7 +371,7 @@ const FileBasedEditor = ({
         <>
             <div className="grid lg:grid-cols-12 flex-1 min-h-0 h-full">
                  {isFileExplorerVisible && (
-                    <div className="lg:col-span-3 h-full flex flex-col bg-black/5 dark:bg-black/10">
+                    <div className="lg:col-span-3 h-full flex flex-col bg-black/5 dark:bg-black/10 border-r border-white/10">
                          <Tabs defaultValue="files" value={activeExplorerTab} onValueChange={setActiveExplorerTab} className="h-full flex flex-col">
                             <TabsList className="m-2">
                                 <TabsTrigger value="files">Fichiers</TabsTrigger>
