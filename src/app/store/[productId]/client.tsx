@@ -4,7 +4,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Check, ArrowRight } from 'lucide-react';
+import { ShoppingCart, Check } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
 import { type Product } from '@/lib/products';
