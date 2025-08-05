@@ -14,6 +14,7 @@ import { Loader2, Sparkles, Cloud, Users, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import OriaAnimation from "@/components/ui/oria-animation";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 
 const GoogleIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15.545 8.558a9.42 9.42 0 0 1 .139 1.626c0 6.097-4.464 10.9-9.98 10.9-5.524 0-10.02-4.48-10.02-10.019 0-5.525 4.5-10.02 10.02-10.02 2.76 0 5.253 1.11 7.087 2.922l-2.656 2.656z" transform="translate(4.455 1.442)"/></svg>
@@ -25,13 +26,23 @@ const AppleIcon = () => (
 
 const SignupPage = () => {
     const { handleSignUp, handleGoogleSignIn, handleAppleSignIn } = useAuth();
+    const { toast } = useToast();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (password !== confirmPassword) {
+            toast({
+                variant: 'destructive',
+                title: "Erreur",
+                description: "Les mots de passe ne correspondent pas.",
+            });
+            return;
+        }
         setLoading(true);
         await handleSignUp(name, email, password);
         setLoading(false);
@@ -125,6 +136,18 @@ const SignupPage = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="6 caractères minimum"
                               />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="confirm-password">Confirmez le mot de passe</Label>
+                                <Input
+                                    id="confirm-password"
+                                    type="password"
+                                    required
+                                    className="bg-background/50 border-input focus:bg-background/80"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    placeholder="Retapez votre mot de passe"
+                                />
                             </div>
                             <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={loading}>
                               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
