@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import Link from "next/link";
@@ -44,6 +45,7 @@ import {
   Terminal,
   FilePenLine,
   FileKey,
+  Cpu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -66,6 +68,7 @@ import { useAuth } from './auth-component';
 const navLinks = [
   { href: "/store", label: "Boutique" },
   { href: "/features", label: "Fonctionnalités" },
+  { href: "/tools", label: "Outils IA" },
   { href: "/careers", label: "Carrières" },
 ];
 
@@ -78,7 +81,7 @@ const communityLinks = [
 
 const ecosystemTools = [
     { href: "/welcome", label: "Découvrir (X)OS", icon: Star, description: "Le système d'exploitation créatif." },
-    { href: "/xos", label: "(X)OS en ligne", icon: AppWindow, description: "Votre bureau, partout." },
+    { href: "/hardware", label: "Station X-1", icon: Cpu, description: "La puissance matérielle ultime." },
     { href: "/cloud", label: "(X)cloud", icon: Cloud, description: "Stockage et gestion de fichiers." },
     { href: "/fusion", label: "(X)fusion", icon: Zap, description: "Combinez vos outils." },
     { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
@@ -286,7 +289,7 @@ export function Header() {
                 variant="ghost"
                 className="text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full h-9 px-4"
               >
-                Outils <ChevronDown className="ml-2 h-4 w-4" />
+                Écosystème <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuPrimitive.Trigger>
             <DropdownMenuPrimitive.Portal>
@@ -303,7 +306,7 @@ export function Header() {
                   className="grid grid-cols-12 gap-4"
                 >
                   <div className="col-span-5 space-y-1">
-                     <h3 className="px-3 text-sm font-semibold text-muted-foreground mb-1">Écosystème</h3>
+                     <h3 className="px-3 text-sm font-semibold text-muted-foreground mb-1">Plateforme</h3>
                      <div className="flex flex-col">
                        {ecosystemTools.map((tool) => (
                           <EcosystemLink key={tool.href} {...tool} />
@@ -443,11 +446,11 @@ export function Header() {
                     </AccordionItem>
                     <AccordionItem value="tools" className="border-b-0">
                       <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
-                        Outils
+                        Écosystème
                       </AccordionTrigger>
                       <AccordionContent className="pl-4">
                          <div className="flex flex-col gap-1 mt-2">
-                             <h4 className="font-semibold text-muted-foreground mb-2">Écosystème</h4>
+                             <h4 className="font-semibold text-muted-foreground mb-2">Plateforme</h4>
                             {ecosystemTools.map((tool) => (
                                 <Link key={tool.href} href={tool.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
                                     <div className="p-1.5 bg-primary/10 rounded-md border border-primary/20">
