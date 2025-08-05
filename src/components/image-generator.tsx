@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
-import { generateImageAction } from '@/app/actions';
+import { generateImageAction, uploadDocumentAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
@@ -22,13 +22,9 @@ import {
   AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
 import AiLoadingAnimation from './ui/ai-loading-animation';
-import { httpsCallable } from 'firebase/functions';
-import { functions } from '@/lib/firebase';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { useNotifications } from '@/hooks/use-notifications';
-
-const uploadDocument = httpsCallable(functions, 'uploadDocument');
 
 const imageStyles = [
   { value: 'none', label: 'Aucun' },
@@ -51,7 +47,7 @@ function SubmitButton() {
 }
 
 function ImageGeneratorFormBody({ state, onReset }: { 
-    state: { message: string; imageDataUri: string | null; error: string; prompt: string; style?: string; id: number },
+    state: { message: string; imageDataUri: string | null; error: string | null; prompt: string; style?: string; id: number },
     onReset: () => void;
 }) {
     const { pending } = useFormStatus();
@@ -76,9 +72,8 @@ function ImageGeneratorFormBody({ state, onReset }: {
         if (!state.imageDataUri) return;
         setIsSaving(true);
         try {
-            const base64 = state.imageDataUri.split(',')[1];
             const fileName = `image-${Date.now()}.png`;
-            await uploadDocument({ name: fileName, content: base64, mimeType: 'image/png' });
+            await uploadDocumentAction({ name: fileName, content: state.imageDataUri, mimeType: 'image/png' });
             toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)drive.` });
         } catch (error: any) {
             toast({ variant: 'destructive', title: "Erreur d'enregistrement", description: error.message });

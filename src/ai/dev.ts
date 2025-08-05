@@ -2,6 +2,9 @@
 import { config } from 'dotenv';
 config();
 
+// This file imports all Genkit flows and is used by the Genkit CLI.
+// It is not intended for direct use in the application.
+
 import '@/ai/flows/generate-text.ts';
 import '@/ai/flows/generate-image.ts';
 import '@/ai/flows/generate-schedule.ts';

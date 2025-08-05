@@ -2,14 +2,20 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile, type User, GoogleAuthProvider, OAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
+// Mock User type, equivalent to Firebase User but simplified
+type MockUser = {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+};
+
 interface AuthContextType {
-  user: User | null;
+  user: MockUser | null;
   loading: boolean;
   handleSignIn: (email: string, pass: string) => Promise<void>;
   handleSignUp: (name: string, email: string, pass: string) => Promise<void>;
@@ -21,101 +27,80 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const googleProvider = new GoogleAuthProvider();
-const appleProvider = new OAuthProvider('apple.com');
-
+// Mock user for development
+const mockUser: MockUser = {
+  uid: 'mock-user-uid',
+  displayName: 'Utilisateur Simulé',
+  email: 'user@example.com',
+  photoURL: 'https://placehold.co/100x100.png',
+};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<MockUser | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    // Check if a mock session exists in localStorage
+    const savedUser = localStorage.getItem('mockUserSession');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+    setLoading(false);
   }, []);
 
   const handleSignIn = async (email: string, pass: string) => {
-    try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        toast({ description: "Connexion réussie ! Bienvenue." });
-        router.push('/account');
-    } catch (error: any) {
-        let description = "Une erreur est survenue.";
-        if (error.code === 'auth/invalid-credential') {
-            description = "Email ou mot de passe incorrect.";
-        }
-        toast({ variant: 'destructive', title: "Erreur de connexion", description });
-    }
+    setLoading(true);
+    await new Promise(res => setTimeout(res, 500));
+    console.log(`Simulating sign in for ${email}`);
+    setUser(mockUser);
+    localStorage.setItem('mockUserSession', JSON.stringify(mockUser));
+    toast({ description: "Connexion simulée réussie ! Bienvenue." });
+    router.push('/account');
+    setLoading(false);
   };
 
   const handleSignUp = async (name: string, email: string, pass: string) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-      await updateProfile(userCredential.user, { displayName: name });
-       setUser(auth.currentUser); // Refresh user state
-      toast({ description: "Inscription réussie ! Bienvenue." });
-      router.push('/account');
-    } catch (error: any) {
-        let description = "Une erreur est survenue.";
-        if (error.code === 'auth/email-already-in-use') {
-            description = "Cette adresse e-mail est déjà utilisée.";
-        } else if (error.code === 'auth/weak-password') {
-            description = "Le mot de passe doit contenir au moins 6 caractères.";
-        }
-        toast({ variant: 'destructive', title: "Erreur d'inscription", description });
-    }
+    setLoading(true);
+    await new Promise(res => setTimeout(res, 500));
+    console.log(`Simulating sign up for ${name} (${email})`);
+    const newUser = { ...mockUser, displayName: name, email };
+    setUser(newUser);
+    localStorage.setItem('mockUserSession', JSON.stringify(newUser));
+    toast({ description: "Inscription simulée réussie ! Bienvenue." });
+    router.push('/account');
+    setLoading(false);
   };
 
   const handlePasswordReset = async (email: string) => {
-    try {
-      await sendPasswordResetEmail(auth, email);
-      toast({ description: "Un e-mail de réinitialisation a été envoyé." });
-      router.push('/login');
-    } catch (error: any) {
-        let description = "Une erreur est survenue.";
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
-            description = "Aucun utilisateur trouvé avec cette adresse e-mail.";
-        }
-        toast({ variant: 'destructive', title: "Erreur", description });
-    }
+    setLoading(true);
+    await new Promise(res => setTimeout(res, 500));
+    console.log(`Simulating password reset for ${email}`);
+    toast({ description: "Un e-mail de réinitialisation (simulé) a été envoyé." });
+    router.push('/login');
+    setLoading(false);
   };
   
   const handleGoogleSignIn = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      toast({ description: 'Connexion avec Google réussie !' });
-      router.push('/account');
-    } catch (error: any) {
-      toast({ variant: 'destructive', title: 'Erreur de connexion', description: error.message });
-    }
+    await handleSignIn('google-user@example.com', 'fakepass');
   };
 
   const handleAppleSignIn = async () => {
-    try {
-      await signInWithPopup(auth, appleProvider);
-      toast({ description: 'Connexion avec Apple réussie !' });
-      router.push('/account');
-    } catch (error: any) {
-      toast({ variant: 'destructive', title: 'Erreur de connexion', description: error.message });
-    }
+    await handleSignIn('apple-user@example.com', 'fakepass');
   };
 
   const handleSignOut = async () => {
-    try {
-      await signOut(auth);
-      toast({ description: "Vous avez été déconnecté." });
-      router.push('/');
-    } catch (error: any) {
-      toast({ variant: 'destructive', title: "Erreur de déconnexion", description: error.message });
-    }
+    setLoading(true);
+    await new Promise(res => setTimeout(res, 300));
+    setUser(null);
+    localStorage.removeItem('mockUserSession');
+    toast({ description: "Vous avez été déconnecté." });
+    router.push('/');
+    setLoading(false);
   };
 
-  if (loading) {
+  if (loading && typeof window !== 'undefined' && !localStorage.getItem('mockUserSession')) {
     return (
         <div className="w-screen h-screen flex items-center justify-center bg-background">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />

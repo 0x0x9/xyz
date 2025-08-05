@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ['@genkit-ai/core', '@genkit-ai/firebase']
+    serverComponentsExternalPackages: ['@genkit-ai/core']
   },
   typescript: {
     ignoreBuildErrors: true,

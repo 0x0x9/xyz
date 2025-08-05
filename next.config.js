@@ -3,7 +3,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    serverComponentsExternalPackages: ['@genkit-ai/core', '@genkit-ai/firebase']
+    serverComponentsExternalPackages: ['@genkit-ai/core']
   },
   typescript: {
     ignoreBuildErrors: true,
