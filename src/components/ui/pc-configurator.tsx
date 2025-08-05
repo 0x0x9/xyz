@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Cpu, HardDrive, MemoryStick, CircuitBoard, CheckCircle } from 'lucide-react';
+import { Cpu, HardDrive, MemoryStick, CircuitBoard } from 'lucide-react';
 
 type Option = {
     name: string;
@@ -53,33 +53,34 @@ interface PCConfiguratorProps {
     onConfigChange: (config: Configuration, newPrice: number) => void;
 }
 
-const ConfiguratorSection = ({ type, title, options, selected, onSelect }: {
+const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSelect }: {
     type: ComponentType,
     title: string,
+    icon: React.ElementType,
     options: Option[],
     selected: string,
     onSelect: (type: ComponentType, value: string) => void
 }) => {
     return (
-        <div className="space-y-6">
-            <h3 className="text-2xl font-semibold text-foreground text-center">{title}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4">
+            <div className="flex items-center gap-3">
+                <Icon className="h-6 w-6 text-muted-foreground" />
+                <h3 className="text-xl font-semibold">{title}</h3>
+            </div>
+            <div className="grid grid-cols-1 gap-3">
                 {options.map((option) => (
                     <button
                         key={option.name}
                         onClick={() => onSelect(type, option.name)}
                         className={cn(
-                            "text-left w-full p-6 rounded-2xl border-2 transition-all duration-200 flex flex-col justify-between items-start h-32",
+                            "text-left w-full p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center",
                             selected === option.name
-                                ? 'bg-primary/5 border-primary shadow-lg'
+                                ? 'bg-primary/10 border-primary shadow-sm'
                                 : 'bg-muted/30 border-transparent hover:border-border'
                         )}
                     >
-                        <div className="flex justify-between w-full items-start">
-                            <span className="font-semibold text-lg max-w-[80%]">{option.name}</span>
-                             {selected === option.name && <CheckCircle className="h-6 w-6 text-primary" />}
-                        </div>
-                        <span className="text-md text-muted-foreground mt-auto">
+                        <span className="font-medium">{option.name}</span>
+                        <span className="text-sm text-muted-foreground">
                             {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
                         </span>
                     </button>
@@ -88,7 +89,6 @@ const ConfiguratorSection = ({ type, title, options, selected, onSelect }: {
         </div>
     );
 };
-
 
 export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProps) {
     const [config, setConfig] = useState<Configuration>({
@@ -116,7 +116,7 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
     };
 
     return (
-        <div className="space-y-16">
+        <div className="space-y-12">
             <div className="text-center">
                 <h2 className="text-3xl md:text-4xl font-bold">Configurez votre Station X-1</h2>
                 <p className="text-muted-foreground mt-2 max-w-xl mx-auto">Personnalisez les composants pour qu'ils répondent parfaitement à vos besoins.</p>
@@ -126,6 +126,7 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
                     key={type}
                     type={type}
                     title={componentInfo[type].title}
+                    icon={componentInfo[type].icon}
                     options={options[type]}
                     selected={config[type]}
                     onSelect={handleSelection}
