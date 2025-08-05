@@ -2,7 +2,7 @@
 'use server';
 
 import { v4 as uuidv4 } from 'uuid';
-import type { Doc, GenerateFluxOutput, GenerateMuseOutput, ProjectPlan, GenerateIdeasOutput, VideoScript, Nexus, GeneratePaletteOutput, GeneratePersonaOutput, GenerateSoundOutput, Frame, GenerateToneOutput, GenerateCodeOutput, GenerateDeckOutput, GenerateTextOutput, GenerateVoiceOutput, OriaChatOutput, ExplainCodeOutput, DebugCodeOutput, AgendaEvent } from '@/ai/types';
+import type { Doc, GenerateFluxOutput, GenerateMuseOutput, ProjectPlan, GenerateIdeasOutput, VideoScript, Nexus, GeneratePaletteOutput, GeneratePersonaOutput, GenerateSoundOutput, Frame, GenerateToneOutput, GenerateCodeOutput, GenerateDeckOutput, GenerateTextOutput, GenerateVoiceOutput, OriaChatOutput, ExplainCodeOutput, DebugCodeOutput, AgendaEvent, ReformatTextWithPromptOutput } from '@/ai/types';
 
 // AI Flow Imports
 import { generateFrame } from '@/ai/flows/generate-frame';
@@ -283,15 +283,18 @@ export async function generateVoiceAction(prevState: any, formData: FormData): P
     }
 }
 
-export async function reformatTextAction(prevState: any, formData: FormData) {
+export async function reformatTextAction(
+    prevState: any, 
+    formData: FormData
+): Promise<{ message: string; result: ReformatTextWithPromptOutput | null; error: string | null; id: number }> {
     const text = formData.get('text') as string;
     const prompt = formData.get('prompt') as string;
     try {
         const result = await reformatTextWithPrompt({ text, prompt });
-        return { ...prevState, message: 'success', result, error: null };
+        return { ...prevState, id: prevState.id + 1, message: 'success', result, error: null };
     } catch(e: any) {
         console.error('Error in reformatTextAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message };
+        return { ...prevState, id: prevState.id + 1, message: 'error', result: null, error: e.message };
     }
 }
 

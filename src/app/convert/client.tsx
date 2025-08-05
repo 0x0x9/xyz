@@ -3,28 +3,29 @@
 
 import { useState, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { convertImageAction } from '@/app/actions';
+import { convertImageAction, reformatTextAction } from '@/app/actions';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
-import { Upload, X, FileKey, Sparkles, Download, Image as ImageIcon, Loader2, FileText, Music } from 'lucide-react';
+import { Upload, X, FileKey, Sparkles, Download, Image as ImageIcon, Loader2, FileText, Music, Copy } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import type { ConvertImageOutput } from '@/ai/types';
+import type { ConvertImageOutput, ReformatTextWithPromptOutput } from '@/ai/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { motion } from 'framer-motion';
 
 
-function SubmitButton() {
-    const { pending } = useFormStatus();
+function SubmitButton({ pending, text = "Lancer la conversion"}: { pending: boolean, text?: string }) {
     return (
         <Button type="submit" size="lg" className="w-full" disabled={pending}>
             {pending ? (
                 <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Conversion...</>
             ) : (
-                <>Lancer la conversion <Sparkles className="ml-2 h-5 w-5" /></>
+                <>{text} <Sparkles className="ml-2 h-5 w-5" /></>
             )}
         </Button>
     )
@@ -36,17 +37,6 @@ function ImageConverter() {
     
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (loadEvent) => {
-                setImagePreview(loadEvent.target?.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
     
     const { pending } = useFormStatus();
 
@@ -67,7 +57,16 @@ function ImageConverter() {
                         type="file"
                         name="imageFile"
                         accept="image/png, image/jpeg, image/webp"
-                        onChange={handleFileChange}
+                        onChange={(e) => {
+                             const file = e.target.files?.[0];
+                            if (file) {
+                                const reader = new FileReader();
+                                reader.onload = (loadEvent) => {
+                                    setImagePreview(loadEvent.target?.result as string);
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        }}
                         ref={fileInputRef}
                         className="hidden"
                     />
@@ -114,12 +113,15 @@ function ImageConverter() {
                        <Checkbox id="removeTransparency" name="removeTransparency" />
                        <Label htmlFor="removeTransparency">Supprimer la transparence (fond blanc)</Label>
                     </div>
-                     <SubmitButton />
+                     <SubmitButton pending={pending} />
                 </div>
             </div>
 
             {state.result && (
-                 <div className="pt-8">
+                 <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="pt-8">
                     <h3 className="text-lg font-semibold mb-4">Résultat de la Conversion</h3>
                     <div className="flex flex-col items-center gap-4">
                         <div className="relative w-full max-w-sm aspect-square rounded-lg border-2 border-dashed bg-muted/20">
@@ -130,10 +132,84 @@ function ImageConverter() {
                             Télécharger l'image convertie
                         </Button>
                     </div>
-                </div>
+                </motion.div>
             )}
         </form>
     )
+}
+
+function DocumentConverter() {
+    const initialState = { message: '', error: null, result: null, id: 0 };
+    const [state, formAction] = useFormState(reformatTextAction, initialState);
+    const { toast } = useToast();
+    const { pending } = useFormStatus();
+
+    const handleCopy = () => {
+        if (!state.result?.reformattedText) return;
+        navigator.clipboard.writeText(state.result.reformattedText);
+        toast({
+            title: 'Copié !',
+            description: 'Le texte transformé a été copié dans le presse-papiers.',
+        });
+    };
+    
+    return (
+        <form action={formAction} className="space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div className="space-y-2">
+                    <Label htmlFor="text-input">Texte Original</Label>
+                    <Textarea
+                        id="text-input"
+                        name="text"
+                        placeholder="Collez ou écrivez votre texte ici..."
+                        rows={15}
+                        className="bg-background/50 text-base"
+                        required
+                    />
+                </div>
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="prompt-input">Instruction de Transformation</Label>
+                        <Textarea
+                            id="prompt-input"
+                            name="prompt"
+                            placeholder="Ex: Transforme ce texte en une liste à puces. / Résume en 3 points clés. / Traduis en anglais."
+                            rows={5}
+                            className="bg-background/50 text-base"
+                            required
+                        />
+                    </div>
+                    <SubmitButton pending={pending} text="Transformer le texte" />
+                </div>
+            </div>
+             {state.result && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <Card className="glass-card bg-background/30">
+                        <CardHeader className="flex flex-row justify-between items-center">
+                            <CardTitle>Résultat Transformé</CardTitle>
+                            {state.result && (
+                                <Button variant="outline" size="icon" onClick={handleCopy}>
+                                    <Copy className="h-4 w-4" />
+                                </Button>
+                            )}
+                        </CardHeader>
+                        <CardContent className="min-h-[200px]">
+                            <Textarea
+                                readOnly
+                                value={state.result?.reformattedText || ''}
+                                rows={10}
+                                className="bg-background/50 text-base"
+                            />
+                        </CardContent>
+                    </Card>
+                </motion.div>
+            )}
+        </form>
+    );
 }
 
 const PlaceholderConverter = ({ title, comingSoon = true }: { title: string, comingSoon?: boolean }) => (
@@ -151,7 +227,7 @@ const PlaceholderConverter = ({ title, comingSoon = true }: { title: string, com
 
 export default function ConvertClient() {
   return (
-    <Card className="glass-card max-w-4xl mx-auto">
+    <Card className="glass-card max-w-5xl mx-auto">
       <CardHeader>
         <CardTitle>Convertisseur Universel</CardTitle>
         <CardDescription>
@@ -162,7 +238,7 @@ export default function ConvertClient() {
         <Tabs defaultValue="image" className="w-full">
             <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="image"><ImageIcon className="mr-2 h-4 w-4"/>Image</TabsTrigger>
-                <TabsTrigger value="document" disabled><FileText className="mr-2 h-4 w-4"/>Document</TabsTrigger>
+                <TabsTrigger value="document"><FileText className="mr-2 h-4 w-4"/>Document</TabsTrigger>
                 <TabsTrigger value="audio" disabled><Music className="mr-2 h-4 w-4"/>Audio</TabsTrigger>
                 <TabsTrigger value="3d" disabled><FileKey className="mr-2 h-4 w-4"/>3D</TabsTrigger>
             </TabsList>
@@ -170,7 +246,7 @@ export default function ConvertClient() {
                 <ImageConverter />
             </TabsContent>
             <TabsContent value="document" className="py-6">
-                 <PlaceholderConverter title="Convertisseur de Documents" />
+                 <DocumentConverter />
             </TabsContent>
              <TabsContent value="audio" className="py-6">
                  <PlaceholderConverter title="Convertisseur Audio" />
