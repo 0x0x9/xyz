@@ -3,37 +3,37 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Cpu, Sparkles, Layers, Folder, Download, Users, MonitorPlay, Check } from 'lucide-react';
+import { ArrowRight, Cpu, Sparkles, Layers, Folder, Download, Users, MonitorPlay, Check, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 const features = [
-    { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw' },
-    { title: "IA au coeur du système", description: "Oria, notre assistant IA, est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: Sparkles, videoId: 'crtsXQdtqbw' },
-    { title: "Performances sans précédent", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite pleinement la puissance de votre machine pour des rendus et des compilations ultra-rapides.", icon: Cpu, videoId: 'YUEb23FQVhA' },
-    { title: "Gestion de fichiers unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys' },
+    { title: "Un OS, Trois Mondes", description: "Basculez instantanément entre Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw' },
+    { title: "IA au Coeur du Système", description: "Oria, notre IA, est intégrée nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: Sparkles, videoId: 'crtsXQdtqbw' },
+    { title: "Performances Brutes", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite la pleine puissance de votre machine pour des rendus et compilations ultra-rapides.", icon: Cpu, videoId: 'YUEb23FQVhA' },
+    { title: "Gestion de Fichiers Unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent synchronisé avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys' },
 ];
 
 const whoIsItFor = [
     {
-        title: "Pour les créatifs",
-        description: "Une suite d'outils IA intégrés qui comprennent votre vision et vous aident à la réaliser plus rapidement que jamais.",
+        title: "Pour les Créatifs",
+        description: "Une suite d'outils IA qui comprend votre vision et vous aide à la réaliser plus rapidement que jamais.",
         icon: Sparkles,
         image: "https://images.unsplash.com/photo-1611791485440-24e82b781373?auto=format&fit=crop&w=800&q=80",
         imageHint: "artist painting digital"
     },
     {
-        title: "Pour les technophiles",
-        description: "Une architecture matérielle et logicielle ouverte, conçue pour la performance et la personnalisation, sans aucune limite.",
+        title: "Pour les Technophiles",
+        description: "Une architecture ouverte, conçue pour la performance et la personnalisation, sans aucune limite.",
         icon: Cpu,
         image: "https://images.unsplash.com/photo-1550745165-9bc0b252726a?auto=format&fit=crop&w=800&q=80",
         imageHint: "retro computer setup"
     },
     {
-        title: "Pour les équipes",
-        description: "Des outils collaboratifs natifs et une gestion de projet unifiée pour travailler en parfaite synchronisation, où que vous soyez.",
+        title: "Pour les Équipes",
+        description: "Des outils collaboratifs natifs pour travailler en parfaite synchronisation, où que vous soyez.",
         icon: Users,
         image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
         imageHint: "team collaborating office"
@@ -143,7 +143,7 @@ export default function WelcomeClient() {
             <div className="h-screen flex flex-col items-center justify-center text-center relative overflow-hidden">
                 <div className="absolute inset-0 w-full h-full">
                     <iframe
-                        src="https://www.youtube.com/embed/9Ks_dCYhX4o?si=tjzSrLtkM4EKlje-&t=9&autoplay=1&mute=1&loop=1&playlist=9Ks_dCYhX4o&controls=0&showinfo=0&autohide=1"
+                        src="https://www.youtube.com/embed/e2_bX1bB3i8?si=9w2j9L3z5K3y0-fS&autoplay=1&mute=1&loop=1&playlist=e2_bX1bB3i8&controls=0&showinfo=0&autohide=1"
                         title="Hero Video"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -165,9 +165,7 @@ export default function WelcomeClient() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="text-xl md:text-2xl lg:text-3xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
-                        L'écosystème créatif. Réinventé.
-                        <br/>
-                        Découvrez la philosophie (X)OS en ligne, ou téléchargez l'OS complet.
+                        L'interface directe entre votre imagination et la technologie.
                     </motion.p>
                 </div>
             </div>
@@ -177,8 +175,8 @@ export default function WelcomeClient() {
             <Section>
                 <AnimatedSection>
                     <div className="text-center container mx-auto px-6 lg:px-8">
-                        <h2 className="text-4xl font-bold tracking-tight text-center md:text-6xl">Conçu pour la nouvelle vague de créateurs.</h2>
-                        <p className="mt-4 text-lg text-center text-muted-foreground max-w-2xl mx-auto md:text-xl">Un écosystème qui amplifie vos idées, pas qui les contraint.</p>
+                        <h2 className="text-4xl font-bold tracking-tight text-center md:text-6xl">Créer. Vendre. Gérer. Sans limites.</h2>
+                        <p className="mt-4 text-lg text-center text-muted-foreground max-w-2xl mx-auto md:text-xl">Un écosystème conçu pour transformer une simple idée en un projet complet et monétisable, sans une seule ligne de code.</p>
                     </div>
                 </AnimatedSection>
                 <AnimatedSection>
@@ -209,8 +207,8 @@ export default function WelcomeClient() {
             <Section>
             <AnimatedSection>
                 <div className="text-center container mx-auto px-6 lg:px-8">
-                    <h2 className="text-4xl font-bold tracking-tight text-center md:text-6xl">Explorez la Gamme</h2>
-                    <p className="mt-4 text-lg text-center text-muted-foreground max-w-2xl mx-auto md:text-xl">Des workstations pensées par et pour les créatifs, en parfaite symbiose avec (X)OS.</p>
+                    <h2 className="text-4xl font-bold tracking-tight text-center md:text-6xl">Un Hardware Iconique</h2>
+                    <p className="mt-4 text-lg text-center text-muted-foreground max-w-2xl mx-auto md:text-xl">Des machines conçues en symbiose avec le logiciel, pour une expérience créative totale.</p>
                 </div>
             </AnimatedSection>
              <AnimatedSection>
@@ -244,6 +242,20 @@ export default function WelcomeClient() {
             </AnimatedSection>
       </Section>
 
+       <Section>
+            <AnimatedSection>
+                <div className="text-center container mx-auto px-6 lg:px-8">
+                     <h2 className="text-4xl font-bold tracking-tight text-center md:text-6xl">Propulsé par la Communauté</h2>
+                    <p className="mt-4 text-lg text-center text-muted-foreground max-w-2xl mx-auto md:text-xl">Chaque utilisateur rend Oria plus intelligente. Chaque création inspire les autres. Rejoignez une économie créative circulaire.</p>
+                     <Button asChild size="lg" className="mt-8 rounded-full text-lg">
+                        <Link href="/community">
+                            Rejoindre la Communauté <Heart className="ml-2 h-5 w-5" />
+                        </Link>
+                    </Button>
+                </div>
+            </AnimatedSection>
+      </Section>
+
             {/* Final CTA Section */}
             <Section>
                 <div className="container mx-auto px-6 lg:px-8 grid md:grid-cols-2 gap-8 items-center">
@@ -253,7 +265,7 @@ export default function WelcomeClient() {
                         </div>
                         <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Essayez (X)OS en ligne.</h2>
                         <p className="mt-4 text-lg text-muted-foreground max-w-xl md:mx-0 mx-auto">
-                            Plongez dans notre environnement web interactif. C'est le meilleur moyen de tester la puissance de nos outils IA et de comprendre la philosophie de (X)yzz, sans rien installer.
+                            Plongez dans notre environnement web interactif pour tester la puissance de nos outils IA, sans rien installer.
                         </p>
                         <Button size="lg" asChild className="rounded-full text-lg mt-8">
                             <Link href="/xos">
@@ -268,11 +280,11 @@ export default function WelcomeClient() {
                         </div>
                         <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Passez à la vitesse supérieure.</h2>
                         <p className="mt-4 text-lg text-muted-foreground max-w-xl md:mx-0 mx-auto">
-                           Installez le système d'exploitation complet (X)OS pour libérer des performances inégalées, une intégration matérielle profonde et une créativité sans aucune limite.
+                           Installez (X)OS sur votre machine pour libérer des performances inégalées et une créativité sans aucune limite.
                         </p>
                         <Button size="lg" variant="outline" asChild className="rounded-full text-lg mt-8">
                             <Link href="/download">
-                                Télécharger l'OS de bureau <ArrowRight className="ml-2 h-5 w-5" />
+                                Télécharger l'OS <ArrowRight className="ml-2 h-5 w-5" />
                             </Link>
                         </Button>
                     </AnimatedSection>

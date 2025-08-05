@@ -11,10 +11,10 @@ import Image from 'next/image';
 import { products } from '@/lib/products';
 
 const features = [
-    { title: "Un seul OS, trois mondes", description: "Basculez instantanément entre les environnements Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw' },
-    { title: "IA au coeur du système", description: "Oria, notre assistant IA, est intégré nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: Sparkles, videoId: 'crtsXQdtqbw' },
-    { title: "Performances sans précédent", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite pleinement la puissance de votre Station X-1 pour des rendus et des compilations ultra-rapides.", icon: Zap, videoId: 'YUEb23FQVhA' },
-    { title: "Gestion de fichiers unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent qui synchronise tout avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys' },
+    { title: "Un OS, Trois Mondes", description: "Basculez instantanément entre Windows, macOS et Linux. Profitez du meilleur de chaque système, sans redémarrage, sans compromis.", icon: Layers, videoId: 'wLiwRGYaVnw' },
+    { title: "IA au Coeur du Système", description: "Oria, notre IA, est intégrée nativement pour optimiser vos workflows, automatiser les tâches et vous suggérer des idées créatives.", icon: Sparkles, videoId: 'crtsXQdtqbw' },
+    { title: "Performances Brutes", description: "Grâce à une gestion matérielle de bas niveau, (X)OS exploite la pleine puissance de votre machine pour des rendus et compilations ultra-rapides.", icon: Zap, videoId: 'YUEb23FQVhA' },
+    { title: "Gestion de Fichiers Unifiée", description: "Accédez à tous vos fichiers, quel que soit l'OS, depuis un explorateur unique et intelligent synchronisé avec (X)Cloud.", icon: Folder, videoId: 'ozGQ2q4l4ys' },
 ];
 
 const hardwareProducts = products.filter(p => p.category === 'Matériel' && p.name.startsWith('(X)-'));
@@ -91,21 +91,21 @@ export default function FeaturesClient() {
   
   const whoIsItFor = [
     {
-        title: "Pour les créatifs",
+        title: "Pour les Créatifs",
         description: "Une suite d'outils IA intégrés qui comprennent votre vision et vous aident à la réaliser plus rapidement que jamais.",
         icon: Sparkles,
         image: "https://images.unsplash.com/photo-1611791485440-24e82b781373?auto=format&fit=crop&w=800&q=80",
         imageHint: "artist painting digital"
     },
     {
-        title: "Pour les technophiles",
+        title: "Pour les Technophiles",
         description: "Une architecture matérielle et logicielle ouverte, conçue pour la performance et la personnalisation, sans aucune limite.",
         icon: Cpu,
         image: "https://images.unsplash.com/photo-1550745165-9bc0b252726a?auto=format&fit=crop&w=800&q=80",
         imageHint: "retro computer setup"
     },
     {
-        title: "Pour les équipes",
+        title: "Pour les Équipes",
         description: "Des outils collaboratifs natifs et une gestion de projet unifiée pour travailler en parfaite synchronisation, où que vous soyez.",
         icon: Users,
         image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
@@ -118,7 +118,7 @@ export default function FeaturesClient() {
       <div className="relative h-screen">
           <div className="absolute inset-0 bg-background/80">
              <iframe
-                src="https://www.youtube.com/embed/tXFEiw1aJTw?autoplay=1&mute=1&loop=1&playlist=tXFEiw1aJTw&controls=0&showinfo=0&autohide=1&wmode=transparent"
+                src="https://www.youtube.com/embed/e2_bX1bB3i8?si=9w2j9L3z5K3y0-fS&autoplay=1&mute=1&loop=1&playlist=e2_bX1bB3i8&controls=0&showinfo=0&autohide=1"
                 title="Hero Video"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -129,7 +129,7 @@ export default function FeaturesClient() {
           </div>
           <div className="relative h-full flex flex-col items-center justify-center text-center text-white px-4">
               <h1 className="text-7xl md:text-9xl font-bold tracking-tighter"> (X)OS </h1>
-              <p className="mt-4 text-xl md:text-2xl max-w-3xl">De l'Ωméga à l'αlpha. L'harmonie entre les univers.</p>
+              <p className="mt-4 text-xl md:text-2xl max-w-3xl">L'interface directe entre votre imagination et la technologie.</p>
           </div>
       </div>
       
@@ -263,7 +263,7 @@ export default function FeaturesClient() {
                 </p>
                 <Button size="lg" variant="outline" asChild className="rounded-full text-lg mt-8">
                     <Link href="/download">
-                        Télécharger l'OS de bureau <ArrowRight className="ml-2 h-5 w-5" />
+                        Télécharger l'OS <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                 </Button>
             </AnimatedSection>
