@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Cpu, HardDrive, MemoryStick, CircuitBoard } from 'lucide-react';
+import { Cpu, HardDrive, MemoryStick, CircuitBoard, CheckCircle } from 'lucide-react';
 
 type Option = {
     name: string;
@@ -63,26 +63,26 @@ const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSel
 }) => {
     return (
         <div className="space-y-4">
-            <div className="flex items-center gap-3">
-                <Icon className="h-6 w-6 text-muted-foreground" />
-                <h3 className="text-xl font-semibold">{title}</h3>
-            </div>
-            <div className="grid grid-cols-1 gap-3">
+            <h3 className="text-2xl font-semibold">{title}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {options.map((option) => (
                     <button
                         key={option.name}
                         onClick={() => onSelect(type, option.name)}
                         className={cn(
-                            "text-left w-full p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center",
+                            "text-left w-full p-6 rounded-2xl border-2 transition-all duration-200 flex justify-between items-center glass-card",
                             selected === option.name
-                                ? 'bg-primary/10 border-primary shadow-sm'
-                                : 'bg-muted/30 border-transparent hover:border-border'
+                                ? 'border-primary shadow-lg shadow-primary/20'
+                                : 'border-border hover:border-primary/50'
                         )}
                     >
-                        <span className="font-medium">{option.name}</span>
-                        <span className="text-sm text-muted-foreground">
-                            {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Inclus'}
-                        </span>
+                        <div>
+                            <p className="font-semibold">{option.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                                {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Configuration de base'}
+                            </p>
+                        </div>
+                        {selected === option.name && <CheckCircle className="h-6 w-6 text-primary shrink-0" />}
                     </button>
                 ))}
             </div>
@@ -116,10 +116,10 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
     };
 
     return (
-        <div className="space-y-12">
+        <div className="space-y-16">
             <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-bold">Configurez votre Station X-1</h2>
-                <p className="text-muted-foreground mt-2 max-w-xl mx-auto">Personnalisez les composants pour qu'ils répondent parfaitement à vos besoins.</p>
+                <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Configurez votre Station X-1</h2>
+                <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">Personnalisez chaque composant pour créer la machine qui correspond parfaitement à vos ambitions créatives.</p>
             </div>
             {(Object.keys(options) as ComponentType[]).map((type) => (
                 <ConfiguratorSection 

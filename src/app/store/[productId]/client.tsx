@@ -2,23 +2,44 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, ArrowRight, CheckCircle } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Shield, Truck } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
 import { type Product } from '@/lib/products';
 import { PCConfigurator, type Configuration } from '@/components/ui/pc-configurator';
 import { useState } from 'react';
 import { ProductCard } from '@/components/product-card';
-import { motion } from 'framer-motion';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
+import React from 'react';
+
+const reassuranceItems = [
+    { icon: Truck, text: "Livraison gratuite et rapide" },
+    { icon: Shield, text: "Garantie constructeur 2 ans" },
+    { icon: CheckCircle, text: "Retours faciles sous 30 jours" },
+]
 
 export default function ProductClient({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
     const { addItem } = useCart();
     const { toast } = useToast();
     const [configuration, setConfiguration] = useState<Configuration | null>(null);
     const [totalPrice, setTotalPrice] = useState(product.price);
+    const [api, setApi] = React.useState<CarouselApi>()
+    const [current, setCurrent] = React.useState(0)
+    const [count, setCount] = React.useState(0)
+
+    React.useEffect(() => {
+        if (!api) return;
+    
+        setCount(api.scrollSnapList().length)
+        setCurrent(api.selectedScrollSnap() + 1)
+    
+        api.on("select", () => {
+          setCurrent(api.selectedScrollSnap() + 1)
+        })
+    }, [api])
 
     const handleAddToCart = () => {
         const productToAdd = {
@@ -41,81 +62,76 @@ export default function ProductClient({ product, relatedProducts }: { product: P
     }
 
     return (
-        <div className="container mx-auto px-4 md:px-6 py-12 md:py-24">
+        <div className="space-y-24 md:space-y-36">
             {/* Hero Section */}
-            <section className="text-center py-16 md:py-24">
+            <section className="container mx-auto px-4 md:px-6 text-center pt-16 md:pt-24">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
+                    className="max-w-4xl mx-auto"
                 >
                     <span className="text-primary font-semibold">{product.category}</span>
                     <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mt-2">{product.name}</h1>
-                    <p className="text-3xl font-bold mt-4">{totalPrice.toFixed(2)}€</p>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-4">{product.description}</p>
+                    <p className="text-3xl font-bold mt-6">{totalPrice.toFixed(2)}€</p>
                      <div className="mt-8 flex gap-4 justify-center">
                         <Button size="lg" className="rounded-full text-lg" onClick={handleAddToCart}>
                             <ShoppingCart className="mr-2 h-5 w-5" />
                             Ajouter au panier
                         </Button>
                     </div>
+                     <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
+                        {reassuranceItems.map((item, i) => (
+                            <div key={i} className="flex items-center gap-2">
+                                <item.icon className="h-4 w-4" />
+                                <span>{item.text}</span>
+                            </div>
+                        ))}
+                    </div>
                 </motion.div>
-                 <motion.div
+                <motion.div
                     initial={{ opacity: 0, y: 20, scale: 0.9 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="relative aspect-video w-full max-w-5xl mx-auto mt-12"
+                    className="relative w-full max-w-6xl mx-auto mt-12"
                 >
-                    <Image
-                        src={product.images[0]}
-                        alt={product.name}
-                        fill
-                        className="object-contain"
-                        data-ai-hint={product.hint}
-                    />
+                    <Carousel setApi={setApi} className="w-full">
+                        <CarouselContent>
+                            {product.images.map((img, index) => (
+                                <CarouselItem key={index}>
+                                    <div className="aspect-[16/10] relative">
+                                        <Image
+                                            src={img}
+                                            alt={`${product.name} - vue ${index + 1}`}
+                                            fill
+                                            className="object-contain"
+                                            data-ai-hint={product.hint}
+                                            priority={index === 0}
+                                        />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="left-4" />
+                        <CarouselNext className="right-4" />
+                    </Carousel>
+                     <div className="py-2 text-center text-sm text-muted-foreground">
+                        {current} / {count}
+                    </div>
                 </motion.div>
             </section>
             
-            {/* Features & Configurator Tabs */}
-            <section className="py-16 md:py-24">
-                <Tabs defaultValue="features" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 max-w-lg mx-auto h-12">
-                        <TabsTrigger value="features" className="text-base h-10">Caractéristiques</TabsTrigger>
-                        <TabsTrigger value="configurator" className="text-base h-10">Configurer</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="features" className="mt-12">
-                         <div className="text-center">
-                            <h2 className="text-3xl md:text-4xl font-bold">Caractéristiques Clés</h2>
-                        </div>
-                        <div className="mt-12 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
-                            {product.features?.map((feature, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, amount: 0.5 }}
-                                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                                    className="flex items-start gap-4"
-                                >
-                                    <div className="bg-primary/10 text-primary p-2 rounded-full border border-primary/20">
-                                        <CheckCircle className="h-5 w-5" />
-                                    </div>
-                                    <span>{feature}</span>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </TabsContent>
-                    <TabsContent value="configurator" className="mt-12">
-                         {product.configurable && (
-                            <PCConfigurator basePrice={product.price} onConfigChange={handleConfigChange} />
-                        )}
-                    </TabsContent>
-                </Tabs>
-            </section>
+            {/* Configurator Section */}
+            {product.configurable && (
+                <section className="container mx-auto px-4 md:px-6">
+                    <PCConfigurator basePrice={product.price} onConfigChange={handleConfigChange} />
+                </section>
+            )}
 
             {/* Related Products Section */}
             {relatedProducts.length > 0 && (
-                <section className="py-16 md:py-24">
+                <section className="container mx-auto px-4 md:px-6">
                     <div className="text-center">
                         <h2 className="text-3xl md:text-4xl font-bold">Vous pourriez aussi aimer</h2>
                     </div>
