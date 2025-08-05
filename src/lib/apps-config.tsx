@@ -2,7 +2,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star, ShoppingCart, Paintbrush, Briefcase, Phone, FileKey, Cpu } from "lucide-react";
+import { Layers, BrainCircuit, Lightbulb, Users, Mic, Film, AudioLines, Palette, CodeXml, SquareTerminal, Zap, FileText, Image as ImageIconLucide, Sparkles, FilePenLine, Folder, Presentation, LayoutTemplate, Music, Terminal, Calendar, Network, Wand2, Cloud, Guitar, Star, ShoppingCart, Paintbrush, Briefcase, Phone, FileKey, Cpu, MessageSquare } from "lucide-react";
 import OriaIconAnimation from '@/components/ui/oria-animation';
 
 // App Components (Dynamically Imported)
@@ -39,11 +39,12 @@ const LazyCareersApp = dynamic(() => import('@/components/careers-app'));
 const LazyContactApp = dynamic(() => import('@/components/contact-app'));
 const LazyFormatApp = dynamic(() => import('@/components/format-app'));
 const LazyConvertApp = dynamic(() => import('@/components/convert-app'));
+const LazyChatApp = dynamic(() => import('@/app/chat/client'));
 
 
 export const ALL_APPS_CONFIG = [
     { id: 'welcome', name: 'Bienvenue', icon: Star, component: (props: any) => <LazyWelcomeApp {...props} />, defaultPos: { x: 80, y: 20 }, defaultSize: { width: 1000, height: 750 } },
-    { id: 'oria', name: 'Oria', icon: OriaIconAnimation, component: (props: any) => <LazyOria {...props} />, defaultPos: { x: 50, y: 50}, defaultSize: { width: 450, height: 650 } },
+    { id: 'chat', name: 'PulseStudio', icon: MessageSquare, component: (props: any) => <LazyChatApp {...props} />, defaultPos: { x: 50, y: 50}, defaultSize: { width: 1200, height: 800 } },
     { id: 'cloud', name: '(X)cloud', icon: Cloud, component: (props: any) => <LazyCloud {...props} />, defaultPos: { x: 150, y: 50}, defaultSize: { width: 1200, height: 750 } },
     { id: 'explorer', name: '(X)plorer', icon: Folder, component: (props: any) => <LazyExplorer {...props} />, defaultPos: { x: 170, y: 50}, defaultSize: { width: 800, height: 550 } },
     { id: 'fusion', name: '(X)fusion', icon: Zap, component: (props: any) => <LazyFusion isPanel={true} {...props} />, defaultPos: { x: 290, y: 50}, defaultSize: { width: 1000, height: 750 } },

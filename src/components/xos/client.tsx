@@ -59,9 +59,8 @@ export default function XosClient() {
                 localStorage.removeItem('xosSession'); // Clear corrupted session
             }
 
-            // 3. Open default apps if no session and no URL launch
-            openWindow('welcome');
-            openWindow('oria');
+            // 3. Open default app if no session and no URL launch
+            openWindow('chat');
         }
     }, [isBooting, searchParams, launchAppFromUrl, setWindows, openWindow]);
 

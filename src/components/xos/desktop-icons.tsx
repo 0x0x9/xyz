@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { ALL_APPS_CONFIG } from "@/lib/apps-config.tsx";
 
 const DESKTOP_APP_IDS = [
-    'oria', 'cloud', 'explorer', 'fusion', 
+    'chat', 'cloud', 'explorer', 'fusion', 
     'flux', 'maestro', 'promptor', 'brand-identity', 'agenda', 'nexus',
     'text', 'image', 'motion', 'voice',
     'muse', 'sound',

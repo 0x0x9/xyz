@@ -54,7 +54,6 @@ export default function XosDock({ windows, onDockItemClick }: XosDockProps) {
                                 whileHover={{ y: -16, scale: 1.2 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 15 }}
                             >
-                                <DockAnimation variant={win.appId} className="w-full h-full" />
                                 {win.appId !== 'oria' && <win.icon className="w-8 h-8 text-foreground drop-shadow-lg absolute z-10" />}
 
                                 {win.isLoading && (

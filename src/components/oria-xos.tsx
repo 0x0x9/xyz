@@ -217,82 +217,12 @@ const OriaResultDisplay = ({ result, openApp }: { result: OriaChatOutput, openAp
                             case 'voice':
                                 const voiceData = data as GenerateVoiceOutput;
                                 return <audio controls src={voiceData.audioDataUri} className="w-full" />;
-                            case 'deck':
-                                const deckData = data as GenerateDeckOutput;
-                                return (
-                                    <div className="space-y-2 text-sm">
-                                        <h4 className="font-semibold flex items-center gap-2"><Presentation className="h-4 w-4" /> {deckData.title}</h4>
-                                        <p className="text-muted-foreground">{deckData.slides.length} diapositives créées.</p>
-                                        <Button onClick={() => openApp('deck', { initialResult: deckData, prompt: result.promptForTool })} size="sm" className="w-full !mt-3 bg-background/80 hover:bg-accent border text-foreground">
-                                            Ouvrir dans (X)deck <ArrowRight className="ml-auto h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                );
-                            case 'frame':
-                                const frameData = data as GenerateFrameOutput;
-                                const { htmlCode, cssCode, jsCode } = frameData;
-                                return (
-                                    <div className="space-y-2 text-sm">
-                                        <h4 className="font-semibold flex items-center gap-2"><LayoutTemplate className="h-4 w-4" /> Maquette générée</h4>
-                                        <p className="text-muted-foreground">{frameData.explanation}</p>
-                                        <Button onClick={() => openApp('editor', { initialProjectCodes: { html: htmlCode, css: cssCode, js: jsCode } })} size="sm" className="w-full !mt-3 bg-background/80 hover:bg-accent border text-foreground">
-                                            Ouvrir dans (X).alpha <ArrowRight className="ml-auto h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                );
                             case 'sound':
                                 const soundData = data as GenerateSoundOutput;
                                 return (
-                                    <div className="space-y-2 text-sm">
-                                        <h4 className="font-semibold flex items-center gap-2"><Music className="h-4 w-4" /> Son généré</h4>
-                                        <p className="text-muted-foreground italic">"{soundData.description}"</p>
-                                        <Button onClick={() => openApp('sound', { initialResult: soundData, prompt: result.promptForTool })} size="sm" className="w-full !mt-3 bg-background/80 hover:bg-accent border text-foreground">
-                                            Ouvrir dans (X)sound <ArrowRight className="ml-auto h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                );
-                             case 'motion':
-                                const motionData = data as GenerateMotionOutput;
-                                return (
-                                    <div className="space-y-2 text-sm">
-                                        <h4 className="font-semibold flex items-center gap-2"><Film className="h-4 w-4" /> {motionData.title}</h4>
-                                        <p className="text-muted-foreground">{motionData.scenes.length} scènes de script générées.</p>
-                                        <Button onClick={() => openApp('motion', { initialResult: motionData, prompt: result.promptForTool })} size="sm" className="w-full !mt-3 bg-background/80 hover:bg-accent border text-foreground">
-                                            Ouvrir dans (X)motion <ArrowRight className="ml-auto h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                );
-                            case 'nexus':
-                                const nexusData = data as GenerateNexusOutput;
-                                return (
-                                    <div className="space-y-2 text-sm">
-                                        <h4 className="font-semibold flex items-center gap-2"><Network className="h-4 w-4" /> Carte mentale sur "{nexusData.mindMap.label}"</h4>
-                                        <p className="text-muted-foreground">{nexusData.mindMap.children.length} branches principales créées.</p>
-                                        <Button onClick={() => openApp('nexus', { initialResult: nexusData, prompt: result.promptForTool })} size="sm" className="w-full !mt-3 bg-background/80 hover:bg-accent border text-foreground">
-                                            Ouvrir dans (X)nexus <ArrowRight className="ml-auto h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                );
-                            case 'promptor': // 'ideas' tool
-                                const ideasData = data as GenerateIdeasOutput;
-                                return (
-                                    <div className="space-y-2 text-sm">
-                                        <h4 className="font-semibold flex items-center gap-2"><Lightbulb className="h-4 w-4" /> Idées générées</h4>
-                                        <p className="text-muted-foreground">"{ideasData.titles[0]}" et autres pistes créatives.</p>
-                                        <Button onClick={() => openApp('promptor', { initialResult: ideasData, prompt: result.promptForTool })} size="sm" className="w-full !mt-3 bg-background/80 hover:bg-accent border text-foreground">
-                                            Ouvrir dans (X)promptor <ArrowRight className="ml-auto h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                );
-                            case 'persona':
-                                const personaData = data as GeneratePersonaOutput;
-                                return (
-                                    <div className="space-y-2 text-sm">
-                                        <h4 className="font-semibold flex items-center gap-2"><Users className="h-4 w-4" /> Personas créés</h4>
-                                        <p className="text-muted-foreground">{personaData.personas.length} profils générés, dont "{personaData.personas[0].name}".</p>
-                                        <Button onClick={() => openApp('persona', { initialResult: personaData, prompt: result.promptForTool })} size="sm" className="w-full !mt-3 bg-background/80 hover:bg-accent border text-foreground">
-                                            Ouvrir dans (X)persona <ArrowRight className="ml-auto h-4 w-4" />
-                                        </Button>
+                                    <div className="space-y-2">
+                                        <p className="text-sm italic text-muted-foreground">"{soundData.description}"</p>
+                                        <audio controls src={soundData.audioDataUri} className="w-full" />
                                     </div>
                                 );
                             case 'code':
@@ -307,11 +237,11 @@ const OriaResultDisplay = ({ result, openApp }: { result: OriaChatOutput, openAp
                                 };
                             
                                 const { language, code: cleanCode } = parseCodeFromMarkdown(codeData.code);
-
-                                return (<div className="space-y-2 text-sm">
+                                
+                                return (<div className="space-y-2 text-xs">
                                     <p className="text-muted-foreground">{codeData.explanation}</p>
                                     <div className="relative group">
-                                      <pre className="bg-black/30 p-4 rounded-lg overflow-x-auto text-foreground"><code>{cleanCode}</code></pre>
+                                      <pre className="bg-black/50 p-3 rounded-md overflow-x-auto text-foreground"><code>{cleanCode}</code></pre>
                                       <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                         {language && language !== 'plaintext' && (
                                              <Button asChild variant="ghost" size="icon" className="h-8 w-8 bg-black/40 hover:bg-black/60 text-white" title="Ouvrir dans (X).alpha">
