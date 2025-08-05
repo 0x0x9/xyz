@@ -52,6 +52,7 @@ import {
   FileKey,
   Briefcase,
   Phone,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -90,7 +91,7 @@ const ecosystemTools = [
     { href: "/hardware", label: "Station X-1", icon: Cpu, description: "La puissance matérielle ultime." },
     { href: "/cloud", label: "(X)cloud", icon: Cloud, description: "Stockage et gestion de fichiers." },
     { href: "/fusion", label: "(X)fusion", icon: Zap, description: "Combinez vos outils." },
-    { href: "/tools", label: "Suite d'Outils IA", icon: AppWindow, description: "Explorez tous nos générateurs." },
+    { href: "/tools", label: "Suite d'Outils IA", icon: Sparkles, description: "Explorez tous nos générateurs." },
     { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
 ]
 
