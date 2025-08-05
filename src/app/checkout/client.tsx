@@ -12,10 +12,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState, useEffect } from 'react';
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CheckoutClient() {
     const { items, total, itemCount, removeItem, addItem, decreaseItem } = useCart();
     const { toast } = useToast();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const shippingCost = 0; // Livraison gratuite
     const finalTotal = total + shippingCost;
@@ -95,9 +102,9 @@ export default function CheckoutClient() {
                          </CardContent>
                     </Card>
 
-                    <Button type="submit" size="lg" className="w-full text-lg h-14 rounded-xl" disabled={items.length === 0}>
+                    <Button type="submit" size="lg" className="w-full text-lg h-14 rounded-xl" disabled={itemCount === 0 || !isClient}>
                         <Lock className="mr-2 h-5 w-5" />
-                        Payer {finalTotal.toFixed(2)}€
+                        Payer {isClient ? finalTotal.toFixed(2) : '...'}€
                     </Button>
                 </form>
             </div>
@@ -109,7 +116,18 @@ export default function CheckoutClient() {
                         <CardTitle className="text-2xl">Récapitulatif</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {items.length > 0 ? (
+                        {!isClient ? (
+                            <div className="space-y-4">
+                                <div className="flex gap-4"><Skeleton className="h-16 w-16" /><div className="flex-1 space-y-2"><Skeleton className="h-4 w-3/4" /><Skeleton className="h-4 w-1/2" /></div></div>
+                                <Separator className="bg-white/10" />
+                                <div className="space-y-2">
+                                    <div className="flex justify-between"><Skeleton className="h-4 w-20" /><Skeleton className="h-4 w-16" /></div>
+                                    <div className="flex justify-between"><Skeleton className="h-4 w-24" /><Skeleton className="h-4 w-16" /></div>
+                                </div>
+                                <Separator className="bg-white/10" />
+                                <div className="flex justify-between"><Skeleton className="h-6 w-20" /><Skeleton className="h-6 w-24" /></div>
+                            </div>
+                        ) : items.length > 0 ? (
                             <div className="space-y-4">
                                 <ScrollArea className="h-64 pr-4 -mr-4">
                                     <div className="space-y-4">
