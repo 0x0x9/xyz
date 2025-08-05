@@ -29,7 +29,7 @@ export function ProductCard({ product }: { product: Product }) {
   
     return (
       <Link href={`/store/${product.id}`} className="block h-full group/link">
-         <motion.div
+        <motion.div
             className="h-full"
             whileHover={{ y: -5 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -38,28 +38,19 @@ export function ProductCard({ product }: { product: Product }) {
                 "group/card flex h-full flex-col overflow-hidden transition-all duration-300", 
                 "glass-card hover:bg-white/5 dark:hover:bg-black/10 hover:border-primary/30"
             )}>
-            <div className="relative flex-1 p-0 flex flex-col">
-                <div className="relative aspect-square bg-white/5 dark:bg-black/10">
+                <div className="relative aspect-square w-full">
                     <Image
                         src={product.images[0]}
                         alt={product.name}
                         fill
-                        className="object-contain p-4 transition-transform duration-500 group-hover/link:scale-105"
+                        className="object-contain p-8 transition-transform duration-500 group-hover/link:scale-105"
                         data-ai-hint={product.hint}
                     />
                 </div>
-                <div className="p-6 flex flex-col flex-grow">
-                    <h3 className="text-xl font-bold text-foreground">{product.name}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground flex-grow">{product.description}</p>
+                <div className="p-6 pt-0 flex flex-col flex-grow text-center">
+                    <h3 className="text-lg font-bold text-foreground">{product.name}</h3>
+                    <p className="mt-4 text-2xl font-semibold text-foreground">{product.price.toFixed(2)}€</p>
                 </div>
-            </div>
-            <div className="mt-auto flex items-center justify-between p-6 pt-0">
-                <p className="text-2xl font-semibold text-foreground">{product.price.toFixed(2)}€</p>
-                <Button size="icon" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full aspect-square transition-transform group-hover/card:scale-110" onClick={handleAddToCart}>
-                    <ShoppingCart className="h-5 w-5" />
-                    <span className="sr-only">Ajouter au panier</span>
-                </Button>
-            </div>
             </Card>
         </motion.div>
       </Link>
