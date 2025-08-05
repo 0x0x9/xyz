@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, CheckCircle, Shield, Truck } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Shield, Truck, ArrowRight } from 'lucide-react';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
 import { type Product } from '@/lib/products';
@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import React from 'react';
+import Link from 'next/link';
 
 const reassuranceItems = [
     { icon: Truck, text: "Livraison gratuite et rapide" },
@@ -63,7 +64,6 @@ export default function ProductClient({ product, relatedProducts }: { product: P
 
     return (
         <div className="space-y-24 md:space-y-36">
-            {/* Hero Section */}
             <section className="container mx-auto px-4 md:px-6 text-center pt-16 md:pt-24">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -122,14 +122,30 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                 </motion.div>
             </section>
             
-            {/* Configurator Section */}
             {product.configurable && (
                 <section className="container mx-auto px-4 md:px-6">
-                    <PCConfigurator basePrice={product.price} onConfigChange={handleConfigChange} />
+                    <PCConfigurator 
+                        basePrice={product.price} 
+                        onConfigChange={handleConfigChange} 
+                        onImageSelect={(imageIndex) => {
+                            if (product.images[imageIndex]) {
+                                // This part is for future use if we want to change main image from configurator
+                            }
+                        }}
+                    />
+                     <div className="mt-16 flex flex-col items-center gap-6 text-center">
+                        <div>
+                            <p className="text-sm text-muted-foreground">Total pour votre configuration</p>
+                            <p className="text-4xl font-bold">{totalPrice.toFixed(2)}€</p>
+                        </div>
+                        <Button size="lg" className="rounded-full text-lg" onClick={handleAddToCart}>
+                            <ShoppingCart className="mr-2 h-5 w-5" />
+                            Ajouter au panier
+                        </Button>
+                    </div>
                 </section>
             )}
 
-            {/* Related Products Section */}
             {relatedProducts.length > 0 && (
                 <section className="container mx-auto px-4 md:px-6">
                     <div className="text-center">

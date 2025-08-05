@@ -129,7 +129,7 @@ function CartSheet() {
           <span className="sr-only">Ouvrir le panier</span>
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md glass-card flex flex-col p-0">
+      <SheetContent overlayClassName="bg-black/20" className="w-full sm:max-w-md glass-card flex flex-col p-0 border-l border-white/10">
         <header className="p-6 border-b border-border">
           <h2 className="text-2xl font-semibold">Votre Panier</h2>
         </header>
@@ -201,7 +201,7 @@ function CartSheet() {
               <SheetClose asChild>
                 <Button
                   size="lg"
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+                  className="w-full"
                   asChild
                 >
                   <Link href="/checkout">Passer la commande</Link>
