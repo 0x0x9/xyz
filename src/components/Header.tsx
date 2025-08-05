@@ -91,6 +91,7 @@ const generatorTools = [
     { href: "/image", label: "Image", icon: ImageIcon },
     { href: "/muse", label: "(X)muse", icon: Guitar },
     { href: "/text", label: "Texte", icon: FileText },
+    { href: "/format", label: "(X)format", icon: FilePenLine },
     { href: "/sound", label: "(X)sound", icon: Music },
     { href: "/voice", label: "(X)voice", icon: AudioLines },
     { href: "/editor", label: "(X).alpha", icon: SquareTerminal },

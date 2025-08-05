@@ -25,3 +25,4 @@ import '@/ai/flows/debug-code.ts';
 import '@/ai/flows/explain-code.ts';
 import '@/ai/flows/refactor-code.ts';
 import '@/ai/flows/code-actions.ts';
+import '@/ai/flows/reformat-text-with-prompt.ts';
