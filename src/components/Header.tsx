@@ -11,6 +11,14 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Menu,
   X,
   ChevronDown,
@@ -53,6 +61,8 @@ import {
   Briefcase,
   Phone,
   Zap,
+  User as UserIcon,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -393,35 +403,30 @@ export function Header() {
                     <ThemeToggle />
                     <CartSheet />
                     {user ? (
-                        <>
-                            <DropdownMenuPrimitive.Root>
-                                <DropdownMenuPrimitive.Trigger asChild>
-                                <Button variant="ghost" className="rounded-full flex items-center gap-2">
-                                    <Image src={user.photoURL || 'https://placehold.co/100x100.png'} alt={user.displayName || "Avatar"} width={28} height={28} className="rounded-full" />
-                                    {user.displayName}
-                                    <ChevronDown className="h-4 w-4" />
-                                </Button>
-                                </DropdownMenuPrimitive.Trigger>
-                                <DropdownMenuPrimitive.Portal>
-                                    <DropdownMenuPrimitive.Content
-                                        align="end"
-                                        sideOffset={10}
-                                        className="w-56 glass-card p-2 z-50 outline-none"
-                                    >
-                                        <DropdownMenuPrimitive.Item asChild>
-                                            <Link href="/account" className="flex items-center w-full cursor-pointer">Mon Compte</Link>
-                                        </DropdownMenuPrimitive.Item>
-                                        <DropdownMenuPrimitive.Item asChild>
-                                             <Link href="/cloud" className="flex items-center w-full cursor-pointer">(X)cloud</Link>
-                                        </DropdownMenuPrimitive.Item>
-                                        <DropdownMenuPrimitive.Separator className="bg-border/50 my-1" />
-                                        <DropdownMenuPrimitive.Item onSelect={handleSignOut} className="w-full cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive">
-                                            Déconnexion
-                                        </DropdownMenuPrimitive.Item>
-                                    </DropdownMenuPrimitive.Content>
-                                </DropdownMenuPrimitive.Portal>
-                            </DropdownMenuPrimitive.Root>
-                        </>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="rounded-full flex items-center gap-2">
+                                <Image src={user.photoURL || 'https://placehold.co/100x100.png'} alt={user.displayName || "Avatar"} width={28} height={28} className="rounded-full" />
+                                {user.displayName}
+                                <ChevronDown className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-56 glass-card" align="end">
+                            <DropdownMenuLabel>Mon Espace</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem asChild>
+                                <Link href="/account" className="flex items-center w-full cursor-pointer"><UserIcon className="mr-2 h-4 w-4"/>Mon Compte</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <Link href="/cloud" className="flex items-center w-full cursor-pointer"><Cloud className="mr-2 h-4 w-4"/>(X)cloud</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onSelect={handleSignOut} className="w-full cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive">
+                                <LogOut className="mr-2 h-4 w-4"/>
+                                Déconnexion
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                     ) : (
                         <Button className="rounded-full" asChild>
                             <Link href="/login">Accéder à mon espace</Link>
