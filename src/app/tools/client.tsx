@@ -8,7 +8,7 @@ import {
   Wand2, BrainCircuit, Layers, Lightbulb, Calendar, Network,
   Film, Image as ImageIconLucide, AudioLines, FileText,
   Guitar, Music, SquareTerminal, LayoutTemplate, Terminal, CodeXml, ArrowRight, View,
-  FileKey, FilePenLine
+  FileKey, FilePenLine, Presentation, Users
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
