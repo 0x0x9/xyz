@@ -89,7 +89,7 @@ const communityLinks = [
 const ecosystemTools = [
     { href: "/welcome", label: "Découvrir (X)OS", icon: Star, description: "Le système d'exploitation créatif." },
     { href: "/hardware", label: "Station X-1", icon: Cpu, description: "La puissance matérielle ultime." },
-    { href: "/pulse-studio", label: "PulseStudio", icon: MessageSquare, description: "Gérez vos projets et collaborez." },
+    { href: "/xos?open=cloud", label: "(X)cloud", icon: Cloud, description: "Gérez vos projets et collaborez." },
     { href: "/fusion", label: "(X)fusion", icon: Zap, description: "Combinez vos outils." },
     { href: "/tools", label: "Suite d'Outils IA", icon: Sparkles, description: "Explorez tous nos générateurs." },
     { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
@@ -412,7 +412,7 @@ export function Header() {
                                             <Link href="/account" className="flex items-center w-full cursor-pointer">Mon Compte</Link>
                                         </DropdownMenuPrimitive.Item>
                                         <DropdownMenuPrimitive.Item asChild>
-                                             <Link href="/xos" className="flex items-center w-full cursor-pointer">PulseStudio</Link>
+                                             <Link href="/xos?open=cloud" className="flex items-center w-full cursor-pointer">(X)cloud</Link>
                                         </DropdownMenuPrimitive.Item>
                                         <DropdownMenuPrimitive.Separator className="bg-border/50 my-1" />
                                         <DropdownMenuPrimitive.Item onSelect={handleSignOut} className="w-full cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive">

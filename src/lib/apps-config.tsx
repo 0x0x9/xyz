@@ -89,8 +89,7 @@ const GoogleSlidesIcon = (props: any) => (
 
 export const ALL_APPS_CONFIG = [
     { id: 'welcome', name: 'Bienvenue', icon: Star, component: (props: any) => <LazyWelcomeApp {...props} />, defaultPos: { x: 80, y: 20 }, defaultSize: { width: 1000, height: 750 } },
-    { id: 'chat', name: 'PulseStudio', icon: MessageSquare, component: (props: any) => <LazyChatApp {...props} />, defaultPos: { x: 50, y: 50}, defaultSize: { width: 1200, height: 800 } },
-    { id: 'cloud', name: '(X)cloud', icon: Cloud, component: (props: any) => <LazyCloud {...props} />, defaultPos: { x: 150, y: 50}, defaultSize: { width: 1200, height: 750 } },
+    { id: 'cloud', name: '(X)cloud', icon: Cloud, component: (props: any) => <LazyCloud {...props} />, defaultPos: { x: 50, y: 50}, defaultSize: { width: 1200, height: 800 } },
     { id: 'explorer', name: '(X)plorer', icon: Folder, component: (props: any) => <LazyExplorer {...props} />, defaultPos: { x: 170, y: 50}, defaultSize: { width: 800, height: 550 } },
     { id: 'fusion', name: '(X)fusion', icon: Zap, component: (props: any) => <LazyFusion isPanel={true} {...props} />, defaultPos: { x: 290, y: 50}, defaultSize: { width: 1000, height: 750 } },
     { id: 'flux', name: '(X)flux', icon: Wand2, component: (props: any) => <LazyFlux {...props} />, defaultPos: { x: 530, y: 50 }, defaultSize: { width: 1000, height: 750 } },
