@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Wand2, BrainCircuit, Layers, Lightbulb, Calendar, Network,
   Film, Image as ImageIconLucide, AudioLines, FileText,
-  Guitar, Music, SquareTerminal, LayoutTemplate, Terminal, CodeXml, ArrowRight, View
+  Guitar, Music, SquareTerminal, LayoutTemplate, Terminal, CodeXml, ArrowRight, View,
+  FileKey, FilePenLine
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -21,7 +22,7 @@ const toolCategories = [
       {
         title: '(X)flux',
         description: "Transformez une idée brute en projet complet.",
-        href: '/flux',
+        href: '/xos?open=flux',
         icon: Wand2,
       },
       {
@@ -42,6 +43,12 @@ const toolCategories = [
         href: '/xos?open=promptor',
         icon: Lightbulb,
       },
+      {
+        title: '(X)persona',
+        description: "Créez des profils d'utilisateurs pour mieux cibler vos projets.",
+        href: '/xos?open=persona',
+        icon: Users,
+      },
        {
         title: '(X)agenda',
         description: "Organisez vos tâches et vos idées avec l'IA.",
@@ -58,12 +65,12 @@ const toolCategories = [
   },
   {
     id: 'content',
-    name: 'Création de Contenu',
+    name: 'Création de Contenu Visuel & Vidéo',
     description: 'Passez de l\'idée à la réalité.',
     tools: [
        {
         title: '(X)motion',
-        description: 'Générez des vidéos complètes avec IA.',
+        description: 'Générez des scripts vidéo complets, scène par scène.',
         href: '/xos?open=motion',
         icon: Film,
       },
@@ -74,73 +81,91 @@ const toolCategories = [
         icon: ImageIconLucide,
       },
       {
-        title: '(X)voice',
-        description: 'Donnez une voix à vos textes et sons.',
-        href: '/xos?open=voice',
-        icon: AudioLines,
-      },
-       {
-        title: 'Texte',
-        description: 'Rédigez des articles, scripts, et plus.',
-        href: '/xos?open=text',
-        icon: FileText,
+        title: '(X)deck',
+        description: 'Construisez des présentations percutantes sur un sujet.',
+        href: '/xos?open=deck',
+        icon: Presentation,
       },
     ],
   },
   {
     id: 'music',
-    name: 'Musique & Son',
-    description: 'Composez, créez et trouvez votre style.',
+    name: 'Audio, Voix & Musique',
+    description: 'Composez, générez et trouvez votre style sonore.',
     tools: [
        {
         title: '(X)muse',
-        description: "Trouvez l'inspiration et écrivez vos prochains textes.",
+        description: "Votre partenaire pour l'écriture de textes et la recherche de styles musicaux.",
         href: '/xos?open=muse',
         icon: Guitar,
       },
        {
         title: '(X)sound',
-        description: 'Générez des effets sonores et des ambiances.',
+        description: 'Générez des effets sonores et des ambiances sur demande.',
         href: '/xos?open=sound',
         icon: Music,
+      },
+       {
+        title: '(X)voice',
+        description: 'Donnez une voix de haute qualité à n\'importe quel texte.',
+        href: '/xos?open=voice',
+        icon: AudioLines,
       },
     ],
   },
   {
     id: 'design',
-    name: 'Design & Dev',
-    description: 'Peaufinez et construisez des solutions.',
+    name: 'Design, Dev & Code',
+    description: 'Peaufinez et construisez des solutions techniques et visuelles.',
     tools: [
       {
         title: '(X).alpha',
-        description: 'Éditez, générez, débuggez et prévisualisez votre code.',
+        description: 'L\'éditeur de code complet, assisté par IA pour générer, expliquer et débugger.',
         href: '/xos?open=editor',
         icon: SquareTerminal,
       },
       {
+        title: '(X)code',
+        description: 'Un générateur de snippets de code rapides pour tous les langages.',
+        href: '/xos?open=code',
+        icon: CodeXml,
+      },
+      {
         title: '(X)frame',
-        description: 'Esquissez des interfaces et des wireframes.',
+        description: 'Esquissez des interfaces et des wireframes fonctionnels en code.',
         href: '/xos?open=frame',
         icon: LayoutTemplate,
       },
       {
         title: '(X)reality',
-        description: 'Prévisualisez vos créations en réalité augmentée et virtuelle.',
-        href: '/reality',
+        description: 'Prévisualisez vos modèles 3D en réalité augmentée et virtuelle.',
+        href: '/xos?open=reality',
         icon: View,
       },
-    ]
+       {
+        title: '(X)term',
+        description: 'Une interface de ligne de commande pour interagir avec vos outils.',
+        href: '/xos?open=terminal',
+        icon: Terminal,
+      },
+    ],
   },
-  {
-    id: 'lab',
-    name: 'Le Laboratoire',
-    description: 'Testez nos outils expérimentaux.',
+   {
+    id: 'utilities',
+    name: 'Utilitaires IA',
+    description: 'Des outils pratiques pour accélérer vos tâches quotidiennes.',
     tools: [
+       {
+        title: '(X)format',
+        description: 'Reformatez et réécrivez n\'importe quel texte selon vos instructions.',
+        href: '/xos?open=format',
+        icon: FilePenLine,
+      },
       {
-        title: '(X)code',
-        description: 'Générez et exécutez du code dans un environnement sécurisé.',
-        href: '/xos?open=code',
-        icon: CodeXml,
+        title: '(X)change',
+        description: 'Un convertisseur de fichiers universel (images, documents, etc.).',
+        href: '/xos?open=convert',
+        icon: FileKey,
       },
     ]
   },
