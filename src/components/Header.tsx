@@ -52,6 +52,7 @@ import {
   FileKey,
   Briefcase,
   Phone,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -88,7 +89,7 @@ const communityLinks = [
 const ecosystemTools = [
     { href: "/welcome", label: "Découvrir (X)OS", icon: Star, description: "Le système d'exploitation créatif." },
     { href: "/hardware", label: "Station X-1", icon: Cpu, description: "La puissance matérielle ultime." },
-    { href: "/cloud", label: "(X)cloud", icon: Cloud, description: "Stockage et gestion de fichiers." },
+    { href: "/pulse-studio", label: "PulseStudio", icon: MessageSquare, description: "Gérez vos projets et collaborez." },
     { href: "/fusion", label: "(X)fusion", icon: Zap, description: "Combinez vos outils." },
     { href: "/tools", label: "Suite d'Outils IA", icon: Sparkles, description: "Explorez tous nos générateurs." },
     { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
@@ -393,12 +394,33 @@ export function Header() {
                     <CartSheet />
                     {user ? (
                         <>
-                            <Button variant="ghost" className="rounded-full" asChild>
-                            <Link href="/account">Mon Compte</Link>
-                            </Button>
-                            <Button variant="outline" className="rounded-full" onClick={handleSignOut}>
-                            Déconnexion
-                            </Button>
+                            <DropdownMenuPrimitive.Root>
+                                <DropdownMenuPrimitive.Trigger asChild>
+                                <Button variant="ghost" className="rounded-full flex items-center gap-2">
+                                    <Image src={user.photoURL || 'https://placehold.co/100x100.png'} alt={user.displayName || "Avatar"} width={28} height={28} className="rounded-full" />
+                                    {user.displayName}
+                                    <ChevronDown className="h-4 w-4" />
+                                </Button>
+                                </DropdownMenuPrimitive.Trigger>
+                                <DropdownMenuPrimitive.Portal>
+                                    <DropdownMenuPrimitive.Content
+                                        align="end"
+                                        sideOffset={10}
+                                        className="w-56 glass-card p-2 z-50 outline-none"
+                                    >
+                                        <DropdownMenuPrimitive.Item asChild>
+                                            <Link href="/account" className="flex items-center w-full cursor-pointer">Mon Compte</Link>
+                                        </DropdownMenuPrimitive.Item>
+                                        <DropdownMenuPrimitive.Item asChild>
+                                             <Link href="/xos" className="flex items-center w-full cursor-pointer">PulseStudio</Link>
+                                        </DropdownMenuPrimitive.Item>
+                                        <DropdownMenuPrimitive.Separator className="bg-border/50 my-1" />
+                                        <DropdownMenuPrimitive.Item onSelect={handleSignOut} className="w-full cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive">
+                                            Déconnexion
+                                        </DropdownMenuPrimitive.Item>
+                                    </DropdownMenuPrimitive.Content>
+                                </DropdownMenuPrimitive.Portal>
+                            </DropdownMenuPrimitive.Root>
                         </>
                     ) : (
                         <Button className="rounded-full" asChild>
@@ -510,12 +532,12 @@ export function Header() {
                         </div>
                         <CartSheet />
                         {user ? (
-                        <>
-                            <Button asChild variant="outline" className="text-lg h-12 rounded-full">
-                                <Link href="/account">Mon Compte</Link>
-                            </Button>
-                            <Button onClick={handleSignOut} className="text-lg h-12 rounded-full">Déconnexion</Button>
-                        </>
+                            <div className='flex flex-col gap-4'>
+                                <Button asChild variant="outline" className="text-lg h-12 rounded-full">
+                                    <Link href="/account">Mon Compte</Link>
+                                </Button>
+                                <Button onClick={handleSignOut} className="text-lg h-12 rounded-full">Déconnexion</Button>
+                            </div>
                         ) : (
                             <Button className="text-lg h-12 rounded-full" asChild>
                                 <Link href="/login">Accéder à mon espace</Link>
