@@ -91,7 +91,7 @@ const navLinks = [
 ];
 
 const discoverLinks = [
-    { href: "/features", label: "(X)OS & Vision", icon: Home, description: "Découvrez notre OS unifié révolutionnaire." },
+    { href: "/welcome", label: "(X)OS & Vision", icon: Home, description: "Découvrez notre OS unifié révolutionnaire." },
     { href: "/tools", label: "Suite d'Outils IA", icon: Sparkles, description: "Un arsenal créatif complet à votre service." },
     { href: "/hardware", label: "Matériel", icon: Cpu, description: "Les machines conçues pour la performance créative." },
     { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
@@ -103,42 +103,6 @@ const communityLinks = [
     { href: "/gallery", label: "Galerie (X)hibit", icon: Paintbrush, description: "Explorez les créations de la communauté." },
     { href: "/blog", label: "Blog (X)press", icon: BookOpen, description: "Tutoriels, analyses et inspiration." },
 ]
-
-const ecosystemTools = [
-    { href: "/welcome", label: "Découvrir (X)OS", icon: Star, description: "Le système d'exploitation créatif." },
-    { href: "/hardware", label: "Station X-1", icon: Cpu, description: "La puissance matérielle ultime." },
-    { href: "/cloud", label: "(X)cloud", icon: Cloud, description: "Gérez vos projets et collaborez." },
-    { href: "/fusion", label: "(X)fusion", icon: Zap, description: "Combinez vos outils." },
-    { href: "/tools", label: "Suite d'Outils IA", icon: Sparkles, description: "Explorez tous nos générateurs." },
-    { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
-]
-
-const generatorTools = [
-    { href: "/flux", label: "(X)flux", icon: Wand2 },
-    { href: "/maestro", label: "Maestro", icon: BrainCircuit },
-    { href: "/promptor", label: "(X)promptor", icon: Lightbulb },
-    { href: "/brand-identity", label: '(X)brand', icon: Layers },
-    { href: "/persona", label: '(X)persona', icon: Users },
-    { href: "/nexus", label: '(X)nexus', icon: Network },
-    { href: "/agenda", label: '(X)agenda', icon: Calendar },
-    { href: "/deck", label: "(X)deck", icon: Presentation },
-    { href: "/text", label: "Texte", icon: FileText },
-    { href: "/image", label: "Image", icon: ImageIconLucide },
-    { href: "/motion", label: "(X)motion", icon: Film },
-    { href: "/muse", label: "(X)muse", icon: Guitar },
-    { href: "/sound", label: "(X)sound", icon: Music },
-    { href: "/voice", label: "(X)voice", icon: AudioLines },
-    { href: "/editor", label: "(X).alpha", icon: SquareTerminal },
-    { href: "/frame", label: "(X)frame", icon: LayoutTemplate },
-    { href: "/terminal", label: "(X)term", icon: Terminal },
-    { href: "/code", label: '(X)code', icon: CodeXml },
-    { href: "/format", label: "(X)format", icon: FilePenLine },
-    { href: "/convert", label: "(X)change", icon: FileKey },
-    { href: "/reality", label: "(X)reality", icon: View },
-    { href: "/palette", label: '(X)palette', icon: Palette },
-    { href: "/tone", label: '(X)tone', icon: Mic },
-]
-
 
 function CartSheet() {
   const { items, removeItem, total, itemCount, addItem, decreaseItem } =
@@ -261,28 +225,6 @@ function CartSheet() {
   );
 }
 
-const EcosystemLink = ({ href, label, description, icon: Icon }: { href: string; label: string; description: string; icon: React.ElementType }) => (
-    <motion.div whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400, damping: 15 }}>
-        <Link href={href} className="group flex items-start gap-3 p-3 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none">
-            <div className="p-2 rounded-lg border bg-primary/10 border-primary/20 mt-1">
-                <Icon className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-                <p className="font-semibold text-foreground text-sm">{label}</p>
-                <p className="text-xs text-muted-foreground">{description}</p>
-            </div>
-        </Link>
-    </motion.div>
-);
-
-const GeneratorLink = ({ href, label, icon: Icon }: { href: string; label: string; icon: React.ElementType }) => (
-    <Link href={href} className="group flex items-center gap-2 p-1.5 rounded-md hover:bg-foreground/10 transition-colors duration-200">
-        <Icon className="h-4 w-4 text-accent" />
-        <span className="text-sm text-foreground">{label}</span>
-    </Link>
-);
-
-
 const DropdownMenuLinkItem = ({ href, label, description, icon: Icon }: { href: string; label: string; description?: string; icon: React.ElementType }) => (
     <DropdownMenuPrimitive.Item asChild>
         <Link
@@ -357,79 +299,21 @@ export function Header() {
               <Link href="/store">Boutique</Link>
           </Button>
           
-          <DropdownMenuPrimitive.Root>
-            <DropdownMenuPrimitive.Trigger asChild>
-              <Button
-                variant="ghost"
-                className="text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full h-9 px-4"
-              >
-                Écosystème <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuPrimitive.Trigger>
-            <DropdownMenuPrimitive.Portal>
-              <DropdownMenuPrimitive.Content
-                align="center"
-                sideOffset={10}
-                className="w-[500px] glass-card p-4 z-50 outline-none"
-              >
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="grid grid-cols-12 gap-4"
-                >
-                  <div className="col-span-5 space-y-1">
-                     <h3 className="px-3 text-sm font-semibold text-muted-foreground mb-1">Plateforme</h3>
-                     <div className="flex flex-col">
-                       {ecosystemTools.map((tool) => (
-                          <EcosystemLink key={tool.href} {...tool} />
-                       ))}
-                     </div>
-                  </div>
-                  <Separator orientation="vertical" className="h-auto" />
-                  <div className="col-span-6 space-y-2">
-                     <h3 className="px-2 text-sm font-semibold text-muted-foreground mb-2">Générateurs IA</h3>
-                     <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-                        {generatorTools.map((tool) => (
-                            <GeneratorLink key={tool.href} {...tool} />
-                        ))}
-                     </div>
-                  </div>
-                </motion.div>
-              </DropdownMenuPrimitive.Content>
-            </DropdownMenuPrimitive.Portal>
-          </DropdownMenuPrimitive.Root>
+          <Button
+              variant="ghost"
+              className="text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full h-9 px-4"
+              asChild
+            >
+              <Link href="/tools">Écosystème</Link>
+          </Button>
           
-           <DropdownMenuPrimitive.Root>
-            <DropdownMenuPrimitive.Trigger asChild>
-              <Button
+           <Button
                 variant="ghost"
                 className="text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full h-9 px-4"
+                asChild
               >
-                Communauté <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuPrimitive.Trigger>
-            <DropdownMenuPrimitive.Portal>
-              <DropdownMenuPrimitive.Content
-                align="center"
-                sideOffset={10}
-                className="w-80 glass-card p-2 z-50 outline-none"
-              >
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="flex flex-col gap-1"
-                >
-                  {communityLinks.map((link) => (
-                     <DropdownMenuLinkItem key={link.href} {...link} />
-                  ))}
-                </motion.div>
-              </DropdownMenuPrimitive.Content>
-            </DropdownMenuPrimitive.Portal>
-          </DropdownMenuPrimitive.Root>
+                <Link href="/community">Communauté</Link>
+          </Button>
 
         </nav>
         <div className="flex items-center gap-2">
@@ -531,52 +415,20 @@ export function Header() {
                         >
                           Boutique
                         </Link>
-                        <AccordionItem value="community" className="border-b-0">
-                            <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
-                                Communauté
-                            </AccordionTrigger>
-                            <AccordionContent className="pl-4">
-                                <div className="flex flex-col gap-1">
-                                    {communityLinks.map((link) => (
-                                        <Link key={link.href} href={link.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
-                                            <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
-                                                <link.icon className="h-5 w-5 text-accent" />
-                                            </div>
-                                            <span className="text-lg font-medium">{link.label}</span>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="tools" className="border-b-0">
-                        <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
-                            Écosystème
-                        </AccordionTrigger>
-                        <AccordionContent className="pl-4">
-                            <div className="flex flex-col gap-1 mt-2">
-                                <h4 className="font-semibold text-muted-foreground mb-2">Plateforme</h4>
-                                {ecosystemTools.map((tool) => (
-                                    <Link key={tool.href} href={tool.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
-                                        <div className="p-1.5 bg-primary/10 rounded-md border border-primary/20">
-                                        <tool.icon className="h-5 w-5 text-primary" />
-                                        </div>
-                                        <span className="text-lg font-medium">{tool.label}</span>
-                                    </Link>
-                                ))}
-                            </div>
-                            <div className="flex flex-col gap-1 mt-4">
-                                <h4 className="font-semibold text-muted-foreground mb-2">Générateurs IA</h4>
-                                {generatorTools.map((tool) => (
-                                    <Link key={tool.href} href={tool.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
-                                        <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
-                                            <tool.icon className="h-5 w-5 text-accent" />
-                                        </div>
-                                        <span className="text-lg font-medium">{tool.label}</span>
-                                    </Link>
-                                ))}
-                            </div>
-                        </AccordionContent>
-                        </AccordionItem>
+                        <Link
+                          href="/tools"
+                          onClick={() => setIsSheetOpen(false)}
+                          className="text-2xl font-medium hover:text-accent transition-colors py-4 flex items-center"
+                        >
+                          Écosystème
+                        </Link>
+                        <Link
+                          href="/community"
+                          onClick={() => setIsSheetOpen(false)}
+                          className="text-2xl font-medium hover:text-accent transition-colors py-4 flex items-center"
+                        >
+                          Communauté
+                        </Link>
                   </Accordion>
                 </nav>
               </ScrollArea>
