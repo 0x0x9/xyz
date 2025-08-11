@@ -115,9 +115,9 @@ function StickyScrollSection() {
                                         frameBorder="0"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
-                                        className="w-full h-full object-cover scale-[1.5]"
+                                        className="w-full h-full object-cover"
                                     ></iframe>
-                                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+                                    <div className="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
                                 </div>
                                 <div className="relative h-full flex flex-col items-center justify-center text-center text-white p-8">
                                     <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 mb-6">
@@ -150,7 +150,7 @@ export default function WelcomeClient() {
                         allowFullScreen
                         className="w-full h-full object-cover"
                     ></iframe>
-                     <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+                     <div className="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
                 </div>
                 <div className="relative z-10 px-4 space-y-4">
                     <motion.h1 
