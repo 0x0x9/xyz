@@ -63,6 +63,7 @@ import {
   Zap,
   User as UserIcon,
   LogOut,
+  Heart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -109,7 +110,7 @@ const generatorTools = [
     { href: "/flux", label: "(X)flux", icon: Wand2 },
     { href: "/maestro", label: "Maestro", icon: BrainCircuit },
     { href: "/promptor", label: "(X)promptor", icon: Lightbulb },
-    { href: "/brand-identity", label: "(X)brand", icon: Layers },
+    { href: "/brand-identity", label: '(X)brand', icon: Layers },
     { href: "/persona", label: '(X)persona', icon: Users },
     { href: "/nexus", label: '(X)nexus', icon: Network },
     { href: "/agenda", label: '(X)agenda', icon: Calendar },
@@ -419,6 +420,9 @@ export function Header() {
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
                                 <Link href="/cloud" className="flex items-center w-full cursor-pointer"><Cloud className="mr-2 h-4 w-4"/>(X)cloud</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <Link href="/chat" className="flex items-center w-full cursor-pointer"><Heart className="mr-2 h-4 w-4"/>Pulse</Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onSelect={handleSignOut} className="w-full cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive">
