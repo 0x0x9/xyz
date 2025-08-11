@@ -143,7 +143,7 @@ export default function WelcomeClient() {
             <div className="h-screen flex flex-col items-center justify-center text-center relative overflow-hidden">
                 <div className="absolute inset-0 w-full h-full">
                     <iframe
-                        src="https://www.youtube.com/embed/YUEb23FQVhA?autoplay=1&mute=1&loop=1&playlist=YUEb23FQVhA&controls=0&showinfo=0&autohide=1"
+                        src="https://www.youtube.com/embed/SqJGQ25sc8Q?autoplay=1&mute=1&loop=1&playlist=SqJGQ25sc8Q&controls=0&showinfo=0&autohide=1"
                         title="Hero Video"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
