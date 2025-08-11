@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { generateLightMoodAction, generateMoodboardAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
