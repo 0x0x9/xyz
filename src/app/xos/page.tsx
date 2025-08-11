@@ -8,18 +8,16 @@ const XosClient = dynamic(() => import('@/components/xos/client'), {
     loading: () => <div className="w-full h-full" />,
 });
 
-const XOSLoader = () => {
-    return <XosClient />;
-}
-
 const XosPage = () => {
     return (
-       <>
-        <Suspense>
-            <XOSLoader />
-        </Suspense>
-       </>
+       <div className="w-full h-full">
+            <Suspense fallback={null}>
+                <XosClient />
+            </Suspense>
+       </div>
     );
 }
 
 export default XosPage;
+
+    

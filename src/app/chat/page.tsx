@@ -1,7 +1,9 @@
 import MessengerClient from './client';
 
-export default function CloudPage() {
+export default function PulsePage() {
     return (
         <MessengerClient />
     );
 }
+
+    

@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader } from 'lucide-react';
+import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader, GitBranch, Share2, UploadCloud, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { OriaHistoryMessage, ProjectPlan, OriaChatOutput, Doc } from '@/ai/types';
+import type { OriaHistoryMessage, ProjectPlan, Doc } from '@/ai/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import { oriaChatAction, deleteDocumentAction, listDocumentsAction } from '@/app/actions';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -23,6 +23,8 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from '@/components/auth-component';
 import { useToast } from '@/hooks/use-toast';
+import { formatDistanceToNow } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 
 // Types
@@ -31,6 +33,102 @@ type ChatPartner = {
     displayName: string | null;
     photoURL: string | null;
 };
+
+const generationPatterns: Record<string, { icon: React.ElementType, text: string }> = {
+    'maestro': { icon: BrainCircuit, text: 'a généré le plan' },
+    'deck-': { icon: Presentation, text: 'a créé la présentation' },
+};
+
+const getGenerationInfo = (docName: string): { icon: React.ElementType; text: string } | null => {
+    for (const key in generationPatterns) {
+        if (docName.startsWith(key)) {
+            return generationPatterns[key];
+        }
+    }
+    return null;
+};
+
+type ActivityType = 'CREATED' | 'UPDATED' | 'SHARED' | 'DELETED' | 'GENERATED';
+
+type Activity = {
+    id: string;
+    type: ActivityType;
+    doc: Doc;
+    timestamp: Date;
+    generationInfo?: { icon: React.ElementType; text: string } | null;
+};
+
+const actionInfoMap = {
+    GENERATED: { text: 'génération', icon: Sparkles, color: 'text-purple-400' },
+    CREATED: { text: 'création', icon: UploadCloud, color: 'text-green-400' },
+    UPDATED: { text: 'modification', icon: Pencil, color: 'text-blue-400' },
+    SHARED: { text: 'partage', icon: Share2, color: 'text-indigo-400' },
+    DELETED: { text: 'suppression', icon: Trash2, color: 'text-red-400' }
+};
+
+const RecentActivityFeed = ({ docs, loading }: { docs: Doc[], loading: boolean }) => {
+    const activities = useMemo((): Activity[] => {
+        if (!docs) return [];
+        return docs
+            .filter(doc => doc.updatedAt)
+            .map(doc => {
+                const generationInfo = getGenerationInfo(doc.name.split('/').pop() || '');
+                const isCreation = doc.createdAt && doc.updatedAt ? (new Date(doc.updatedAt).getTime() - new Date(doc.createdAt).getTime() < 2000) : false;
+                
+                let type: ActivityType = 'UPDATED';
+                if (isCreation) {
+                    type = generationInfo ? 'GENERATED' : 'CREATED';
+                }
+                
+                return {
+                    id: doc.id, type, doc, timestamp: new Date(doc.updatedAt!), generationInfo,
+                };
+            })
+            .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+            .slice(0, 5); // Limit to 5 recent activities
+    }, [docs]);
+
+    if (loading) {
+        return (
+            <div className="space-y-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="flex items-center gap-3 p-2">
+                        <Skeleton className="h-6 w-6 rounded-full" />
+                        <div className="flex-1 space-y-1.5"><Skeleton className="h-3 w-4/5" /><Skeleton className="h-2 w-1/3" /></div>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
+    return (
+        <div className="p-2 space-y-2">
+            <h3 className="px-3 text-xs font-semibold uppercase text-muted-foreground mb-1">Activité Récente</h3>
+            {activities.length > 0 ? (
+                activities.map(activity => {
+                    const action = actionInfoMap[activity.type] || actionInfoMap.UPDATED;
+                    const Icon = action.icon;
+                    return (
+                        <div key={activity.id} className="p-3 rounded-xl flex items-start gap-3 text-sm">
+                            <Icon className={cn("w-4 h-4 mt-0.5 shrink-0", action.color)} />
+                            <div>
+                                <p className="text-foreground/90 leading-tight">
+                                    <span className="font-semibold">{activity.doc.name.split('/').pop()}</span>
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                    {action.text} • {formatDistanceToNow(activity.timestamp, { addSuffix: true, locale: fr })}
+                                </p>
+                            </div>
+                        </div>
+                    );
+                })
+            ) : (
+                <p className="text-center text-xs text-muted-foreground p-4">Aucune activité récente.</p>
+            )}
+        </div>
+    );
+};
+
 
 // Sub-components
 function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, projects, loading }: { activeProject: ProjectPlan | null, setActiveProject: (project: ProjectPlan | null) => void, onProjectDeleted: (deletedId: string) => void, projects: ProjectPlan[], loading: boolean }) {
@@ -351,7 +449,7 @@ export default function MessengerClient() {
     const { user } = useAuth();
     
     const [loading, setLoading] = useState(true);
-    const [projects, setProjects] = useState<ProjectPlan[]>([]);
+    const [docs, setDocs] = useState<Doc[]>([]);
         
     const [activeProject, setActiveProject] = useState<ProjectPlan | null>(null);
     const [showSidebar, setShowSidebar] = useState(true);
@@ -362,28 +460,12 @@ export default function MessengerClient() {
         photoURL: null,
     };
 
-    const fetchProjects = useCallback(async () => {
+    const fetchDocs = useCallback(async () => {
         setLoading(true);
         try {
-            const result: Doc[] = await listDocumentsAction();
-            const maestroProjects = result
-                .filter(doc => doc.name.startsWith('maestro-'))
-                .map(doc => {
-                    // This is a simplified mock. In a real app, you'd fetch and parse file content.
-                    return {
-                        id: doc.id,
-                        title: doc.name.replace('maestro-', '').replace('.json', '').replace(/_/g, ' '),
-                        creativeBrief: 'Un brief créatif inspirant pour ce projet génial.',
-                        tasks: [
-                            { title: 'Définir la vision', description: 'Clarifier les objectifs', category: 'Stratégie', duration: '1 jour', checklist: [{text: 'Faire un brainstorming', completed: true}, {text: 'Valider le concept', completed: false}]},
-                            { title: 'Créer le contenu', description: 'Produire les livrables', category: 'Production', duration: '5 jours', checklist: [{text: 'Rédiger les textes', completed: false}, {text: 'Créer les visuels', completed: false}]}
-                        ],
-                        events: [],
-                        imagePrompts: []
-                    } as ProjectPlan;
-                });
-            setProjects(maestroProjects);
-        } catch (error) {
+            const result = await listDocumentsAction();
+            setDocs(result || []);
+        } catch (error: any) {
             toast({ variant: 'destructive', title: 'Erreur', description: 'Impossible de charger les projets.'});
         } finally {
             setLoading(false);
@@ -391,27 +473,47 @@ export default function MessengerClient() {
     }, [toast]);
     
     useEffect(() => {
-        fetchProjects();
-    }, [fetchProjects]);
+        fetchDocs();
+    }, [fetchDocs]);
+
+    const projects = useMemo(() => {
+        return docs
+            .filter(doc => doc.name.startsWith('maestro-') && doc.mimeType === 'application/json')
+            .map(doc => {
+                // In a real app, you would fetch and parse the content. Here we simulate.
+                return {
+                    id: doc.id,
+                    title: doc.name.replace('maestro-', '').replace('.json', '').replace(/_/g, ' '),
+                    creativeBrief: 'Un brief créatif inspirant pour ce projet génial.',
+                    tasks: [
+                        { title: 'Définir la vision', description: 'Clarifier les objectifs', category: 'Stratégie & Recherche', duration: '1 jour', checklist: [{text: 'Faire un brainstorming', completed: Math.random() > 0.5}, {text: 'Valider le concept', completed: Math.random() > 0.5}]},
+                        { title: 'Créer le contenu', description: 'Produire les livrables', category: 'Création & Production', duration: '5 jours', checklist: [{text: 'Rédiger les textes', completed: false}, {text: 'Créer les visuels', completed: false}]}
+                    ],
+                    events: [],
+                    imagePrompts: []
+                } as ProjectPlan;
+            });
+    }, [docs]);
+
     
     const onProjectDeleted = (deletedId: string) => {
         if (activeProject && activeProject.id === deletedId) {
             setActiveProject(null);
         }
-        setProjects(prev => prev.filter(p => p.id !== deletedId));
+        setDocs(prev => prev.filter(p => p.id !== deletedId));
     };
     
     const updateActiveProject = (updatedProject: ProjectPlan) => {
         setActiveProject(updatedProject);
-        setProjects(prevProjects => prevProjects.map(p => p.id === updatedProject.id ? updatedProject : p));
+        // This part is for local state update. A real app would persist this.
     }
 
     const MainContent = () => {
         if (!activeProject) {
             return (
                 <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground p-8">
-                    <MessageSquare className="mx-auto h-20 w-20 text-muted-foreground/30" />
-                    <p className="mt-6 text-xl font-semibold text-foreground">Bienvenue sur (X)cloud</p>
+                    <BrainCircuit className="mx-auto h-20 w-20 text-muted-foreground/30" />
+                    <p className="mt-6 text-xl font-semibold text-foreground">Bienvenue sur Pulse</p>
                     <p className="mt-2">Sélectionnez un projet pour commencer à le gérer.</p>
                 </div>
             );
@@ -439,7 +541,7 @@ export default function MessengerClient() {
                     <ProjectPlanView project={activeProject} setProject={updateActiveProject} />
                 </TabsContent>
                 <TabsContent value="files" className="flex-1 min-h-0 -mt-2 p-1">
-                    <DocManager onDataChange={fetchProjects} />
+                    <DocManager onDataChange={fetchDocs} />
                 </TabsContent>
                 <TabsContent value="chat" className="flex-1 min-h-0 -mt-2">
                     <OriaChatWindow partner={oriaPartner} onBack={() => setActiveProject(null)} activeProject={activeProject} />
@@ -474,10 +576,12 @@ export default function MessengerClient() {
                                         </Avatar>
                                         <div className="overflow-hidden">
                                             <p className="font-semibold truncate text-sm">{user?.displayName || 'Utilisateur'}</p>
-                                            <p className="text-xs text-muted-foreground">Espace de travail</p>
+                                            <p className="text-xs text-muted-foreground">Pulse</p>
                                         </div>
                                     </div>
                                     <ProjectTracker activeProject={activeProject} setActiveProject={setActiveProject} onProjectDeleted={onProjectDeleted} projects={projects} loading={loading} />
+                                    <div className="my-2 h-px bg-border"/>
+                                    <RecentActivityFeed docs={docs} loading={loading} />
                                 </ScrollArea>
                             </motion.div>
                         )}
@@ -491,5 +595,7 @@ export default function MessengerClient() {
         </div>
     );
 }
+
+    
 
     
