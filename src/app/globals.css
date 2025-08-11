@@ -69,6 +69,44 @@
   }
 }
 
+@layer components {
+    /* Custom styles for blog post content */
+    .article-content {
+        @apply text-lg text-foreground/80;
+    }
+    .article-content h2 {
+        @apply text-3xl md:text-4xl font-bold text-foreground mt-16 mb-6 pb-4 border-b border-border;
+    }
+    .article-content h3 {
+        @apply text-2xl md:text-3xl font-bold text-foreground mt-12 mb-4;
+    }
+    .article-content p {
+        @apply leading-relaxed my-6;
+    }
+    .article-content a {
+        @apply text-primary font-medium underline-offset-4 hover:underline;
+    }
+    .article-content blockquote {
+        @apply border-l-4 border-primary pl-6 my-8 text-muted-foreground italic;
+    }
+    .article-content ul {
+        @apply list-disc list-outside pl-6 my-6 space-y-2;
+    }
+    .article-content li {
+        @apply pl-2;
+    }
+    .article-content li::marker {
+      @apply text-primary;
+    }
+    .article-content strong {
+        @apply font-semibold text-foreground;
+    }
+    .article-content code {
+        @apply bg-muted text-foreground font-medium px-2 py-1 rounded-md text-sm;
+    }
+}
+
+
 @layer base {
   .prism-light {
     position: absolute;
