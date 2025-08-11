@@ -509,4 +509,8 @@
         animation: fadeInUp 0.8s ease-out forwards;
         opacity: 0;
     }
+
+    .perspective {
+        perspective: 1000px;
+    }
 }
