@@ -2,7 +2,7 @@
 'use client';
 
 import { useUIState } from "@/hooks/use-ui-state";
-import AnimatedBackground from "../layout/animated-background";
+import AnimatedBackground from "@/components/layout/animated-background";
 
 export default function XosWallpaper() {
     const { isAnimatedBg } = useUIState();
