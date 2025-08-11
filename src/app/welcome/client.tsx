@@ -148,23 +148,23 @@ export default function WelcomeClient() {
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover scale-[1.5]"
                     ></iframe>
-                     <div className="absolute inset-0 bg-black/40"></div>
+                     <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
                 </div>
                 <div className="relative z-10 px-4 space-y-6">
                     <motion.h1 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white [text-shadow:0_4px_20px_rgba(0,0,0,0.5)]">
+                        className="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-white [text-shadow:0_4px_20px_rgba(0,0,0,0.5)]">
                         (X)OS
                     </motion.h1>
                     <motion.p 
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="text-xl md:text-2xl lg:text-3xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
+                        className="text-lg md:text-xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
                         L'interface directe entre votre imagination et la technologie.
                     </motion.p>
                 </div>
