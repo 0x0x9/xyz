@@ -12,7 +12,7 @@ const DESKTOP_APP_IDS = [
     'muse', 'sound',
     'editor', 'frame', 'terminal', 'reality',
     'store', 'gallery', 'collaborations', 'careers', 'contact',
-    'format', 'convert',
+    'format', 'convert', 'cloud',
     'google-drive', 'google-docs', 'google-sheets', 'google-slides'
 ];
 

@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import XosWallpaper from '@/components/xos-wallpaper';
 
 const XosClient = dynamic(() => import('@/components/xos/client'), {
     ssr: false,
@@ -11,6 +12,7 @@ const XosClient = dynamic(() => import('@/components/xos/client'), {
 const XosPage = () => {
     return (
        <div className="w-full h-full">
+            <XosWallpaper />
             <Suspense fallback={null}>
                 <XosClient />
             </Suspense>
@@ -19,5 +21,3 @@ const XosPage = () => {
 }
 
 export default XosPage;
-
-    

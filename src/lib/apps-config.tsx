@@ -128,5 +128,3 @@ export const ALL_APPS_CONFIG = [
     { id: 'google-sheets', name: 'Google Sheets', icon: GoogleSheetsIcon, component: (props: any) => <LazyGoogleSheetsApp {...props} />, defaultPos: { x: 340, y: 140 }, defaultSize: { width: 900, height: 700 } },
     { id: 'google-slides', name: 'Google Slides', icon: GoogleSlidesIcon, component: (props: any) => <LazyGoogleSlidesApp {...props} />, defaultPos: { x: 360, y: 160 }, defaultSize: { width: 900, height: 700 } },
 ];
-
-    
