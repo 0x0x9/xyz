@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import Link from "next/link";
@@ -64,6 +63,8 @@ import {
   User as UserIcon,
   LogOut,
   Heart,
+  Home,
+  ShoppingBag,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -86,8 +87,14 @@ import { useIsClient } from '@/hooks/use-is-client';
 
 const navLinks = [
   { href: "/store", label: "Boutique" },
-  { href: "/features", label: "Fonctionnalités" },
   { href: "/careers", label: "Carrières" },
+];
+
+const discoverLinks = [
+    { href: "/features", label: "(X)OS & Vision", icon: Home, description: "Découvrez notre OS unifié révolutionnaire." },
+    { href: "/tools", label: "Suite d'Outils IA", icon: Sparkles, description: "Un arsenal créatif complet à votre service." },
+    { href: "/hardware", label: "Matériel", icon: Cpu, description: "Les machines conçues pour la performance créative." },
+    { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
 ];
 
 const communityLinks = [
@@ -280,7 +287,7 @@ const DropdownMenuLinkItem = ({ href, label, description, icon: Icon }: { href: 
     <DropdownMenuPrimitive.Item asChild>
         <Link
         href={href}
-        className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none"
+        className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-all duration-200 focus:bg-foreground/10 focus:outline-none cursor-pointer"
         >
         <div className="p-1.5 rounded-md border bg-accent/10 border-accent/20">
             <Icon className="h-5 w-5 text-accent" />
@@ -312,16 +319,43 @@ export function Header() {
         </div>
         <nav className="hidden lg:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1 bg-background/50 dark:bg-black/20 border border-border rounded-full p-1">
           
-          {navLinks.map((link) => (
-            <Button
-              key={link.href}
+           <DropdownMenuPrimitive.Root>
+            <DropdownMenuPrimitive.Trigger asChild>
+              <Button
+                variant="ghost"
+                className="text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full h-9 px-4"
+              >
+                Découvrir <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuPrimitive.Trigger>
+            <DropdownMenuPrimitive.Portal>
+              <DropdownMenuPrimitive.Content
+                align="center"
+                sideOffset={10}
+                className="w-80 glass-card p-2 z-50 outline-none"
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="flex flex-col gap-1"
+                >
+                  {discoverLinks.map((link) => (
+                     <DropdownMenuLinkItem key={link.href} {...link} />
+                  ))}
+                </motion.div>
+              </DropdownMenuPrimitive.Content>
+            </DropdownMenuPrimitive.Portal>
+          </DropdownMenuPrimitive.Root>
+          
+          <Button
               variant="ghost"
               className="text-foreground/80 hover:text-foreground hover:bg-foreground/10 rounded-full h-9 px-4"
               asChild
             >
-              <Link href={link.href}>{link.label}</Link>
-            </Button>
-          ))}
+              <Link href="/store">Boutique</Link>
+          </Button>
           
           <DropdownMenuPrimitive.Root>
             <DropdownMenuPrimitive.Trigger asChild>
@@ -472,63 +506,77 @@ export function Header() {
               </div>
               <ScrollArea className="flex-1">
                 <nav className="flex flex-col gap-2 p-6 text-left">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setIsSheetOpen(false)}
-                      className="text-2xl font-medium hover:text-accent transition-colors py-2"
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                   <Accordion type="multiple" className="w-full pt-4">
-                     <AccordionItem value="community" className="border-b-0">
+                    <Accordion type="multiple" className="w-full">
+                         <AccordionItem value="discover" className="border-b-0">
+                            <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
+                                Découvrir
+                            </AccordionTrigger>
+                            <AccordionContent className="pl-4">
+                                <div className="flex flex-col gap-1">
+                                    {discoverLinks.map((link) => (
+                                        <Link key={link.href} href={link.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
+                                            <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
+                                                <link.icon className="h-5 w-5 text-accent" />
+                                            </div>
+                                            <span className="text-lg font-medium">{link.label}</span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </AccordionContent>
+                        </AccordionItem>
+                        <Link
+                          href="/store"
+                          onClick={() => setIsSheetOpen(false)}
+                          className="text-2xl font-medium hover:text-accent transition-colors py-4 flex items-center"
+                        >
+                          Boutique
+                        </Link>
+                        <AccordionItem value="community" className="border-b-0">
+                            <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
+                                Communauté
+                            </AccordionTrigger>
+                            <AccordionContent className="pl-4">
+                                <div className="flex flex-col gap-1">
+                                    {communityLinks.map((link) => (
+                                        <Link key={link.href} href={link.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
+                                            <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
+                                                <link.icon className="h-5 w-5 text-accent" />
+                                            </div>
+                                            <span className="text-lg font-medium">{link.label}</span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="tools" className="border-b-0">
                         <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
-                            Communauté
+                            Écosystème
                         </AccordionTrigger>
                         <AccordionContent className="pl-4">
-                             <div className="flex flex-col gap-1">
-                                {communityLinks.map((link) => (
-                                    <Link key={link.href} href={link.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
-                                        <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
-                                            <link.icon className="h-5 w-5 text-accent" />
+                            <div className="flex flex-col gap-1 mt-2">
+                                <h4 className="font-semibold text-muted-foreground mb-2">Plateforme</h4>
+                                {ecosystemTools.map((tool) => (
+                                    <Link key={tool.href} href={tool.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
+                                        <div className="p-1.5 bg-primary/10 rounded-md border border-primary/20">
+                                        <tool.icon className="h-5 w-5 text-primary" />
                                         </div>
-                                        <span className="text-lg font-medium">{link.label}</span>
+                                        <span className="text-lg font-medium">{tool.label}</span>
+                                    </Link>
+                                ))}
+                            </div>
+                            <div className="flex flex-col gap-1 mt-4">
+                                <h4 className="font-semibold text-muted-foreground mb-2">Générateurs IA</h4>
+                                {generatorTools.map((tool) => (
+                                    <Link key={tool.href} href={tool.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
+                                        <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
+                                            <tool.icon className="h-5 w-5 text-accent" />
+                                        </div>
+                                        <span className="text-lg font-medium">{tool.label}</span>
                                     </Link>
                                 ))}
                             </div>
                         </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="tools" className="border-b-0">
-                      <AccordionTrigger className="text-2xl font-medium hover:text-accent transition-colors py-2 hover:no-underline">
-                        Écosystème
-                      </AccordionTrigger>
-                      <AccordionContent className="pl-4">
-                         <div className="flex flex-col gap-1 mt-2">
-                             <h4 className="font-semibold text-muted-foreground mb-2">Plateforme</h4>
-                            {ecosystemTools.map((tool) => (
-                                <Link key={tool.href} href={tool.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
-                                    <div className="p-1.5 bg-primary/10 rounded-md border border-primary/20">
-                                    <tool.icon className="h-5 w-5 text-primary" />
-                                    </div>
-                                    <span className="text-lg font-medium">{tool.label}</span>
-                                </Link>
-                            ))}
-                        </div>
-                        <div className="flex flex-col gap-1 mt-4">
-                             <h4 className="font-semibold text-muted-foreground mb-2">Générateurs IA</h4>
-                            {generatorTools.map((tool) => (
-                                <Link key={tool.href} href={tool.href} onClick={() => setIsSheetOpen(false)} className="group flex items-center gap-3 p-2 rounded-lg hover:bg-foreground/10 transition-colors">
-                                    <div className="p-1.5 bg-accent/10 rounded-md border border-accent/20">
-                                        <tool.icon className="h-5 w-5 text-accent" />
-                                    </div>
-                                    <span className="text-lg font-medium">{tool.label}</span>
-                                </Link>
-                            ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
+                        </AccordionItem>
                   </Accordion>
                 </nav>
               </ScrollArea>
