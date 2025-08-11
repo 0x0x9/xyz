@@ -41,16 +41,7 @@ export default function PostClient({ post }: { post: Post }) {
         </div>
 
         <div
-          className="prose prose-lg dark:prose-invert text-foreground/80 max-w-none 
-            prose-headings:font-bold prose-headings:text-foreground
-            prose-h2:text-3xl prose-h2:md:text-4xl prose-h2:mb-6 prose-h2:mt-16 prose-h2:border-b prose-h2:pb-4
-            prose-h3:text-xl prose-h3:md:text-2xl prose-h3:mb-4 prose-h3:mt-12
-            prose-p:leading-relaxed prose-p:my-6
-            prose-a:text-primary prose-a:font-medium prose-a:no-underline hover:prose-a:underline
-            prose-blockquote:border-primary prose-blockquote:font-normal prose-blockquote:text-muted-foreground prose-blockquote:text-lg prose-blockquote:py-2
-            prose-ul:my-6 prose-li:my-2 prose-li:marker:text-primary
-            prose-strong:text-foreground
-            prose-code:bg-muted prose-code:text-foreground prose-code:font-medium prose-code:px-2 prose-code:py-1 prose-code:rounded-md"
+          className="prose prose-lg dark:prose-invert text-foreground/80 max-w-none prose-headings:font-bold prose-headings:text-foreground prose-h2:text-3xl prose-h2:md:text-4xl prose-h2:mb-6 prose-h2:mt-16 prose-h2:border-b prose-h2:pb-4 prose-h3:text-xl prose-h3:md:text-2xl prose-h3:mb-4 prose-h3:mt-12 prose-p:leading-relaxed prose-p:my-6 prose-a:text-primary prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-blockquote:border-primary prose-blockquote:font-normal prose-blockquote:text-muted-foreground prose-blockquote:text-lg prose-blockquote:py-2 prose-ul:my-6 prose-li:my-2 prose-li:marker:text-primary prose-strong:text-foreground prose-code:bg-muted prose-code:text-foreground prose-code:font-medium prose-code:px-2 prose-code:py-1 prose-code:rounded-md"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </div>
