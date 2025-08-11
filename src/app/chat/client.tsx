@@ -179,6 +179,11 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
         }
     }, [messages]);
     
+    const getProjectContext = () => {
+        if (!activeProject) return 'non spécifié';
+        return `Titre du projet: "${activeProject.title}". Brief Créatif: "${activeProject.creativeBrief}"`;
+    }
+
     return (
         <div className="glass-card h-full flex flex-col">
             <header className="p-4 border-b border-white/10 flex items-center gap-4 flex-shrink-0">
@@ -241,7 +246,7 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
             </ScrollArea>
              <div className="p-4 border-t border-white/10 shrink-0">
                 <form ref={formRef} action={formAction} className="flex gap-4">
-                    <input type="hidden" name="activeProject" value={activeProject ? JSON.stringify({ title: activeProject.title, creativeBrief: activeProject.creativeBrief }) : ''} />
+                    <input type="hidden" name="context" value={getProjectContext()} />
                     <Input
                         name="prompt"
                         placeholder="Discutez avec Oria..."
@@ -481,4 +486,3 @@ export default function MessengerClient() {
         </div>
     );
 }
-
