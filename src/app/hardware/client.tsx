@@ -10,25 +10,17 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import PerformanceChart from '@/components/ui/performance-chart';
 import { MemoryStick } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 function Section({ children, className }: { children: React.ReactNode, className?: string }) {
-    const ref = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start end", "end start"]
-    });
-    const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
-
     return (
-        <section ref={ref} className={cn("relative container mx-auto px-4 md:px-6 py-24 md:py-36 min-h-screen flex flex-col justify-center", className)}>
-             <motion.div style={{ y }}>
-                {children}
-            </motion.div>
+        <section className={cn("relative container mx-auto px-4 md:px-6 py-24 md:py-36", className)}>
+            {children}
         </section>
     );
 }
 
-function AnimatedText({ children, className }: { children: React.ReactNode, className?: string }) {
+function AnimatedSection({ children, className }: { children: React.ReactNode, className?: string }) {
     const ref = useRef(null);
      const { scrollYProgress } = useScroll({
         target: ref,
@@ -40,7 +32,7 @@ function AnimatedText({ children, className }: { children: React.ReactNode, clas
             {children}
         </motion.div>
     )
-}
+};
 
 const performanceData = [
     { name: 'X-1 Station', 'Rendu 3D': 95, 'Compilation de code': 98, 'Simulation IA': 92 },
@@ -113,108 +105,99 @@ export default function HardwareClient() {
 
             {/* Performance Section */}
             <Section className="text-center">
-                <AnimatedText>
+                <AnimatedSection>
                     <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
                         Des performances qui défient la réalité.
                     </h2>
                     <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
                        La Station X-1 a été conçue pour les workflows les plus exigeants. Voyez par vous-même comment elle se mesure à la concurrence.
                     </p>
-                </AnimatedText>
-                <AnimatedText className="mt-16">
+                </AnimatedSection>
+                <AnimatedSection className="mt-16">
                    <PerformanceChart data={performanceData} />
-                </AnimatedText>
+                </AnimatedSection>
             </Section>
 
              {/* Features Section */}
             <Section>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <div className="relative aspect-square">
-                         <AnimatedText>
-                             <Image
-                                src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80"
-                                alt="Vue éclatée des composants de la Station X-1"
-                                fill
-                                className="object-contain"
-                                data-ai-hint="computer components"
-                            />
-                         </AnimatedText>
-                    </div>
-                    <AnimatedText>
-                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                           Le Cœur de la Puissance.
-                        </h2>
-                        <div className="mt-8 space-y-6">
-                            {features.map(feature => (
-                                <div key={feature.title} className="flex items-start gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 shrink-0">
-                                        <feature.icon className="h-6 w-6 text-primary" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xl font-bold">{feature.title}</h3>
-                                        <p className="text-muted-foreground mt-1">{feature.description}</p>
-                                    </div>
+                 <AnimatedSection className="text-center">
+                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+                        Le Cœur de la Puissance.
+                    </h2>
+                </AnimatedSection>
+                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {features.map((feature, i) => (
+                        <AnimatedSection key={i} className="h-full">
+                           <Card className="glass-card h-full p-8 flex flex-col items-center text-center">
+                                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 mb-6">
+                                    <feature.icon className="h-8 w-8 text-primary" />
                                 </div>
-                            ))}
-                        </div>
-                    </AnimatedText>
+                                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                                <p className="text-muted-foreground text-sm flex-grow">{feature.description}</p>
+                            </Card>
+                        </AnimatedSection>
+                    ))}
                 </div>
             </Section>
 
-            {/* Water Cooling Section */}
-            <Section>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                     <AnimatedText className="lg:order-2">
-                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+            {/* Immersive sections */}
+            <div className="space-y-8">
+                 <div className="relative h-[80vh] min-h-[600px] flex items-center justify-center text-center overflow-hidden rounded-3xl mx-auto container">
+                    <motion.div
+                        className="absolute inset-0"
+                        style={{
+                            scale: useTransform(useScroll({ target: targetRef, offset: ["start end", "end start"] }).scrollYProgress, [0, 1], [1, 1.2])
+                        }}
+                    >
+                         <Image
+                            src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=1600&q=80"
+                            alt="Système de refroidissement liquide de la Station X-1"
+                            fill
+                            className="object-cover"
+                            data-ai-hint="liquid cooling"
+                        />
+                         <div className="absolute inset-0 bg-black/50"></div>
+                    </motion.div>
+                     <AnimatedSection className="relative z-10 text-white max-w-3xl px-8">
+                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
                            Refroidissement Cryo-Silencieux.
                         </h2>
-                        <p className="mt-6 text-lg md:text-xl text-muted-foreground">
+                        <p className="mt-6 text-lg md:text-xl text-white/80">
                             Notre système de refroidissement liquide sub-ambiant maintient des performances maximales dans un silence quasi-absolu. Poussez votre machine à ses limites, elle restera de glace.
                         </p>
-                    </AnimatedText>
-                    <div className="relative aspect-square lg:order-1">
-                         <AnimatedText>
-                             <Image
-                                src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80"
-                                alt="Système de refroidissement liquide de la Station X-1"
-                                fill
-                                className="object-contain"
-                                data-ai-hint="liquid cooling"
-                            />
-                         </AnimatedText>
-                    </div>
+                    </AnimatedSection>
                 </div>
-            </Section>
-
-            {/* Upgradability Section */}
-            <Section>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <div className="relative aspect-square">
-                         <AnimatedText>
-                             <Image
-                                src="https://images.unsplash.com/photo-1587593665183-a773cb21f845?auto=format&fit=crop&w=800&q=80"
-                                alt="Châssis ouvert de la Station X-1 montrant l'accès aux composants"
-                                fill
-                                className="object-contain"
-                                data-ai-hint="open computer"
-                            />
-                         </AnimatedText>
-                    </div>
-                    <AnimatedText>
-                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                           Conçue pour évoluer avec vous.
+                
+                 <div className="relative h-[80vh] min-h-[600px] flex items-center justify-center text-center overflow-hidden rounded-3xl mx-auto container">
+                    <motion.div
+                        className="absolute inset-0"
+                         style={{
+                            scale: useTransform(useScroll({ target: targetRef, offset: ["start end", "end start"] }).scrollYProgress, [0, 1], [1.2, 1])
+                        }}
+                    >
+                        <Image
+                            src="https://images.unsplash.com/photo-1587593665183-a773cb21f845?auto=format&fit=crop&w=1600&q=80"
+                            alt="Châssis ouvert de la Station X-1 montrant l'accès aux composants"
+                            fill
+                            className="object-cover"
+                            data-ai-hint="open computer"
+                        />
+                         <div className="absolute inset-0 bg-black/50"></div>
+                    </motion.div>
+                    <AnimatedSection className="relative z-10 text-white max-w-3xl px-8">
+                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
+                           Conçue pour évoluer.
                         </h2>
-                        <p className="mt-6 text-lg md:text-xl text-muted-foreground">
-                            Accès sans outils. Composants standards. Pas de soudures propriétaires. La Station X-1 est conçue pour être mise à niveau facilement, garantissant que votre investissement dure dans le temps.
+                        <p className="mt-6 text-lg md:text-xl text-white/80">
+                           Accès sans outils. Composants standards. La Station X-1 est conçue pour être mise à niveau facilement, garantissant que votre investissement dure dans le temps.
                         </p>
-                    </AnimatedText>
+                    </AnimatedSection>
                 </div>
-            </Section>
-
+            </div>
 
              {/* Final CTA Section */}
-             <Section className="text-center">
-                <AnimatedText>
+             <Section className="text-center mt-16">
+                <AnimatedSection>
                     <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
                         Passez à la vitesse supérieure.
                     </h2>
@@ -225,7 +208,7 @@ export default function HardwareClient() {
                             </Link>
                         </Button>
                     </div>
-                </AnimatedText>
+                </AnimatedSection>
             </Section>
         </div>
     );
