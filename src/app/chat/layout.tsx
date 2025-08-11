@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '(X)cloud - (X)yzz.ai',
-  description: 'Gérez vos projets créatifs, collaborez et discutez avec l\'assistante IA Oria.',
+  title: '(X)cloud - Gestion de Projet IA',
+  description: "Pilotez vos projets créatifs, de l'idée à la réalisation. Suivez vos tâches, gérez vos fichiers et collaborez avec votre assistant IA.",
 };
 
 export default function ChatLayout({
