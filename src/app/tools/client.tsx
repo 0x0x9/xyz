@@ -3,7 +3,7 @@
 
 import { useState, useRef } from 'react';
 import Link from 'next/link';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import {
   Wand2, BrainCircuit, Layers, Lightbulb, Calendar, Network,
   Film, Image as ImageIconLucide, AudioLines, FileText,
@@ -156,7 +156,7 @@ export default function ToolsClient() {
                     <p className="text-muted-foreground mt-2 max-w-xl mx-auto">Les piliers de votre workflow, où la créativité et la productivité convergent.</p>
                 </div>
                 <div className="space-y-8">
-                     {environments.map(env => <EnvironmentCard key={env.id} env={env} />)}
+                     {environments.map(env => <EnvironmentCard key={env.title} env={env} />)}
                 </div>
             </section>
 
