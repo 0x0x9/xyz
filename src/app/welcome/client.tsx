@@ -117,14 +117,14 @@ function StickyScrollSection() {
                                         allowFullScreen
                                         className="w-full h-full object-cover"
                                     ></iframe>
-                                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+                                    <div className="absolute inset-0 bg-black/40"></div>
                                 </div>
                                 <div className="relative h-full flex flex-col items-center justify-center text-center text-white p-8">
                                     <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 mb-6">
                                         <feature.icon className="w-8 h-8 text-white" />
                                     </div>
-                                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{feature.title}</h2>
-                                    <p className="text-lg md:text-xl text-white/80 max-w-2xl">{feature.description}</p>
+                                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4 [text-shadow:0_4px_20px_rgba(0,0,0,0.5)]">{feature.title}</h2>
+                                    <p className="text-lg md:text-xl text-white/80 max-w-2xl [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">{feature.description}</p>
                                 </div>
                             </motion.div>
                         );
@@ -150,7 +150,7 @@ export default function WelcomeClient() {
                         allowFullScreen
                         className="w-full h-full object-cover"
                     ></iframe>
-                     <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+                     <div className="absolute inset-0 bg-black/20"></div>
                 </div>
                 <div className="relative z-10 px-4 space-y-4">
                     <motion.h1 
