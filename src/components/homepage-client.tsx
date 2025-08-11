@@ -25,7 +25,8 @@ import {
   Sparkles,
   BookOpen,
   Paintbrush,
-  Users
+  Users,
+  CheckCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
@@ -33,6 +34,7 @@ import { cn } from "@/lib/utils";
 import HomepageOriaChat from '@/components/homepage-oria';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { products } from '@/lib/products';
 
 function AnimatedSection({ children, className }: { children: React.ReactNode, className?: string }) {
     const ref = useRef(null);
@@ -258,6 +260,8 @@ const ecosystemLinks = [
     },
 ];
 
+const hardwareProducts = products.filter(p => p.category === 'Matériel' && ['Station de Création X-1', 'Laptop de Création X-Book', '(X)-alpha'].includes(p.name));
+
 
 const HomePageClient = () => {
   const [activeCategory, setActiveCategory] = useState(toolCategories[0].id);
@@ -295,6 +299,54 @@ const HomePageClient = () => {
             videoId="ozGQ2q4l4ys"
             icon={Cpu}
         />
+        
+        <section id="hardware" className="my-24 md:my-32 container mx-auto px-4 md:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold">Un Hardware Iconique</h2>
+              <p className="max-w-2xl mx-auto text-lg text-muted-foreground mt-4">
+                  Des machines conçues en symbiose avec le logiciel, pour une expérience créative totale.
+              </p>
+            </div>
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {hardwareProducts.map((product, i) => (
+                    <AnimatedSection key={product.id} className={cn(i === 0 && 'lg:col-span-2')}>
+                        <Link href={`/store/${product.id}`} className="block group">
+                            <div className={cn(
+                                "glass-card h-full overflow-hidden transition-all duration-300 hover:border-primary/30 hover:-translate-y-2",
+                                i === 0 && "grid md:grid-cols-2 items-center"
+                            )}>
+                                 <div className={cn("relative aspect-square p-8", i === 0 && "md:h-[500px] h-96")}>
+                                     <Image 
+                                        src={product.images[0]} 
+                                        alt={product.name} 
+                                        fill 
+                                        className="object-contain group-hover:scale-105 transition-transform duration-500"
+                                        data-ai-hint={product.hint}
+                                    />
+                                </div>
+                                <div className="p-8">
+                                    <h3 className="text-3xl md:text-4xl font-bold">{product.name}</h3>
+                                    <p className="mt-4 text-muted-foreground">{product.description}</p>
+                                    <div className="mt-6 space-y-2">
+                                      {(product.features ?? []).slice(0, 3).map((feature: string) => (
+                                        <div key={feature} className="flex items-center gap-3 text-sm">
+                                          <CheckCircle className="h-4 w-4 text-primary shrink-0"/>
+                                          <span className="text-muted-foreground">{feature}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                    <div className="mt-8">
+                                        <Button variant="outline" className="rounded-full">
+                                            Découvrir {product.name} <ArrowRight className="ml-2 h-4 w-4"/>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    </AnimatedSection>
+                ))}
+             </div>
+        </section>
 
         <section id="tools" className="my-24 md:my-32 container mx-auto px-4 md:px-6">
           <div className="text-center mb-12">
