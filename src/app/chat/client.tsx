@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Send, ArrowLeft, MessageSquare, Search, Sparkles, Loader, Home, AppWindow, Settings, Folder, BrainCircuit, Trash2, Edit, PanelLeft, Wand2, CheckSquare, FolderOpen, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { Send, ArrowLeft, MessageSquare, Search, Sparkles, Loader, Home, AppWindow, Settings, Folder, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightOpen, PanelRightClose } from 'lucide-react';
 import { format, isValid, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
@@ -260,28 +260,24 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
 
 function ProjectPlanView({ project, setProject }: { project: ProjectDoc, setProject: (p: ProjectDoc) => void }) {
     const categories = [...new Set(project.tasks.map(task => task.category))];
-    const { toast } = useToast();
 
-    const handleChecklistChange = async (taskIndex: number, itemIndex: number, checked: boolean) => {
+    const handleChecklistChange = (taskIndex: number, itemIndex: number, checked: boolean) => {
         const updatedProject = JSON.parse(JSON.stringify(project));
         updatedProject.tasks[taskIndex].checklist[itemIndex].completed = checked;
-        setProject(updatedProject); // Optimistic update
-
-        // In a real app, this would be an API call to persist the change.
-        // For now, it's just local state.
+        setProject(updatedProject);
     };
 
     return (
         <ScrollArea className="h-full">
-            <div className="p-4 md:p-6 space-y-6">
+            <div className="p-4 md:p-6 space-y-8">
                 <h2 className="text-2xl font-bold">{project.title}</h2>
                 <blockquote className="border-l-4 border-primary pl-4 text-muted-foreground italic">
                     {project.creativeBrief}
                 </blockquote>
-                <div className="space-y-6">
+                <div className="space-y-8">
                     {categories.map(category => (
                         <div key={category}>
-                            <h3 className="text-lg font-semibold mb-3">{category}</h3>
+                            <h3 className="text-xl font-semibold mb-4">{category}</h3>
                             <div className="space-y-4">
                                 {project.tasks.filter(t => t.category === category).map((task, taskIndex) => (
                                     <div key={taskIndex} className="p-4 rounded-lg bg-black/5 dark:bg-black/10">
@@ -312,42 +308,37 @@ function ProjectPlanView({ project, setProject }: { project: ProjectDoc, setProj
     )
 }
 
-function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar }: { activeProject: ProjectDoc | null, onProjectDeleted: (id: string) => void, toggleSidebar: () => void }) {
+function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar, isSidebarVisible }: { activeProject: ProjectDoc | null, onProjectDeleted: (id: string) => void, toggleSidebar: () => void, isSidebarVisible: boolean }) {
     const { theme, setTheme } = useTheme();
 
     const handleDeleteProject = async () => {
         if (!activeProject) return;
-        // Placeholder for delete
         onProjectDeleted(activeProject.id);
     };
     
     return (
-        <Menubar className="rounded-none border-x-0 border-t-0 px-2 lg:px-4">
+        <Menubar className="rounded-none border-x-0 border-t-0 px-2 lg:px-4 bg-muted/20">
             <MenubarMenu>
-                 <MenubarTrigger asChild>
+                <MenubarTrigger asChild>
                     <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-8 w-8 mr-1">
-                        <PanelLeftOpen className="h-5 w-5" />
+                        {isSidebarVisible ? <PanelLeftOpen className="h-5 w-5" /> : <PanelRightOpen className="h-5 w-5" />}
                     </Button>
                 </MenubarTrigger>
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Fichier</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem onClick={() => {}}>
-                        Nouveau Projet <MenubarShortcut>⌘N</MenubarShortcut>
-                    </MenubarItem>
+                    <MenubarItem>Nouveau Projet <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
+                    <MenubarItem>Nouvelle Fenêtre</MenubarItem>
                     <MenubarSeparator />
-                    <MenubarItem disabled>
-                        Sauvegarder <MenubarShortcut>⌘S</MenubarShortcut>
-                    </MenubarItem>
+                    <MenubarItem disabled>Sauvegarder <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+                    <MenubarItem disabled>Fermer l'onglet <MenubarShortcut>⌘W</MenubarShortcut></MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Projet</MenubarTrigger>
                  <MenubarContent>
-                    <MenubarItem disabled={!activeProject}>
-                        Renommer le projet...
-                    </MenubarItem>
+                    <MenubarItem disabled={!activeProject}>Renommer le projet...</MenubarItem>
                     <MenubarItem disabled={!activeProject} onClick={handleDeleteProject} className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                         Supprimer le projet
                     </MenubarItem>
@@ -463,16 +454,24 @@ export default function MessengerClient() {
                     activeProject={activeProject} 
                     onProjectDeleted={onProjectDeleted} 
                     toggleSidebar={() => setShowSidebar(!showSidebar)}
+                    isSidebarVisible={showSidebar}
                 />
                 <div className="flex-1 flex min-h-0">
-                    <div className={cn(
-                        "w-full md:w-1/3 lg:w-1/4 flex-shrink-0 flex flex-col transition-all duration-300 border-r border-white/10",
-                        !showSidebar ? 'hidden' : 'flex'
-                    )}>
-                        <ScrollArea className="flex-1">
-                            <ProjectTracker activeProject={activeProject} setActiveProject={setActiveProject} onProjectDeleted={onProjectDeleted} projects={projects} loading={loading} />
-                        </ScrollArea>
-                    </div>
+                    <AnimatePresence>
+                        {showSidebar && (
+                            <motion.div
+                                initial={{ width: 0, opacity: 0 }}
+                                animate={{ width: 'clamp(250px, 30%, 320px)', opacity: 1 }}
+                                exit={{ width: 0, opacity: 0, padding: 0 }}
+                                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                className="w-1/3 lg:w-1/4 flex-shrink-0 flex flex-col border-r border-white/10 overflow-hidden"
+                            >
+                                <ScrollArea className="flex-1">
+                                    <ProjectTracker activeProject={activeProject} setActiveProject={setActiveProject} onProjectDeleted={onProjectDeleted} projects={projects} loading={loading} />
+                                </ScrollArea>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     <div className="flex-1 min-w-0">
                        <MainContent />
