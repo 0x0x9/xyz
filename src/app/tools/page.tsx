@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import ToolsClient from "./client";
 
 export const metadata = {
-  title: "Outils IA - (X)yzz.ai",
+  title: "Suite d'Outils IA - (X)yzz.ai",
   description: "Explorez la suite complète d'outils créatifs IA de l'écosystème (X)yzz. De l'idée à la réalisation, accélérez votre workflow.",
 };
 
