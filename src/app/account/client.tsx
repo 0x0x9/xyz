@@ -30,9 +30,9 @@ const initialUser = {
 };
 
 const mockProjects = [
-    { id: 1, title: 'Lancement Marque de Vêtements', imageUrl: 'https://placehold.co/300x200.png', hint: 'clothing brand fashion' },
-    { id: 2, title: 'Jeu Vidéo Rétro', imageUrl: 'https://placehold.co/300x200.png', hint: 'pixel art game' },
-    { id: 3, title: 'Court-métrage "Nébuleuse"', imageUrl: 'https://placehold.co/300x200.png', hint: 'nebula space' },
+    { id: 1, title: 'Projet Nébuleuse (Court-métrage)', imageUrl: 'https://images.unsplash.com/photo-1534433369931-29f1b1382103?auto=format&fit=crop&w=300&q=80', hint: 'nebula space stars' },
+    { id: 2, title: 'Lancement Marque de Vêtements', imageUrl: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=300&q=80', hint: 'clothing brand fashion' },
+    { id: 3, title: 'Identité Visuelle - Nova', imageUrl: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&w=300&q=80', hint: 'abstract gradient design' },
 ];
 
 const initialDevices = [

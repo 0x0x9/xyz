@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useMemo } from 'react';
@@ -10,8 +11,7 @@ import { fr } from 'date-fns/locale';
 import { FileImage, FileText, File, Folder, GitBranch, UploadCloud, Share2, Pencil, BrainCircuit, Code2, Film, Network, Palette, Users, Lightbulb, Music, LayoutTemplate, AudioLines, Mic, Wand2, FilePenLine, AppWindow, Terminal, Calendar, Zap, Presentation } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-
-type Doc = { id: string; name: string; path: string; mimeType: string; size: number; createdAt: string | null; updatedAt: string | null; shareId: string | null; };
+import type { Doc } from '@/ai/types';
 
 const generationPatterns: Record<string, { icon: React.ElementType, text: string }> = {
     'maestro': { icon: BrainCircuit, text: 'a généré le plan' },
@@ -124,10 +124,16 @@ export default function ActivityClient({ docs, loading }: { docs: Doc[], loading
             .filter(doc => doc.updatedAt)
             .map(doc => {
                 const generationInfo = getGenerationInfo(doc.name.split('/').pop() || '');
-                const isCreation = (new Date(doc.updatedAt!).getTime() - new Date(doc.createdAt!).getTime() < 2000);
-                const type: ActivityType = isCreation
-                    ? (generationInfo ? 'GENERATED' : 'CREATED')
-                    : 'UPDATED';
+                const isCreation = doc.createdAt && doc.updatedAt ? (new Date(doc.updatedAt).getTime() - new Date(doc.createdAt).getTime() < 2000) : false;
+                const isShared = doc.shareId !== null;
+
+                let type: ActivityType = 'UPDATED';
+                if (isCreation) {
+                    type = generationInfo ? 'GENERATED' : 'CREATED';
+                } else if (isShared) {
+                    // This is a simplification. Real share tracking would need dedicated events.
+                    // For this demo, we'll just show it as a modification.
+                }
 
                 return {
                     id: doc.id,
