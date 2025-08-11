@@ -1,6 +1,6 @@
 import MessengerClient from './client';
 
-export default function ChatPage() {
+export default function CloudPage() {
     return (
         <MessengerClient />
     );

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'PulseStudio - (X)yzz.ai',
+  title: '(X)cloud - (X)yzz.ai',
   description: 'Gérez vos projets créatifs, collaborez et discutez avec l\'assistante IA Oria.',
 };
 

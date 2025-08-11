@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Send, ArrowLeft, MessageSquare, Search, Sparkles, Loader, Home, AppWindow, Settings, Folder, BrainCircuit, Trash2, Edit, PanelLeft, Wand2, CheckSquare, FolderOpen } from 'lucide-react';
+import { Send, ArrowLeft, MessageSquare, Search, Sparkles, Loader, Home, AppWindow, Settings, Folder, BrainCircuit, Trash2, Edit, PanelLeft, Wand2, CheckSquare, FolderOpen, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { format, isValid, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
@@ -29,13 +29,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
 // Types
-type Message = {
-    id: string;
-    senderId: string;
-    text: string;
-    timestamp: string | null;
-};
-
 type ChatPartner = {
     uid: string;
     displayName: string | null;
@@ -59,52 +52,6 @@ const mockUser = {
 
 
 // Sub-components
-function SearchResultsSkeleton() {
-    return (
-        <div className="p-2 space-y-2">
-            {Array.from({ length: 3 }).map((_, i) => (
-                 <div key={i} className="flex items-center gap-3 p-3">
-                    <Skeleton className="h-10 w-10 rounded-full" />
-                    <Skeleton className="h-5 w-3/4" />
-                </div>
-            ))}
-        </div>
-    )
-}
-
-function ChatWindowSkeleton() {
-    return (
-        <div className="h-full w-full flex flex-col p-4">
-            <div className="flex items-center gap-3 mb-4">
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <Skeleton className="h-6 w-40" />
-            </div>
-            <div className="flex-1 space-y-4">
-                <Skeleton className="h-12 w-3/4 rounded-2xl self-start" />
-                <Skeleton className="h-16 w-1/2 rounded-2xl self-end ml-auto" />
-                <Skeleton className="h-8 w-2/3 rounded-2xl self-start" />
-            </div>
-            <Skeleton className="h-12 w-full mt-4 rounded-full" />
-        </div>
-    )
-}
-
-const formatDate = (dateString: string | null) => {
-    if (!dateString) return '';
-    const date = parseISO(dateString);
-    if (!isValid(date)) return '';
-    const now = new Date();
-    const diffDays = (now.getTime() - date.getTime()) / (1000 * 3600 * 24);
-
-    if (diffDays < 1 && now.getDate() === date.getDate()) {
-        return format(date, 'HH:mm'); // Today
-    }
-    if (diffDays < 2 && now.getDate() - 1 === date.getDate()) {
-        return 'Hier'; // Yesterday
-    }
-    return format(date, 'dd/MM/yy');
-};
-
 function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, projects, loading }: { activeProject: ProjectDoc | null, setActiveProject: (project: ProjectDoc | null) => void, onProjectDeleted: (deletedId: string) => void, projects: ProjectDoc[], loading: boolean }) {
     const [projectToDelete, setProjectToDelete] = useState<ProjectDoc | null>(null);
     const { toast } = useToast();
@@ -365,7 +312,7 @@ function ProjectPlanView({ project, setProject }: { project: ProjectDoc, setProj
     )
 }
 
-function TopMenuBar({ activeProject, setActiveView, onProjectDeleted, toggleSidebar }: { activeProject: ProjectDoc | null, setActiveView: (v: string) => void, onProjectDeleted: (id: string) => void, toggleSidebar: () => void }) {
+function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar }: { activeProject: ProjectDoc | null, onProjectDeleted: (id: string) => void, toggleSidebar: () => void }) {
     const { theme, setTheme } = useTheme();
 
     const handleDeleteProject = async () => {
@@ -377,13 +324,17 @@ function TopMenuBar({ activeProject, setActiveView, onProjectDeleted, toggleSide
     return (
         <Menubar className="rounded-none border-x-0 border-t-0 px-2 lg:px-4">
             <MenubarMenu>
+                 <MenubarTrigger asChild>
+                    <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-8 w-8 mr-1">
+                        <PanelLeftOpen className="h-5 w-5" />
+                    </Button>
+                </MenubarTrigger>
+            </MenubarMenu>
+            <MenubarMenu>
                 <MenubarTrigger>Fichier</MenubarTrigger>
                 <MenubarContent>
                     <MenubarItem onClick={() => {}}>
                         Nouveau Projet <MenubarShortcut>⌘N</MenubarShortcut>
-                    </MenubarItem>
-                    <MenubarItem onClick={() => setActiveView('files')}>
-                        Gérer les fichiers <MenubarShortcut>⌘O</MenubarShortcut>
                     </MenubarItem>
                     <MenubarSeparator />
                     <MenubarItem disabled>
@@ -405,10 +356,6 @@ function TopMenuBar({ activeProject, setActiveView, onProjectDeleted, toggleSide
             <MenubarMenu>
                 <MenubarTrigger>Affichage</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem onClick={toggleSidebar}>
-                        Basculer le panneau latéral
-                    </MenubarItem>
-                    <MenubarSeparator />
                     <MenubarItem onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
                         Changer le thème
                     </MenubarItem>
@@ -425,14 +372,8 @@ export default function MessengerClient() {
 
     const [loading, setLoading] = useState(true);
     const [projects, setProjects] = useState<ProjectDoc[]>([]);
-    
-    const [searchResults, setSearchResults] = useState<ChatPartner[]>([]);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [isSearching, setIsSearching] = useState(false);
-    
+        
     const [activeChat, setActiveChat] = useState<{ id: string, partner: ChatPartner } | null>(null);
-    const [isStartingChat, setIsStartingChat] = useState(false);
-    const [activeView, setActiveView] = useState('chat');
     const [activeProject, setActiveProject] = useState<ProjectDoc | null>(null);
     const [showSidebar, setShowSidebar] = useState(true);
     
@@ -457,30 +398,7 @@ export default function MessengerClient() {
     useEffect(() => {
         fetchProjects();
     }, [fetchProjects]);
-
-    useEffect(() => {
-        const handleSearch = async () => {
-            if (searchQuery.length < 3) {
-                setSearchResults([]);
-                return;
-            }
-            setIsSearching(true);
-            // Placeholder for search
-             setTimeout(() => {
-                setSearchResults([ { uid: 'user2', displayName: 'Jane Doe', photoURL: null } ]);
-                setIsSearching(false);
-            }, 500);
-        };
-
-        const debounce = setTimeout(() => {
-            handleSearch();
-        }, 300);
-
-        return () => clearTimeout(debounce);
-    }, [searchQuery, toast]);
     
-    const clearActiveChat = () => setActiveChat(null);
-
     const onProjectDeleted = (deletedId: string) => {
         if (activeProject && activeProject.id === deletedId) {
             setActiveProject(null);
@@ -523,7 +441,7 @@ export default function MessengerClient() {
                         <DocManager onDataChange={fetchProjects} />
                     </TabsContent>
                     <TabsContent value="chat" className="flex-1 min-h-0 -mt-2">
-                        <OriaChatWindow partner={oriaPartner} onBack={clearActiveChat} activeProject={activeProject} />
+                        <OriaChatWindow partner={oriaPartner} onBack={() => setActiveProject(null)} activeProject={activeProject} />
                     </TabsContent>
                 </Tabs>
             );
@@ -532,20 +450,17 @@ export default function MessengerClient() {
         return (
              <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground p-8">
                 <MessageSquare className="mx-auto h-20 w-20 text-muted-foreground/30" />
-                <p className="mt-6 text-xl font-semibold text-foreground">Bienvenue sur PulseStudio</p>
+                <p className="mt-6 text-xl font-semibold text-foreground">Bienvenue sur (X)cloud</p>
                 <p className="mt-2">Sélectionnez un projet pour commencer à le gérer, ou une conversation pour discuter.</p>
             </div>
         )
     };
 
     return (
-        <div className="flex h-full w-full gap-6">
-            <NavMenu activeView={activeView} setActiveView={setActiveView} />
-
+        <div className="flex h-full w-full">
             <div className="flex-1 flex flex-col glass-card p-0">
                 <TopMenuBar 
                     activeProject={activeProject} 
-                    setActiveView={setActiveView} 
                     onProjectDeleted={onProjectDeleted} 
                     toggleSidebar={() => setShowSidebar(!showSidebar)}
                 />
@@ -568,41 +483,25 @@ export default function MessengerClient() {
     );
 }
 
-function NavMenu({ activeView, setActiveView }: { activeView: string; setActiveView: (view: string) => void; }) {
-    const navItems = [
-        { href: "/xos", icon: AppWindow, label: "PulseStudio", view: 'chat' },
-        { href: "/account", icon: Settings, label: "Paramètres", view: 'settings' },
-    ];
-    return (
-        <TooltipProvider>
-            <nav className="glass-card flex flex-col items-center gap-4 p-3">
-                <Link href="/" aria-label="Accueil">
-                    <Home className="h-7 w-7 text-foreground" />
-                </Link>
+```
+  </change>
+  <change>
+    <file>src/app/chat/layout.tsx</file>
+    <content><![CDATA[import type { Metadata } from 'next';
 
-                <div className="w-full h-px bg-white/10 my-2"></div>
+export const metadata: Metadata = {
+  title: '(X)cloud - (X)yzz.ai',
+  description: 'Gérez vos projets créatifs, collaborez et discutez avec l\'assistante IA Oria.',
+};
 
-                <div className="flex flex-col gap-2 flex-1">
-                    {navItems.map(item => (
-                        <Tooltip key={item.view}>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setActiveView(item.view)}
-                                    className={cn("h-12 w-12 rounded-2xl", activeView === item.view && "bg-primary/10 text-primary")}
-                                >
-                                    <item.icon className="h-6 w-6" />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="right">
-                                <p>{item.label}</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    ))}
-                </div>
-            </nav>
-        </TooltipProvider>
-    );
+export default function ChatLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <div className="h-screen w-screen flex items-center justify-center p-4 md:p-6 bg-transparent">
+        {children}
+    </div>
+  );
 }
-
