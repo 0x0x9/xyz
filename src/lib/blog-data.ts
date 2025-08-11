@@ -1,13 +1,14 @@
+
 export type Post = {
   slug: string;
   title: string;
   author: string;
   avatar: string;
+  imageHint: string;
   category: string;
   date: string;
   readingTime: number;
   image: string;
-  imageHint: string;
   excerpt: string;
   content: string;
 };
@@ -18,11 +19,11 @@ export const blogPosts: Post[] = [
     title: "De l'idée au projet complet : Comment (X)flux révolutionne votre workflow",
     author: "Alfred Sisley",
     avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80",
+    imageHint: "woman portrait professional",
     category: "Tutoriel",
     date: "2024-07-28",
     readingTime: 7,
     image: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=1600&q=80",
-    imageHint: "futuristic workflow interface",
     excerpt: "Découvrez comment notre outil d'orchestration IA, (X)flux, peut transformer une simple phrase en un plan d'action détaillé, avec tous les livrables créatifs dont vous avez besoin.",
     content: `
 <p>Dans le monde de la création, l'un des plus grands défis est de passer de l'étincelle initiale d'une idée à un projet structuré et réalisable. C'est ici qu'intervient (X)flux, notre assistant IA conçu pour être votre chef de projet personnel.</p>
@@ -49,11 +50,11 @@ export const blogPosts: Post[] = [
     title: "Maîtriser l'Art du Prompt avec (X)promptor",
     author: "Chloé Martin",
     avatar: "https://images.unsplash.com/photo-1519340333755-c6e2a6a1b49a?auto=format&fit=facearea&w=256&h=256&facepad=2&q=80",
+    imageHint: "woman portrait friendly",
     category: "Conseils",
     date: "2024-07-25",
     readingTime: 5,
     image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1600&q=80",
-    imageHint: "creative person writing ideas",
     excerpt: "L'efficacité de l'IA générative dépend de la qualité de vos prompts. Apprenez à transformer des idées vagues en instructions précises pour des résultats spectaculaires.",
     content: `
 <p>Vous avez une idée en tête, une ambiance, une émotion, mais vous ne savez pas comment la traduire en une image ou un texte ? (X)promptor est votre allié. Cet outil est conçu pour prendre votre inspiration brute et la transformer en pistes créatives concrètes.</p>

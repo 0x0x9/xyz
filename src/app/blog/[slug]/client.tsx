@@ -24,7 +24,7 @@ export default function PostClient({ post }: { post: Post }) {
           <div className="flex items-center gap-4 text-muted-foreground">
             <div className="flex items-center gap-2">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={post.avatar} />
+                <AvatarImage src={post.avatar} data-ai-hint={post.imageHint} />
                 <AvatarFallback>{post.author.substring(0, 2)}</AvatarFallback>
               </Avatar>
               <span>{post.author}</span>
@@ -41,7 +41,7 @@ export default function PostClient({ post }: { post: Post }) {
         </div>
 
         <div
-          className="prose prose-lg dark:prose-invert text-foreground/90 max-w-none prose-h2:text-foreground prose-h2:font-bold prose-p:leading-relaxed prose-a:text-primary hover:prose-a:text-primary/80 prose-blockquote:border-primary prose-strong:text-foreground"
+          className="prose prose-lg dark:prose-invert text-foreground/90 max-w-none prose-h2:font-bold prose-h2:text-3xl prose-p:leading-relaxed prose-a:text-primary hover:prose-a:text-primary/80 prose-blockquote:border-primary prose-strong:text-foreground"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </div>
