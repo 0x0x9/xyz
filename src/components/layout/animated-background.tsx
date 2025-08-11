@@ -2,6 +2,7 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useUIState } from '@/hooks/use-ui-state';
 
 /**
  * An animated background with luminous prism effects that vary by route.
@@ -12,6 +13,7 @@ import { cn } from '@/lib/utils';
  */
 export default function AnimatedBackground() {
   const pathname = usePathname();
+  const { isAnimatedBg } = useUIState();
 
   const getVariant = () => {
     if (pathname.startsWith('/xos')) {
@@ -24,6 +26,10 @@ export default function AnimatedBackground() {
   };
 
   const variant = getVariant();
+
+  if (!isAnimatedBg) {
+      return null;
+  }
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-50 h-full w-full overflow-hidden bg-background">

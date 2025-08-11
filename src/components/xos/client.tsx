@@ -11,6 +11,7 @@ import DesktopIcons from './desktop-icons';
 
 import { useWindowManager } from '@/hooks/use-window-manager';
 import { useAppLauncher } from '@/hooks/use-app-launcher';
+import XosThemeSelector from './theme-selector';
 
 export default function XosClient() {
     const searchParams = useSearchParams();
@@ -69,6 +70,8 @@ export default function XosClient() {
         <div className="absolute inset-0" >
             <DesktopIcons isBooting={isBooting} onOpenApp={openWindow} />
 
+            <XosThemeSelector />
+            
             <AnimatePresence>
                 {windows.map(win => (
                     <XosWindow
@@ -89,7 +92,7 @@ export default function XosClient() {
                 ))}
             </AnimatePresence>
             
-            <XosDock windows={windows} onDockItemClick={toggleMinimize} openApp={openWindow} />
+            <XosDock windows={windows} onDockItemClick={toggleMinimize} />
         </div>
     );
 }

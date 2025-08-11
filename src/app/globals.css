@@ -122,16 +122,16 @@
   @keyframes float-five { 0% { transform: translate(0, 0) scale(1) rotate(0deg); } 25% { transform: translate(-35vw, -20vh) scale(1.2) rotate(80deg); } 50% { transform: translate(30vw, 35vh) scale(0.9) rotate(-150deg); } 75% { transform: translate(-25vw, 15vh) scale(1.1) rotate(-30deg); } 100% { transform: translate(0, 0) scale(1) rotate(360deg); } }
 
   .prism-light.xos-one {
-    width: 40%; background: #0ea5e9; animation: xos-one 12s infinite ease-in-out; top: -10%; left: -10%;
+    width: 40%; background: hsl(var(--accent)); animation: xos-one 12s infinite ease-in-out; top: -10%; left: -10%;
   }
   .prism-light.xos-two {
-    width: 30%; background: #8b5cf6; animation: xos-two 15s infinite ease-in-out; bottom: -5%; right: -5%;
+    width: 30%; background: hsl(var(--accent) / 0.7); animation: xos-two 15s infinite ease-in-out; bottom: -5%; right: -5%;
   }
   .prism-light.xos-three {
-    width: 25%; background: #14b8a6; animation: xos-three 10s infinite ease-in-out; top: 40%; left: 50%;
+    width: 25%; background: hsl(var(--accent) / 0.5); animation: xos-three 10s infinite ease-in-out; top: 40%; left: 50%;
   }
   .prism-light.xos-four {
-    width: 20%; background: #ec4899; animation: xos-four 18s infinite ease-in-out; top: 15%; right: 20%;
+    width: 20%; background: hsl(var(--accent) / 0.6); animation: xos-four 18s infinite ease-in-out; top: 15%; right: 20%;
   }
   
   @keyframes xos-one { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(10vw, 15vh) scale(1.2); } 100% { transform: translate(0, 0) scale(1); } }

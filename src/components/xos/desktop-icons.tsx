@@ -2,18 +2,38 @@
 'use client';
 
 import { cn } from "@/lib/utils";
-import { ALL_APPS_CONFIG } from "@/lib/apps-config";
-import { View } from "lucide-react";
+import { ALL_APPS_CONFIG, AppConfig } from "@/lib/apps-config";
+import { motion } from 'framer-motion';
 
-const DESKTOP_APP_IDS = [
-    'chat', 'explorer', 'fusion', 
-    'flux', 'maestro', 'promptor', 'brand-identity', 'agenda', 'nexus',
-    'text', 'image', 'motion', 'voice',
-    'muse', 'sound',
-    'editor', 'frame', 'terminal', 'reality',
-    'store', 'gallery', 'collaborations', 'careers', 'contact',
-    'format', 'convert', 'cloud',
-    'google-drive', 'google-docs', 'google-sheets', 'google-slides'
+const iconGroupCategories: { title: string; ids: string[] }[] = [
+    {
+        title: "Core",
+        ids: ['chat', 'cloud', 'fusion']
+    },
+    {
+        title: "Strategy & Ideation",
+        ids: ['flux', 'maestro', 'promptor', 'brand-identity', 'nexus', 'persona', 'agenda']
+    },
+    {
+        title: "Content Creation",
+        ids: ['text', 'image', 'motion', 'voice', 'deck', 'muse', 'sound']
+    },
+    {
+        title: "Design & Dev",
+        ids: ['editor', 'frame', 'code', 'terminal', 'reality']
+    },
+    {
+        title: "Utilities",
+        ids: ['format', 'convert']
+    },
+    {
+        title: "Community & Store",
+        ids: ['store', 'gallery', 'collaborations', 'careers']
+    },
+    {
+        title: "Google Suite",
+        ids: ['google-drive', 'google-docs', 'google-sheets', 'google-slides']
+    }
 ];
 
 interface DesktopIconsProps {
@@ -21,27 +41,52 @@ interface DesktopIconsProps {
     onOpenApp: (appId: string) => void;
 }
 
+const DesktopIcon = ({ app, index, onOpenApp }: { app: AppConfig, index: number, onOpenApp: (appId: string) => void }) => (
+     <button
+        key={app.id}
+        onDoubleClick={() => onOpenApp(app.id)}
+        className="flex flex-col items-center justify-start text-center gap-2 p-2 rounded-lg focus:outline-none focus:bg-white/5 dark:focus:bg-black/10 hover:bg-white/5 dark:hover:bg-black/10 transition-colors duration-200 w-24 h-24"
+    >
+        <app.icon className="w-10 h-10 text-foreground drop-shadow-lg" />
+        <span className="text-foreground text-[11px] font-medium leading-tight line-clamp-2 [text-shadow:0_1px_3px_rgba(0,0,0,0.3)] dark:[text-shadow:0_1px_3px_rgba(0,0,0,0.5)]">{app.name}</span>
+    </button>
+);
+
+const DesktopIconGroup = ({ title, ids, onOpenApp, bootDelay }: { title: string, ids: string[], onOpenApp: (appId: string) => void, bootDelay: number }) => {
+    const apps = ids.map(id => ALL_APPS_CONFIG.find(app => app.id === id)).filter(Boolean) as AppConfig[];
+    
+    return (
+        <motion.div 
+            className="space-y-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: bootDelay }}
+        >
+            <h2 className="text-xs font-semibold text-foreground/80 uppercase tracking-widest px-4 [text-shadow:0_1px_2px_rgba(0,0,0,0.2)]">{title}</h2>
+            <div className="flex flex-wrap gap-1">
+                {apps.map((app, index) => (
+                    <DesktopIcon key={app.id} app={app} index={index} onOpenApp={onOpenApp} />
+                ))}
+            </div>
+        </motion.div>
+    );
+};
+
+
 export default function DesktopIcons({ isBooting, onOpenApp }: DesktopIconsProps) {
-    const desktopApps = DESKTOP_APP_IDS
-        .map(id => ALL_APPS_CONFIG.find(app => app.id === id))
-        .filter(Boolean) as (typeof ALL_APPS_CONFIG[0])[];
+    if (isBooting) return null;
 
     return (
-        <div className="p-8 z-1 relative">
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4">
-                {desktopApps.map((app, index) => (
-                    <button
-                        key={app.id}
-                        onDoubleClick={() => onOpenApp(app.id)}
-                        className={cn(
-                            "flex flex-col items-center gap-2 p-2 rounded-lg focus:outline-none focus:bg-foreground/5 transition-all duration-300",
-                            isBooting ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
-                        )}
-                        style={{ transitionDelay: `${index * 50}ms`}}
-                    >
-                        <app.icon className="w-12 h-12 text-foreground drop-shadow-lg" />
-                        <span className="text-foreground text-sm font-medium [text-shadow:0_1px_3px_rgba(0,0,0,0.5)] dark:[text-shadow:0_1px_3px_rgba(0,0,0,0.5)]">{app.name}</span>
-                    </button>
+        <div className="p-4 md:p-8 z-1 relative w-full h-full overflow-y-auto no-scrollbar">
+            <div className="flex flex-col flex-wrap items-start gap-y-8">
+                {iconGroupCategories.map((group, index) => (
+                    <DesktopIconGroup
+                        key={group.title}
+                        title={group.title}
+                        ids={group.ids}
+                        onOpenApp={onOpenApp}
+                        bootDelay={index * 0.1}
+                    />
                 ))}
             </div>
         </div>
