@@ -1,24 +1,20 @@
 
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Send, ArrowLeft, MessageSquare, Search, Sparkles, Loader, Home, AppWindow, Settings, Folder, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightOpen, PanelRightClose, PanelLeftClose } from 'lucide-react';
-import { format, isValid, parseISO } from 'date-fns';
-import { fr } from 'date-fns/locale';
-import { useRouter } from 'next/navigation';
+import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { OriaHistoryMessage, ProjectPlan, OriaChatOutput } from '@/ai/types';
+import type { OriaHistoryMessage, ProjectPlan, OriaChatOutput, Doc } from '@/ai/types';
 import { AnimatePresence, motion } from 'framer-motion';
-import { oriaChatAction } from '@/app/actions';
+import { oriaChatAction, deleteDocumentAction, listDocumentsAction } from '@/app/actions';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import Link from 'next/link';
 import DocManager from '@/components/doc-manager';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger } from '@/components/ui/menubar';
@@ -26,6 +22,7 @@ import { useTheme } from 'next-themes';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from '../auth-component';
 
 
 // Types
@@ -35,25 +32,9 @@ type ChatPartner = {
     photoURL: string | null;
 };
 
-type ProjectDoc = {
-    id: string;
-    name: string;
-    title: string;
-    creativeBrief: string;
-    tasks: ProjectPlan['tasks'];
-};
-
-// Mock user for development
-const mockUser = {
-  uid: 'mock-user-uid',
-  displayName: 'Mock User',
-  photoURL: null,
-};
-
-
 // Sub-components
-function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, projects, loading }: { activeProject: ProjectDoc | null, setActiveProject: (project: ProjectDoc | null) => void, onProjectDeleted: (deletedId: string) => void, projects: ProjectDoc[], loading: boolean }) {
-    const [projectToDelete, setProjectToDelete] = useState<ProjectDoc | null>(null);
+function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, projects, loading }: { activeProject: ProjectPlan | null, setActiveProject: (project: ProjectPlan | null) => void, onProjectDeleted: (deletedId: string) => void, projects: ProjectPlan[], loading: boolean }) {
+    const [projectToDelete, setProjectToDelete] = useState<ProjectPlan | null>(null);
     const { toast } = useToast();
 
     const calculateProgress = useCallback((tasks: ProjectPlan['tasks']) => {
@@ -65,12 +46,17 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
     }, []);
 
     const handleDeleteProject = async () => {
-        if (!projectToDelete) return;
-        // In a real app, you would call a server action to delete the document
-        toast({ title: "Projet supprimé", description: `"${projectToDelete.title}" a été supprimé.` });
-        const deletedId = projectToDelete.id;
-        setProjectToDelete(null);
-        onProjectDeleted(deletedId); // Notify parent to clear active project if needed & refetch
+        if (!projectToDelete || !projectToDelete.id) return;
+        
+        try {
+            await deleteDocumentAction({ docId: projectToDelete.id });
+             toast({ title: "Projet supprimé", description: `"${projectToDelete.title}" a été supprimé.` });
+            const deletedId = projectToDelete.id;
+            setProjectToDelete(null);
+            onProjectDeleted(deletedId);
+        } catch (error) {
+            toast({ variant: 'destructive', title: "Erreur", description: "La suppression du projet a échoué."})
+        }
     };
 
     return (
@@ -118,7 +104,7 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
                     </div>
                 ))
             ) : (
-                <p className="text-center text-xs text-muted-foreground p-4">Aucun projet récent trouvé.</p>
+                <p className="text-center text-xs text-muted-foreground p-4">Aucun projet Maestro trouvé.</p>
             )}
 
             <AlertDialog open={!!projectToDelete} onOpenChange={(open) => !open && setProjectToDelete(null)}>
@@ -141,7 +127,7 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
     );
 }
 
-function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartner, onBack: () => void, activeProject: ProjectDoc | null }) {
+function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartner, onBack: () => void, activeProject: ProjectPlan | null }) {
     const formRef = useRef<HTMLFormElement>(null);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
     const [messages, setMessages] = useState<OriaHistoryMessage[]>([]);
@@ -164,7 +150,7 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
         if (result.message === 'success' && result.result) {
             setMessages(prev => [...prev, { role: 'model', content: result.result as any }]);
         } else {
-            setMessages(prev => [...prev, { role: 'model', content: result.error || "Désolée, une erreur est survenue." }]);
+            setMessages(prev => [...prev, { role: 'model', content: { type: 'response', response: result.error || "Désolée, une erreur est survenue." } }]);
         }
         formRef.current?.reset();
         return result;
@@ -180,22 +166,19 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
     }, [messages]);
     
     const getProjectContext = () => {
-        if (!activeProject) return 'non spécifié';
-        return `Titre du projet: "${activeProject.title}". Brief Créatif: "${activeProject.creativeBrief}"`;
+        if (!activeProject) return 'aucun';
+        return `L'utilisateur travaille sur le projet "${activeProject.title}". Le brief créatif est : "${activeProject.creativeBrief}"`;
     }
 
     return (
         <div className="glass-card h-full flex flex-col">
             <header className="p-4 border-b border-white/10 flex items-center gap-4 flex-shrink-0">
-                <Button variant="ghost" size="icon" onClick={onBack} className="md:hidden">
-                    <ArrowLeft />
-                </Button>
                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-fuchsia-500 flex items-center justify-center">
                     <Sparkles className="text-white h-5 w-5" />
                 </div>
                 <div>
                     <h3 className="font-semibold">{partner.displayName}</h3>
-                    {activeProject && <p className="text-xs text-muted-foreground">Contexte : {activeProject.title}</p>}
+                    {activeProject && <p className="text-xs text-muted-foreground truncate max-w-xs">Contexte : {activeProject.title}</p>}
                 </div>
             </header>
             <ScrollArea className="flex-1 p-6" ref={scrollAreaRef}>
@@ -263,7 +246,7 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
     )
 }
 
-function ProjectPlanView({ project, setProject }: { project: ProjectDoc, setProject: (p: ProjectDoc) => void }) {
+function ProjectPlanView({ project, setProject }: { project: ProjectPlan, setProject: (p: ProjectPlan) => void }) {
     const categories = [...new Set(project.tasks.map(task => task.category))];
 
     const handleChecklistChange = (taskIndex: number, itemIndex: number, checked: boolean) => {
@@ -294,7 +277,7 @@ function ProjectPlanView({ project, setProject }: { project: ProjectDoc, setProj
                                                     <Checkbox
                                                         id={`task-${taskIndex}-item-${itemIndex}`}
                                                         checked={item.completed}
-                                                        onCheckedChange={(checked) => handleChecklistChange(project.tasks.indexOf(task), itemIndex, !!checked)}
+                                                        onCheckedChange={(checked) => handleChecklistChange(project.tasks.findIndex(t => t.title === task.title), itemIndex, !!checked)}
                                                     />
                                                     <label htmlFor={`task-${taskIndex}-item-${itemIndex}`} className="text-sm text-foreground/90 has-[:checked]:line-through has-[:checked]:text-muted-foreground cursor-pointer">
                                                         {item.text}
@@ -313,11 +296,11 @@ function ProjectPlanView({ project, setProject }: { project: ProjectDoc, setProj
     )
 }
 
-function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar, isSidebarVisible }: { activeProject: ProjectDoc | null, onProjectDeleted: (id: string) => void, toggleSidebar: () => void, isSidebarVisible: boolean }) {
+function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar, isSidebarVisible }: { activeProject: ProjectPlan | null, onProjectDeleted: (id: string) => void, toggleSidebar: () => void, isSidebarVisible: boolean }) {
     const { theme, setTheme } = useTheme();
 
     const handleDeleteProject = async () => {
-        if (!activeProject) return;
+        if (!activeProject || !activeProject.id) return;
         onProjectDeleted(activeProject.id);
     };
     
@@ -364,13 +347,12 @@ function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar, isSidebarV
 // Main Component
 export default function MessengerClient() {
     const { toast } = useToast();
-    const router = useRouter();
-
+    const { user } = useAuth();
+    
     const [loading, setLoading] = useState(true);
-    const [projects, setProjects] = useState<ProjectDoc[]>([]);
+    const [projects, setProjects] = useState<ProjectPlan[]>([]);
         
-    const [activeChat, setActiveChat] = useState<{ id: string, partner: ChatPartner } | null>(null);
-    const [activeProject, setActiveProject] = useState<ProjectDoc | null>(null);
+    const [activeProject, setActiveProject] = useState<ProjectPlan | null>(null);
     const [showSidebar, setShowSidebar] = useState(true);
     
     const oriaPartner: ChatPartner = {
@@ -381,15 +363,29 @@ export default function MessengerClient() {
 
     const fetchProjects = useCallback(async () => {
         setLoading(true);
-        // Placeholder for fetching projects
-        setTimeout(() => {
-             setProjects([
-                { id: 'proj1', name: 'maestro-proj1', title: 'Lancement Marque de Vêtements', creativeBrief: 'Une marque de vêtement futuriste...', tasks: [ { category: 'Branding', title: 'Définir identité', description: '...', checklist: [{text: 'Logo', completed: true}, {text: 'Slogan', completed: false}] } ] },
-                { id: 'proj2', name: 'maestro-proj2', title: 'Jeu Vidéo Rétro', creativeBrief: 'Un platformer 2D...', tasks: [ { category: 'Design', title: 'Créer les assets', description: '...', checklist: [{text: 'Personnage principal', completed: true}, {text: 'Niveau 1', completed: true}] } ] },
-             ]);
+        try {
+            const result: Doc[] = await listDocumentsAction();
+            const maestroProjects = result
+                .filter(doc => doc.name.startsWith('maestro-'))
+                .map(doc => {
+                    // In a real app, we'd fetch and parse content. Here we assume structure.
+                    const projectData = doc as any; // Mocking content parsing
+                    return {
+                        id: doc.id,
+                        title: projectData.metadata?.title || doc.name.replace('maestro-', '').replace('.json', ''),
+                        creativeBrief: projectData.metadata?.creativeBrief || 'Aucun brief créatif.',
+                        tasks: projectData.metadata?.tasks || [],
+                        events: projectData.metadata?.events || [],
+                        imagePrompts: projectData.metadata?.imagePrompts || []
+                    } as ProjectPlan;
+                });
+            setProjects(maestroProjects);
+        } catch (error) {
+            toast({ variant: 'destructive', title: 'Erreur', description: 'Impossible de charger les projets.'});
+        } finally {
             setLoading(false);
-        }, 1000);
-    }, []);
+        }
+    }, [toast]);
     
     useEffect(() => {
         fetchProjects();
@@ -399,29 +395,34 @@ export default function MessengerClient() {
         if (activeProject && activeProject.id === deletedId) {
             setActiveProject(null);
         }
-        fetchProjects(); // Refetch projects after deletion
+        setProjects(prev => prev.filter(p => p.id !== deletedId));
     };
     
-    const updateActiveProject = (updatedProject: ProjectDoc) => {
+    const updateActiveProject = (updatedProject: ProjectPlan) => {
         setActiveProject(updatedProject);
         setProjects(prevProjects => prevProjects.map(p => p.id === updatedProject.id ? updatedProject : p));
     }
 
-
-    if (loading) {
-        return <Skeleton className="h-[85vh] w-full max-w-7xl mx-auto rounded-3xl" />;
-    }
-    
     const MainContent = () => {
-        if (activeProject) {
+        if (!activeProject) {
             return (
-                <Tabs defaultValue="project" className="h-full flex flex-col">
-                    <TabsList className="m-2 mx-auto">
+                <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground p-8">
+                    <MessageSquare className="mx-auto h-20 w-20 text-muted-foreground/30" />
+                    <p className="mt-6 text-xl font-semibold text-foreground">Bienvenue sur (X)cloud</p>
+                    <p className="mt-2">Sélectionnez un projet pour commencer à le gérer.</p>
+                </div>
+            );
+        }
+
+        return (
+            <Tabs defaultValue="project" className="h-full flex flex-col">
+                <div className="p-2 border-b border-border">
+                    <TabsList className="mx-auto">
                         <TabsTrigger value="project">
                             <BrainCircuit className="h-4 w-4 mr-2"/>
                             Plan du Projet
                         </TabsTrigger>
-                        <TabsTrigger value="chat" onClick={() => setActiveChat({ id: 'oria-chat-bot', partner: oriaPartner })}>
+                        <TabsTrigger value="chat">
                             <Sparkles className="h-4 w-4 mr-2"/>
                             Discuter avec Oria
                         </TabsTrigger>
@@ -430,26 +431,18 @@ export default function MessengerClient() {
                             Fichiers du projet
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="project" className="flex-1 min-h-0 -mt-2">
-                        <ProjectPlanView project={activeProject} setProject={updateActiveProject} />
-                    </TabsContent>
-                    <TabsContent value="files" className="flex-1 min-h-0 -mt-2 p-1">
-                        <DocManager onDataChange={fetchProjects} />
-                    </TabsContent>
-                    <TabsContent value="chat" className="flex-1 min-h-0 -mt-2">
-                        <OriaChatWindow partner={oriaPartner} onBack={() => setActiveProject(null)} activeProject={activeProject} />
-                    </TabsContent>
-                </Tabs>
-            );
-        }
-
-        return (
-             <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground p-8">
-                <MessageSquare className="mx-auto h-20 w-20 text-muted-foreground/30" />
-                <p className="mt-6 text-xl font-semibold text-foreground">Bienvenue sur (X)cloud</p>
-                <p className="mt-2">Sélectionnez un projet pour commencer à le gérer, ou une conversation pour discuter.</p>
-            </div>
-        )
+                </div>
+                <TabsContent value="project" className="flex-1 min-h-0 -mt-2">
+                    <ProjectPlanView project={activeProject} setProject={updateActiveProject} />
+                </TabsContent>
+                <TabsContent value="files" className="flex-1 min-h-0 -mt-2 p-1">
+                    <DocManager onDataChange={fetchProjects} />
+                </TabsContent>
+                <TabsContent value="chat" className="flex-1 min-h-0 -mt-2">
+                    <OriaChatWindow partner={oriaPartner} onBack={() => setActiveProject(null)} activeProject={activeProject} />
+                </TabsContent>
+            </Tabs>
+        );
     };
 
     return (
@@ -469,9 +462,18 @@ export default function MessengerClient() {
                                 animate={{ width: 'clamp(250px, 30%, 320px)', opacity: 1 }}
                                 exit={{ width: 0, opacity: 0, padding: 0 }}
                                 transition={{ duration: 0.3, ease: 'easeInOut' }}
-                                className="w-1/3 lg:w-1/4 flex-shrink-0 flex flex-col border-r border-white/10 overflow-hidden"
+                                className="flex-shrink-0 flex flex-col border-r border-white/10 overflow-hidden"
                             >
                                 <ScrollArea className="flex-1">
+                                    <div className="p-4 flex items-center gap-3 border-b border-border">
+                                        <Avatar>
+                                            <AvatarFallback>{user?.displayName?.substring(0,2) || 'U'}</AvatarFallback>
+                                        </Avatar>
+                                        <div className="overflow-hidden">
+                                            <p className="font-semibold truncate text-sm">{user?.displayName || 'Utilisateur'}</p>
+                                            <p className="text-xs text-muted-foreground">Espace de travail</p>
+                                        </div>
+                                    </div>
                                     <ProjectTracker activeProject={activeProject} setActiveProject={setActiveProject} onProjectDeleted={onProjectDeleted} projects={projects} loading={loading} />
                                 </ScrollArea>
                             </motion.div>
@@ -486,3 +488,4 @@ export default function MessengerClient() {
         </div>
     );
 }
+
