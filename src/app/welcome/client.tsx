@@ -148,7 +148,7 @@ export default function WelcomeClient() {
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
-                        className="w-full h-full object-cover scale-[1.5]"
+                        className="w-full h-full object-cover"
                     ></iframe>
                      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
                 </div>
