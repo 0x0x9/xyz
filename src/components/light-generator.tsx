@@ -26,7 +26,7 @@ const moodThemes = [
 function SubmitButton({ children }: { children: React.ReactNode }) {
     const { pending } = useFormStatus();
     return (
-        <Button type="submit" disabled={pending} size="lg" className="w-full">
+        <Button type="submit" disabled={pending} size="lg" className="h-12">
         {pending ? (
             <LoadingState text="Recherche d'inspiration..." isCompact={true} />
         ) : (
@@ -59,7 +59,14 @@ function ResultsDisplay({ result }: { result: GenerateLightMoodOutput & { images
                         <h4 className="font-semibold">Palette de Couleurs</h4>
                         <div className="flex gap-2">
                             {result.colors.map((color, i) => (
-                                <div key={i} className="w-12 h-12 rounded-full border-2 border-white/20" style={{ backgroundColor: color }} />
+                                <motion.div 
+                                    key={i} 
+                                    className="w-12 h-12 rounded-full border-2 border-white/20" 
+                                    style={{ backgroundColor: color }} 
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.3, delay: i * 0.1 }}
+                                />
                             ))}
                         </div>
                     </div>
@@ -67,7 +74,13 @@ function ResultsDisplay({ result }: { result: GenerateLightMoodOutput & { images
                          <h4 className="font-semibold">Mots-clés</h4>
                          <div className="flex flex-wrap gap-2">
                              {result.keywords.map((keyword, i) => (
-                                <div key={i} className="bg-primary/10 text-primary font-medium px-3 py-1 rounded-full text-sm">{keyword}</div>
+                                <motion.div 
+                                    key={i} 
+                                    className="bg-primary/10 text-primary font-medium px-3 py-1 rounded-full text-sm"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.3, delay: 0.5 + i * 0.1 }}
+                                >{keyword}</motion.div>
                             ))}
                          </div>
                     </div>
@@ -78,22 +91,17 @@ function ResultsDisplay({ result }: { result: GenerateLightMoodOutput & { images
                     <CardTitle>Inspiration Visuelle</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {result.isLoadingImages ? (
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <Skeleton className="aspect-square w-full" />
-                            <Skeleton className="aspect-square w-full" />
-                            <Skeleton className="aspect-square w-full" />
-                            <Skeleton className="aspect-square w-full" />
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                           {result.images.map((img, i) => (
-                               <div key={i} className="relative aspect-square rounded-lg overflow-hidden group">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {(result.isLoadingImages ? Array(4).fill(null) : result.images).map((img, i) => (
+                           <div key={i} className="relative aspect-square rounded-lg overflow-hidden group bg-muted/50">
+                               {img ? (
                                    <Image src={img} alt={`Mood image ${i+1}`} fill className="object-cover" />
-                               </div>
-                           ))}
-                        </div>
-                    )}
+                               ) : (
+                                   <Skeleton className="w-full h-full" />
+                               )}
+                           </div>
+                       ))}
+                    </div>
                 </CardContent>
             </Card>
         </motion.div>
@@ -105,6 +113,7 @@ export default function LightGenerator() {
     const [state, formAction] = useFormState(generateLightMoodAction, initialState);
     const { toast } = useToast();
     const [resultWithImages, setResultWithImages] = useState<(GenerateLightMoodOutput & { images: string[], isLoadingImages: boolean }) | null>(null);
+    const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
         if (state.error) {
@@ -124,6 +133,13 @@ export default function LightGenerator() {
                 });
         }
     }, [state, toast]);
+    
+    const handleThemeClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const formData = new FormData(formRef.current!);
+        formData.set('prompt', e.currentTarget.value);
+        formAction(formData);
+    }
 
     return (
         <div className="max-w-4xl mx-auto w-full">
@@ -133,13 +149,13 @@ export default function LightGenerator() {
                     <CardDescription>Choisissez un thème ou décrivez votre propre ambiance.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form action={formAction}>
+                    <form ref={formRef} action={formAction}>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                             {moodThemes.map(theme => (
                                 <button
                                     key={theme.id}
-                                    type="submit"
-                                    name="prompt"
+                                    type="button"
+                                    onClick={handleThemeClick}
                                     value={theme.prompt}
                                     className="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-transparent bg-background/50 hover:border-primary transition-colors"
                                 >
@@ -149,8 +165,10 @@ export default function LightGenerator() {
                             ))}
                         </div>
                         <div className="flex items-center gap-4">
-                            <Input name="prompt" placeholder="Ou décrivez votre propre ambiance..." className="flex-1 h-12 text-base" />
-                            <Button type="submit" size="lg" className="h-12"><Sparkles className="mr-2 h-4 w-4" />Générer</Button>
+                            <Input name="prompt" placeholder="Ou décrivez votre propre ambiance..." className="flex-1 h-12 text-base bg-background/50" />
+                            <SubmitButton>
+                                <Sparkles className="mr-2 h-4 w-4" />Générer
+                            </SubmitButton>
                         </div>
                     </form>
                 </CardContent>
