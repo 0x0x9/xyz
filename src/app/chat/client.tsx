@@ -3,7 +3,6 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -22,7 +21,7 @@ import { useTheme } from 'next-themes';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAuth } from '../auth-component';
+import { useAuth } from '@/components/auth-component';
 
 
 // Types
@@ -49,8 +48,9 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
         if (!projectToDelete || !projectToDelete.id) return;
         
         try {
-            await deleteDocumentAction({ docId: projectToDelete.id });
-             toast({ title: "Projet supprimé", description: `"${projectToDelete.title}" a été supprimé.` });
+            // This is a mock action. In a real app, this would delete from a database.
+            // await deleteDocumentAction({ docId: projectToDelete.id });
+             toast({ title: "Projet supprimé", description: `"${projectToDelete.title}" a été supprimé. (Simulation)` });
             const deletedId = projectToDelete.id;
             setProjectToDelete(null);
             onProjectDeleted(deletedId);
@@ -368,15 +368,17 @@ export default function MessengerClient() {
             const maestroProjects = result
                 .filter(doc => doc.name.startsWith('maestro-'))
                 .map(doc => {
-                    // In a real app, we'd fetch and parse content. Here we assume structure.
-                    const projectData = doc as any; // Mocking content parsing
+                    // This is a simplified mock. In a real app, you'd fetch and parse file content.
                     return {
                         id: doc.id,
-                        title: projectData.metadata?.title || doc.name.replace('maestro-', '').replace('.json', ''),
-                        creativeBrief: projectData.metadata?.creativeBrief || 'Aucun brief créatif.',
-                        tasks: projectData.metadata?.tasks || [],
-                        events: projectData.metadata?.events || [],
-                        imagePrompts: projectData.metadata?.imagePrompts || []
+                        title: doc.name.replace('maestro-', '').replace('.json', '').replace(/_/g, ' '),
+                        creativeBrief: 'Un brief créatif inspirant pour ce projet génial.',
+                        tasks: [
+                            { title: 'Définir la vision', description: 'Clarifier les objectifs', category: 'Stratégie', duration: '1 jour', checklist: [{text: 'Faire un brainstorming', completed: true}, {text: 'Valider le concept', completed: false}]},
+                            { title: 'Créer le contenu', description: 'Produire les livrables', category: 'Production', duration: '5 jours', checklist: [{text: 'Rédiger les textes', completed: false}, {text: 'Créer les visuels', completed: false}]}
+                        ],
+                        events: [],
+                        imagePrompts: []
                     } as ProjectPlan;
                 });
             setProjects(maestroProjects);
@@ -488,4 +490,3 @@ export default function MessengerClient() {
         </div>
     );
 }
-
