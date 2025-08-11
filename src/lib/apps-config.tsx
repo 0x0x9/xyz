@@ -41,6 +41,7 @@ const LazyFormatApp = dynamic(() => import('@/components/format-app'));
 const LazyConvertApp = dynamic(() => import('@/components/convert-app'));
 const LazyChatApp = dynamic(() => import('@/app/chat/client'));
 const LazyRealityApp = dynamic(() => import('@/components/reality-app'));
+const LazyLightApp = dynamic(() => import('@/components/light-generator'));
 const LazyGoogleDriveApp = dynamic(() => import('@/components/google/drive-app'));
 const LazyGoogleDocsApp = dynamic(() => import('@/components/google/docs-app'));
 const LazyGoogleSheetsApp = dynamic(() => import('@/components/google/sheets-app'));
@@ -114,6 +115,7 @@ export const ALL_APPS_CONFIG = [
     { id: 'deck', name: 'Présentation', icon: Presentation, component: (props: any) => <LazyDeck {...props} />, defaultPos: { x: 280, y: 280}, defaultSize: { width: 900, height: 700 } },
     { id: 'code', name: '(X)code', icon: CodeXml, component: (props: any) => <LazyCode {...props} />, defaultPos: { x: 300, y: 300}, defaultSize: { width: 800, height: 700 } },
     { id: 'reality', name: '(X)reality', icon: View, component: (props: any) => <LazyRealityApp {...props} />, defaultPos: { x: 320, y: 320}, defaultSize: { width: 900, height: 600 } },
+    { id: 'light', name: '(X)light', icon: Sparkles, component: (props: any) => <LazyLightApp {...props} />, defaultPos: { x: 100, y: 150 }, defaultSize: { width: 900, height: 700 } },
     { id: 'store', name: 'Boutique', icon: ShoppingCart, component: (props: any) => <LazyStoreApp {...props} />, defaultPos: { x: 100, y: 100 }, defaultSize: { width: 1200, height: 800 } },
     { id: 'checkout', name: 'Panier', icon: ShoppingCart, component: (props: any) => <LazyCheckoutApp {...props} />, defaultPos: { x: 120, y: 120 }, defaultSize: { width: 1000, height: 750 } },
     { id: 'gallery', name: 'Galerie', icon: Paintbrush, component: (props: any) => <LazyGalleryApp {...props} />, defaultPos: { x: 140, y: 140 }, defaultSize: { width: 1100, height: 800 } },

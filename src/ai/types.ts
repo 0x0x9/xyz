@@ -439,6 +439,21 @@ export const ConvertImageOutputSchema = z.object({
 });
 export type ConvertImageOutput = z.infer<typeof ConvertImageOutputSchema>;
 
+// From: src/ai/flows/generate-light-mood.ts
+export const GenerateLightMoodInputSchema = z.object({
+  prompt: z.string().describe("Une description d'une ambiance, un thème ou une émotion."),
+});
+export type GenerateLightMoodInput = z.infer<typeof GenerateLightMoodInputSchema>;
+
+export const GenerateLightMoodOutputSchema = z.object({
+  title: z.string().describe("Un titre poétique pour l'ambiance."),
+  description: z.string().describe("Une courte description de l'ambiance."),
+  colors: z.array(z.string().regex(/^#[0-9a-fA-F]{6}$/)).length(5).describe("Une palette de 5 couleurs en format HEX."),
+  keywords: z.array(z.string()).length(5).describe("Une liste de 5 mots-clés pertinents."),
+  imagePrompts: z.array(z.string()).length(4).describe("Une liste de 4 prompts d'image détaillés."),
+});
+export type GenerateLightMoodOutput = z.infer<typeof GenerateLightMoodOutputSchema>;
+
 // IMPORTANT: The Oria schemas must be defined LAST, after all the schemas
 // they might reference in their `data` union type.
 

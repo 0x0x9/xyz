@@ -94,6 +94,7 @@ const discoverLinks = [
     { href: "/welcome", label: "(X)OS & Vision", icon: Home, description: "Découvrez notre OS unifié révolutionnaire." },
     { href: "/tools", label: "Suite d'Outils IA", icon: Sparkles, description: "Un arsenal créatif complet à votre service." },
     { href: "/hardware", label: "Matériel", icon: Cpu, description: "Les machines conçues pour la performance créative." },
+    { href: "/light", label: "(X)light", icon: Lightbulb, description: "Votre sanctuaire pour l'inspiration créative." },
     { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
 ];
 

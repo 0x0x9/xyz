@@ -4,7 +4,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
-import type { Doc, GenerateFluxOutput, GenerateMuseOutput, ProjectPlan, GenerateIdeasOutput, VideoScript, Nexus, GeneratePaletteOutput, GeneratePersonaOutput, GenerateSoundOutput, Frame, GenerateToneOutput, GenerateCodeOutput, GenerateDeckOutput, GenerateTextOutput, GenerateVoiceOutput, OriaChatOutput, ExplainCodeOutput, DebugCodeOutput, AgendaEvent, ReformatTextWithPromptOutput, GenerateCodeInput, ExplainCodeInput, RefactorCodeInput } from '@/ai/types';
+import type { Doc, GenerateFluxOutput, GenerateMuseOutput, ProjectPlan, GenerateIdeasOutput, VideoScript, Nexus, GeneratePaletteOutput, GeneratePersonaOutput, GenerateSoundOutput, Frame, GenerateToneOutput, GenerateCodeOutput, GenerateDeckOutput, GenerateTextOutput, GenerateVoiceOutput, OriaChatOutput, ExplainCodeOutput, DebugCodeOutput, AgendaEvent, ReformatTextWithPromptOutput, GenerateCodeInput, ExplainCodeInput, RefactorCodeInput, GenerateLightMoodOutput } from '@/ai/types';
 
 // AI Flow Imports
 import { generateFrame } from '@/ai/flows/generate-frame';
@@ -28,6 +28,7 @@ import { generateDeck } from '@/ai/flows/generate-deck';
 import { generateVoice } from '@/ai/flows/generate-voice';
 import { reformatTextWithPrompt } from '@/ai/flows/reformat-text-with-prompt';
 import { convertImage } from '@/ai/flows/convert-image';
+import { generateLightMood } from '@/ai/flows/generate-light-mood';
 import * as codeActions from '@/ai/flows/code-actions';
 
 
@@ -248,6 +249,18 @@ export async function generateToneAction(prevState: any, formData: FormData): Pr
         return { ...prevState, message: 'error', result: null, error: e.message, prompt };
     }
 }
+
+export async function generateLightMoodAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateLightMoodOutput | null, error: string | null, id: number }> {
+    const prompt = formData.get('prompt') as string;
+    try {
+        const result = await generateLightMood({ prompt });
+        return { ...prevState, message: 'success', result, error: null };
+    } catch (e: any) {
+        console.error('Error in generateLightMoodAction:', e);
+        return { ...prevState, message: 'error', result: null, error: e.message };
+    }
+}
+
 
 const CodeActionSchema = z.object({
     prompt: z.string().min(1),
