@@ -290,7 +290,7 @@ const HomePageClient = () => {
             description="Ce n'est pas un système d'exploitation. C'est une extension de votre imagination, un environnement unifié où tous vos outils et idées convergent."
             buttonText="Découvrir (X)OS"
             buttonHref="/welcome"
-            videoId="9Ks_dCYhX4o"
+            videoId="SqJGQ25sc8Q"
             icon={Sparkles}
         />
         <ImmersiveFeatureSection
