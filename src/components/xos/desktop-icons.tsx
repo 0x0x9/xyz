@@ -7,27 +7,27 @@ import { motion } from 'framer-motion';
 
 const iconGroupCategories: { title: string; ids: string[] }[] = [
     {
-        title: "Core",
+        title: "Applications Principales",
         ids: ['chat', 'cloud', 'fusion']
     },
     {
-        title: "Strategy & Ideation",
+        title: "Stratégie & Idéation",
         ids: ['flux', 'maestro', 'promptor', 'brand-identity', 'nexus', 'persona', 'agenda']
     },
     {
-        title: "Content Creation",
+        title: "Création de Contenu",
         ids: ['text', 'image', 'motion', 'voice', 'deck', 'muse', 'sound']
     },
     {
-        title: "Design & Dev",
+        title: "Design & Développement",
         ids: ['editor', 'frame', 'code', 'terminal', 'reality']
     },
     {
-        title: "Utilities",
+        title: "Utilitaires",
         ids: ['format', 'convert']
     },
     {
-        title: "Community & Store",
+        title: "Communauté & Boutique",
         ids: ['store', 'gallery', 'collaborations', 'careers']
     },
     {
