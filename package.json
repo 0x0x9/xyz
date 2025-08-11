@@ -8,7 +8,7 @@
     "start": "next start -p 9002",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "genkit:watch": "ts-node -r tsconfig-paths/register -r dotenv/config --transpileOnly src/ai/dev.ts",
+    "genkit:watch": "genkit start --watch",
     "genkit:dev": "next dev -p 9002"
   },
   "dependencies": {
