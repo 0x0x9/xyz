@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Send, ArrowLeft, MessageSquare, Search, Sparkles, Loader, Home, AppWindow, Settings, Folder, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightOpen, PanelRightClose } from 'lucide-react';
+import { Send, ArrowLeft, MessageSquare, Search, Sparkles, Loader, Home, AppWindow, Settings, Folder, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightOpen, PanelRightClose, PanelLeftClose } from 'lucide-react';
 import { format, isValid, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
@@ -280,7 +280,7 @@ function ProjectPlanView({ project, setProject }: { project: ProjectDoc, setProj
                             <h3 className="text-xl font-semibold mb-4">{category}</h3>
                             <div className="space-y-4">
                                 {project.tasks.filter(t => t.category === category).map((task, taskIndex) => (
-                                    <div key={taskIndex} className="p-4 rounded-lg bg-black/5 dark:bg-black/10">
+                                    <div key={taskIndex} className="p-4 rounded-lg bg-background/50 border border-white/10">
                                         <h4 className="font-semibold">{task.title}</h4>
                                         <p className="text-sm text-muted-foreground mb-3">{task.description}</p>
                                         <div className="space-y-2">
@@ -317,17 +317,17 @@ function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar, isSidebarV
     };
     
     return (
-        <Menubar className="rounded-none border-x-0 border-t-0 px-2 lg:px-4 bg-muted/20">
+        <Menubar className="rounded-none border-x-0 border-t-0 px-2 lg:px-4 bg-muted/30 backdrop-blur-md">
             <MenubarMenu>
                 <MenubarTrigger asChild>
                     <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-8 w-8 mr-1">
-                        {isSidebarVisible ? <PanelLeftOpen className="h-5 w-5" /> : <PanelRightOpen className="h-5 w-5" />}
+                        {isSidebarVisible ? <PanelLeftClose className="h-5 w-5" /> : <PanelLeftOpen className="h-5 w-5" />}
                     </Button>
                 </MenubarTrigger>
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Fichier</MenubarTrigger>
-                <MenubarContent>
+                <MenubarContent className="glass-card">
                     <MenubarItem>Nouveau Projet <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
                     <MenubarItem>Nouvelle Fenêtre</MenubarItem>
                     <MenubarSeparator />
@@ -337,7 +337,7 @@ function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar, isSidebarV
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Projet</MenubarTrigger>
-                 <MenubarContent>
+                 <MenubarContent className="glass-card">
                     <MenubarItem disabled={!activeProject}>Renommer le projet...</MenubarItem>
                     <MenubarItem disabled={!activeProject} onClick={handleDeleteProject} className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                         Supprimer le projet
@@ -346,7 +346,7 @@ function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar, isSidebarV
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Affichage</MenubarTrigger>
-                <MenubarContent>
+                <MenubarContent className="glass-card">
                     <MenubarItem onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
                         Changer le thème
                     </MenubarItem>
@@ -481,3 +481,4 @@ export default function MessengerClient() {
         </div>
     );
 }
+
