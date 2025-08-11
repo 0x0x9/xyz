@@ -27,6 +27,8 @@ import {
   Paintbrush,
   Users,
   CheckCircle,
+  MonitorPlay,
+  Download
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
@@ -439,26 +441,40 @@ const HomePageClient = () => {
             </div>
         </section>
 
-        <section id="demo" className="mt-24 container mx-auto px-4 md:px-6">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold">La création, réinventée.</h2>
-            <p className="max-w-2xl mx-auto text-md text-muted-foreground mt-2">
-                Voyez comment notre suite d'outils peut transformer votre processus créatif.
-            </p>
-          </div>
-          <div className="glass-card p-2 md:p-3 max-w-5xl mx-auto rounded-2xl">
-            <div className="aspect-video w-full">
-                <iframe
-                  src="https://www.youtube.com/embed/SqJGQ25sc8Q?si=279cRsOPl_dffifa&autoplay=1&mute=1&loop=1&playlist=SqJGQ25sc8Q"
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full rounded-lg"
-                ></iframe>
+        <section id="final-cta" className="my-24 md:my-32 container mx-auto px-4 md:px-6">
+            <div className="grid md:grid-cols-2 gap-8 items-center glass-card p-8 md:p-12 rounded-3xl">
+                <div className="text-center md:text-left">
+                    <div className="inline-block bg-primary/10 p-4 rounded-2xl border border-primary/20 mb-4">
+                        <MonitorPlay className="h-10 w-10 text-primary" />
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Essayez (X)OS en ligne.</h2>
+                    <p className="mt-4 text-lg text-muted-foreground max-w-xl md:mx-0 mx-auto">
+                        Plongez dans notre environnement web interactif pour tester la puissance de nos outils IA, sans rien installer.
+                    </p>
+                    <Button size="lg" asChild className="rounded-full text-lg mt-8">
+                        <Link href="/xos">
+                            Lancer l'expérience web <ArrowRight className="ml-2 h-5 w-5" />
+                        </Link>
+                    </Button>
+                </div>
+
+                <div className="text-center md:text-left">
+                        <div className="inline-block bg-primary/10 p-4 rounded-2xl border border-primary/20 mb-4">
+                        <Download className="h-10 w-10 text-primary" />
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Passez à la vitesse supérieure.</h2>
+                    <p className="mt-4 text-lg text-muted-foreground max-w-xl md:mx-0 mx-auto">
+                       Installez (X)OS sur votre machine pour libérer des performances inégalées et une créativité sans aucune limite.
+                    </p>
+                    <Button size="lg" variant="outline" asChild className="rounded-full text-lg mt-8">
+                        <Link href="/download">
+                            Télécharger l'OS <ArrowRight className="ml-2 h-5 w-5" />
+                        </Link>
+                    </Button>
+                </div>
             </div>
-          </div>
         </section>
+
       </main>
       <Footer />
     </>
