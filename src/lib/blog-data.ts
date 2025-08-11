@@ -82,20 +82,20 @@ export const blogPosts: Post[] = [
     excerpt: "Passez de l'idée à une interface fonctionnelle en quelques minutes. Ce guide vous montre comment utiliser (X)frame pour générer du code React à partir d'une simple description.",
     content: `
 <h2>Introduction : Qu'est-ce que (X)frame ?</h2>
-<p>(X)frame est un outil d'IA révolutionnaire qui transforme vos descriptions textuelles en composants React fonctionnels. Fini les heures passées à coder des maquettes ! Vous décrivez, (X)frame construit. Dans ce tutoriel, nous allons créer une carte de profil utilisateur simple.</p>
+<p>(X)frame est un outil d'IA révolutionnaire qui transforme vos descriptions textuelles en <strong>composants React fonctionnels</strong>. Fini les heures passées à coder des maquettes ! Vous décrivez, (X)frame construit. Dans ce tutoriel, nous allons créer une carte de profil utilisateur simple.</p>
 <h3>Étape 1 : Lancer (X)frame</h3>
 <p>La première étape est d'ouvrir (X)frame depuis votre bureau (X)OS ou via la commande <code>open frame</code> dans (X)term. Vous serez accueilli par une interface simple vous invitant à décrire le composant que vous souhaitez créer.</p>
 <h3>Étape 2 : Rédiger le Prompt</h3>
 <p>La qualité de votre résultat dépend de la clarté de votre prompt. Soyons précis. Dans la zone de texte, écrivez :</p>
 <blockquote>"Crée une carte de profil utilisateur. Elle doit contenir un avatar rond, un nom d'utilisateur, un nom de compte (handle), et un bouton 'Suivre'. Utilise les composants Card de shadcn/ui et des icônes de lucide-react si nécessaire. Le design doit être moderne et épuré."</blockquote>
-<p>Ce prompt indique à (X)frame non seulement ce qu'il faut construire (une carte de profil), mais aussi quels outils utiliser (shadcn/ui, lucide-react) et quel style adopter (moderne, épuré).</p>
+<p>Ce prompt indique à (X)frame non seulement <strong>ce qu'il faut construire</strong> (une carte de profil), mais aussi <strong>quels outils utiliser</strong> (shadcn/ui, lucide-react) et <strong>quel style adopter</strong> (moderne, épuré).</p>
 <h3>Étape 3 : Générer et Analyser le Code</h3>
 <p>Cliquez sur "Générer". En quelques instants, (X)frame vous fournira le code JSX complet du composant React. Vous remarquerez qu'il a correctement importé <code>Card</code>, <code>Avatar</code>, et <code>Button</code> depuis les bonnes bibliothèques. Le code est propre et prêt à l'emploi.</p>
 <p>Le plus impressionnant est que (X)frame ne se contente pas de générer du code statique. Il inclut souvent des états de base. Par exemple, le bouton "Suivre" pourrait avoir un état \`isFollowing\` géré avec un \`useState\` pour basculer son texte et son style.</p>
 <h3>Étape 4 : Personnaliser et Intégrer</h3>
 <p>Le code généré est une base solide. Vous pouvez maintenant le copier-coller dans votre projet existant via (X).alpha (notre éditeur de code) et le personnaliser. Changez les textes, ajustez les styles avec Tailwind CSS, ou ajoutez une logique plus complexe. Vous venez de gagner un temps précieux.</p>
 <h2>Conclusion</h2>
-<p>Vous avez créé votre premier composant avec (X)frame ! Cet outil est conçu pour accélérer votre développement, vous permettant de vous concentrer sur la logique complexe plutôt que sur la mise en place répétitive des interfaces. Expérimentez avec des prompts plus complexes et découvrez toute la puissance de l'IA au service du design.</p>
+<p>Vous avez créé votre premier composant avec (X)frame ! Cet outil est conçu pour <strong>accélérer votre développement</strong>, vous permettant de vous concentrer sur la logique complexe plutôt que sur la mise en place répétitive des interfaces. Expérimentez avec des prompts plus complexes et découvrez toute la puissance de l'IA au service du design.</p>
 `
   }
 ];
