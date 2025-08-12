@@ -9,7 +9,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "genkit:watch": "ts-node -r tsconfig-paths/register -r dotenv/config --transpileOnly src/ai/dev.ts",
-    "genkit:dev": "next dev -p 9002"
+    "genkit:dev": "next dev"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.2",
