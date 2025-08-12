@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run start",
+    "dev": "next dev -p 9002 -H 0.0.0.0",
     "build": "genkit-cli build && next build",
     "start": "next dev -p 9002 -H 0.0.0.0",
     "lint": "next lint",
