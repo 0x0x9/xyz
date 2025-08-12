@@ -3,13 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm:genkit:watch\" \"npm:start\"",
+    "dev": "npm run start",
     "build": "genkit-cli build && next build",
     "start": "next dev -p 9002 -H 0.0.0.0",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "genkit:watch": "ts-node -r tsconfig-paths/register -r dotenv/config --transpileOnly src/ai/dev.ts",
-    "genkit:dev": "next dev"
+    "genkit:watch": "ts-node -r tsconfig-paths/register -r dotenv/config --transpileOnly src/ai/dev.ts"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.2",
