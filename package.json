@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm:genkit:watch\" \"npm:genkit:dev\"",
+    "dev": "concurrently \"npm:genkit:watch\" \"npm:start\"",
     "build": "genkit-cli build && next build",
-    "start": "next start -p 9002",
+    "start": "next dev -p 9002 -H 0.0.0.0",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "genkit:watch": "ts-node -r tsconfig-paths/register -r dotenv/config --transpileOnly src/ai/dev.ts",
