@@ -26,8 +26,8 @@ import { useAuth } from '@/components/auth-component';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 
 // Types
@@ -235,45 +235,48 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
 }
 
 function ManualProjectForm({ onProjectCreated, onCancel }: { onProjectCreated: (project: ProjectPlan) => void, onCancel: () => void }) {
-    const initialState = { success: false, error: null };
-    const [state, formAction] = useFormState(createManualProjectAction, initialState);
-    const { pending } = useFormStatus();
-
-    useEffect(() => {
-        if (state.success && state.project) {
-            onProjectCreated(state.project);
+    const formRef = useRef<HTMLFormElement>(null);
+    const [isPending, setIsPending] = useState(false);
+    
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsPending(true);
+        const formData = new FormData(e.currentTarget);
+        const result = await createManualProjectAction(null, formData);
+        if (result.success && result.project) {
+            onProjectCreated(result.project);
+        } else if (result.error) {
+            alert(`Erreur: ${result.error}`);
         }
-        if (!state.success && state.error) {
-            alert(`Erreur: ${state.error}`);
-        }
-    }, [state, onProjectCreated]);
+        setIsPending(false);
+    };
 
     return (
-        <form action={formAction} className="w-full max-w-lg mt-8 space-y-4 text-left">
+        <form ref={formRef} onSubmit={handleSubmit} className="w-full max-w-lg mt-8 space-y-4 text-left">
             <div className="space-y-2">
                 <Label htmlFor="title">Titre du projet</Label>
-                <Input id="title" name="title" placeholder="Ex: Lancement de ma chaîne YouTube" required disabled={pending} />
+                <Input id="title" name="title" placeholder="Ex: Lancement de ma chaîne YouTube" required disabled={isPending} />
             </div>
             <div className="space-y-2">
                 <Label htmlFor="creativeBrief">Description / Brief Créatif</Label>
-                <Textarea id="creativeBrief" name="creativeBrief" placeholder="Décrivez l'objectif principal et la vision de votre projet." rows={4} required disabled={pending} />
+                <Textarea id="creativeBrief" name="creativeBrief" placeholder="Décrivez l'objectif principal et la vision de votre projet." rows={4} required disabled={isPending} />
             </div>
             <div className="flex gap-4 pt-4">
-                <Button type="button" variant="ghost" onClick={onCancel} disabled={pending}>Annuler</Button>
-                <Button type="submit" disabled={pending} className="flex-1">
-                    {pending ? <Loader className="animate-spin mr-2"/> : <FilePlus className="mr-2 h-4 w-4"/>}
-                    {pending ? 'Création...' : 'Créer le projet'}
+                <Button type="button" variant="ghost" onClick={onCancel} disabled={isPending}>Annuler</Button>
+                <Button type="submit" disabled={isPending} className="flex-1">
+                    {isPending ? <Loader className="animate-spin mr-2"/> : <FilePlus className="mr-2 h-4 w-4"/>}
+                    {isPending ? 'Création...' : 'Créer le projet'}
                 </Button>
             </div>
         </form>
     );
 }
 
-
 function NewProjectView({ onProjectCreated, onCancel }: { onProjectCreated: (result: any) => void, onCancel: () => void}) {
     const initialState = { message: '', result: null, error: null, id: 0, prompt: '', job: '' };
     const [state, formAction] = useFormState(fluxAction, initialState);
     const [view, setView] = useState<'ai' | 'manual'>('ai');
+    
     const { pending } = useFormStatus();
 
     useEffect(() => {
@@ -366,8 +369,16 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
     
     const getProjectContext = () => {
         if (!activeProject) return 'aucun';
-        return `L'utilisateur travaille sur le projet "${activeProject.title}". Le brief créatif est : "${activeProject.creativeBrief}"`;
-    }
+
+        const tasksSummary = activeProject.tasks.map(task => 
+            `- ${task.title} (${task.category}): ${task.checklist.filter(c => c.completed).length}/${task.checklist.length} complétées.`
+        ).join('\n');
+
+        return `L'utilisateur travaille sur le projet "${activeProject.title}".
+        Brief créatif : "${activeProject.creativeBrief}".
+        Liste des tâches :
+        ${tasksSummary}`;
+    };
 
     return (
         <div className="glass-card h-full flex flex-col">
