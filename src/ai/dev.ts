@@ -33,3 +33,4 @@ import '@/ai/flows/reformat-text-with-prompt.ts';
 import '@/ai/flows/convert-image.ts';
 import '@/ai/flows/generate-visual-prompts.ts';
 import '@/ai/flows/generate-light-mood.ts';
+import '@/ai/flows/generate-video.ts';
