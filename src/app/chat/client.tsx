@@ -324,7 +324,10 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
     return (
         <div className="glass-card h-full flex flex-col">
             <header className="p-4 border-b border-white/10 flex items-center gap-4 flex-shrink-0">
-                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-fuchsia-500 flex items-center justify-center">
+                <Button variant="ghost" size="icon" onClick={onBack} className="h-8 w-8">
+                    <ArrowLeft className="h-5 w-5" />
+                </Button>
+                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-fuchsia-500 flex items-center justify-center shrink-0">
                     <Sparkles className="text-white h-5 w-5" />
                 </div>
                 <div>
