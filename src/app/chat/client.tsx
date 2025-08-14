@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader, GitBranch, Share2, UploadCloud, Pencil, Plus, Presentation, FilePlus } from 'lucide-react';
+import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader, GitBranch, Share2, UploadCloud, Pencil, Plus, Presentation, FilePlus, Save, ChevronsRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { OriaHistoryMessage, ProjectPlan, Doc, GenerateFluxOutput } from '@/ai/types';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -369,9 +369,9 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
     
     const getProjectContext = () => {
         if (!activeProject) return 'aucun';
-
+        
         const tasksSummary = activeProject.tasks.map(task => 
-            `- ${task.title} (${task.category}): ${task.checklist.filter(c => c.completed).length}/${task.checklist.length} complétées.`
+            `- ${task.title} (${task.category}): ${task.checklist.filter(c => c.completed).length}/${task.checklist.length} complétées. Description: ${task.description}`
         ).join('\n');
 
         return `L'utilisateur travaille sur le projet "${activeProject.title}".
@@ -509,7 +509,7 @@ function ProjectPlanView({ project, setProject }: { project: ProjectPlan, setPro
     )
 }
 
-function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar, isSidebarVisible }: { activeProject: ProjectPlan | null, onProjectDeleted: (id: string) => void, toggleSidebar: () => void, isSidebarVisible: boolean }) {
+function TopMenuBar({ activeProject, onCreateNew, onProjectDeleted, onSaveProject, toggleSidebar, isSidebarVisible }: { activeProject: ProjectPlan | null, onCreateNew: () => void, onProjectDeleted: (id: string) => void, onSaveProject: () => void, toggleSidebar: () => void, isSidebarVisible: boolean }) {
     const { theme, setTheme } = useTheme();
 
     const handleDeleteProject = async () => {
@@ -526,20 +526,14 @@ function TopMenuBar({ activeProject, onProjectDeleted, toggleSidebar, isSidebarV
                     </Button>
                 </MenubarTrigger>
             </MenubarMenu>
-            <MenubarMenu>
-                <MenubarTrigger>Fichier</MenubarTrigger>
-                <MenubarContent className="glass-card">
-                    <MenubarItem>Nouveau Projet <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
-                    <MenubarItem>Nouvelle Fenêtre</MenubarItem>
-                    <MenubarSeparator />
-                    <MenubarItem disabled>Sauvegarder <MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
-                    <MenubarItem disabled>Fermer l'onglet <MenubarShortcut>⌘W</MenubarShortcut></MenubarItem>
-                </MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu>
+             <MenubarMenu>
                 <MenubarTrigger>Projet</MenubarTrigger>
                  <MenubarContent className="glass-card">
+                    <MenubarItem onClick={onCreateNew}>Nouveau Projet <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
+                    <MenubarSeparator />
                     <MenubarItem disabled={!activeProject}>Renommer le projet...</MenubarItem>
+                    <MenubarItem disabled={!activeProject} onClick={onSaveProject}>Sauvegarder les changements<MenubarShortcut>⌘S</MenubarShortcut></MenubarItem>
+                    <MenubarSeparator />
                     <MenubarItem disabled={!activeProject} onClick={handleDeleteProject} className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                         Supprimer le projet
                     </MenubarItem>
@@ -697,7 +691,9 @@ export default function MessengerClient() {
             <div className="flex-1 flex flex-col glass-card p-0">
                 <TopMenuBar 
                     activeProject={activeProject} 
+                    onCreateNew={() => setView('newProject')}
                     onProjectDeleted={onProjectDeleted} 
+                    onSaveProject={() => toast({ title: "Simulation", description: "La sauvegarde des modifications n'est pas encore implémentée." })}
                     toggleSidebar={() => setShowSidebar(!showSidebar)}
                     isSidebarVisible={showSidebar}
                 />
