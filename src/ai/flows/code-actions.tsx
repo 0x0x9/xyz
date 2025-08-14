@@ -54,8 +54,15 @@ const initialDevices = [
     { id: 2, name: 'MacBook Pro 16"', icon: MonitorSmartphone, location: 'Lyon, FR', lastSeen: 'il y a 2 jours' },
 ];
 
-const SectionCard = ({ icon, title, description, children, className }: { icon: React.ElementType, title: string, description: string, children: React.ReactNode, className?: string }) => {
-    const Icon = icon;
+interface SectionCardProps {
+    icon: React.ElementType, 
+    title: string, 
+    description: string, 
+    children: React.ReactNode, 
+    className?: string
+}
+
+const SectionCard: React.FC<SectionCardProps> = ({ icon: Icon, title, description, children, className }) => {
     return (
         <Card className={`glass-card h-full ${className}`}>
             <CardHeader className="flex flex-row items-center gap-4">
