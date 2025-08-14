@@ -1,18 +1,18 @@
 
 'use client';
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader, GitBranch, Share2, UploadCloud, Pencil } from 'lucide-react';
+import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader, GitBranch, Share2, UploadCloud, Pencil, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { OriaHistoryMessage, ProjectPlan, Doc } from '@/ai/types';
+import type { OriaHistoryMessage, ProjectPlan, Doc, GenerateFluxOutput } from '@/ai/types';
 import { AnimatePresence, motion } from 'framer-motion';
-import { oriaChatAction, deleteDocumentAction, listDocumentsAction } from '@/app/actions';
+import { oriaChatAction, deleteDocumentAction, listDocumentsAction, fluxAction } from '@/app/actions';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import DocManager from '@/components/doc-manager';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
@@ -25,6 +25,7 @@ import { useAuth } from '@/components/auth-component';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { Textarea } from '../ui/textarea';
 
 
 // Types
@@ -131,7 +132,7 @@ const RecentActivityFeed = ({ docs, loading }: { docs: Doc[], loading: boolean }
 
 
 // Sub-components
-function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, projects, loading }: { activeProject: ProjectPlan | null, setActiveProject: (project: ProjectPlan | null) => void, onProjectDeleted: (deletedId: string) => void, projects: ProjectPlan[], loading: boolean }) {
+function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, projects, loading, onCreateNew }: { activeProject: ProjectPlan | null, setActiveProject: (project: ProjectPlan | null) => void, onProjectDeleted: (deletedId: string) => void, projects: ProjectPlan[], loading: boolean, onCreateNew: () => void }) {
     const [projectToDelete, setProjectToDelete] = useState<ProjectPlan | null>(null);
     const { toast } = useToast();
 
@@ -160,7 +161,12 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
 
     return (
         <div className="p-2 space-y-2">
-            <h3 className="px-3 text-xs font-semibold uppercase text-muted-foreground mb-1">Projets Récents</h3>
+            <div className="flex justify-between items-center px-3 mb-1">
+                <h3 className="text-xs font-semibold uppercase text-muted-foreground">Projets</h3>
+                 <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onCreateNew}>
+                    <Plus className="h-4 w-4" />
+                </Button>
+            </div>
             {loading ? (
                 Array.from({ length: 2 }).map((_, i) => (
                     <div key={i} className="flex items-center gap-3 p-3">
@@ -224,6 +230,52 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
             </AlertDialog>
         </div>
     );
+}
+
+
+function NewProjectView({ onProjectCreated, onCancel }: { onProjectCreated: (result: GenerateFluxOutput) => void, onCancel: () => void}) {
+    const initialState = { message: '', result: null, error: null, id: 0, prompt: '', job: '' };
+    const [state, formAction] = useFormState(fluxAction, initialState);
+    const { pending } = useFormStatus();
+
+    useEffect(() => {
+        if(state.result) {
+            onProjectCreated(state.result);
+        }
+        if(state.error) {
+            alert(`Erreur: ${state.error}`);
+        }
+    }, [state, onProjectCreated]);
+
+    return (
+        <div className="h-full flex flex-col items-center justify-center text-center p-8">
+            <Sparkles className="mx-auto h-20 w-20 text-muted-foreground/30" />
+            <h2 className="mt-6 text-xl font-semibold text-foreground">Créer un nouveau projet</h2>
+            <p className="mt-2 text-muted-foreground">Décrivez votre objectif et laissez (X)flux générer tous les livrables de départ.</p>
+            <form action={formAction} className="w-full max-w-lg mt-8 space-y-4">
+                 <Textarea
+                    name="prompt"
+                    placeholder="Exemple : Je suis une artiste et je veux lancer une collection de NFT sur le thème de l'espace."
+                    rows={3}
+                    required
+                    minLength={15}
+                    className="bg-background/50 text-base text-center"
+                    disabled={pending}
+                />
+                 <Input 
+                    name="job"
+                    placeholder="Votre métier ? (ex: Développeur, Artiste...) - Optionnel"
+                    className="bg-background/50 text-base text-center"
+                    disabled={pending}
+                />
+                <Button type="submit" size="lg" disabled={pending} className="w-full">
+                    {pending ? <Loader className="animate-spin mr-2"/> : <Sparkles className="mr-2 h-4 w-4"/>}
+                    {pending ? 'Génération en cours...' : 'Lancer (X)flux'}
+                </Button>
+                 <Button variant="ghost" onClick={onCancel} disabled={pending}>Annuler</Button>
+            </form>
+        </div>
+    )
 }
 
 function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartner, onBack: () => void, activeProject: ProjectPlan | null }) {
@@ -453,6 +505,7 @@ export default function MessengerClient() {
         
     const [activeProject, setActiveProject] = useState<ProjectPlan | null>(null);
     const [showSidebar, setShowSidebar] = useState(true);
+    const [view, setView] = useState<'welcome' | 'newProject'>('welcome');
     
     const oriaPartner: ChatPartner = {
         uid: 'oria-chat-bot',
@@ -499,8 +552,37 @@ export default function MessengerClient() {
     const onProjectDeleted = (deletedId: string) => {
         if (activeProject && activeProject.id === deletedId) {
             setActiveProject(null);
+            setView('welcome');
         }
         setDocs(prev => prev.filter(p => p.id !== deletedId));
+    };
+
+    const handleProjectCreated = (result: GenerateFluxOutput) => {
+        // Here, you would typically save the result to your backend
+        // and then refetch the project list. For this mock, we'll
+        // simulate adding the new project to our state.
+        if (result.projectPlan) {
+            const newProject: ProjectPlan = {
+                ...result.projectPlan,
+                id: `flux-${Date.now()}`,
+            };
+            
+            // Simulate saving the project plan
+            const newDoc: Doc = {
+                 id: newProject.id,
+                 name: `maestro-${newProject.title.replace(/\s/g, '_')}.json`,
+                 path: `maestro-${newProject.title.replace(/\s/g, '_')}.json`,
+                 mimeType: 'application/json',
+                 size: JSON.stringify(newProject).length,
+                 createdAt: new Date().toISOString(),
+                 updatedAt: new Date().toISOString(),
+                 shareId: null,
+            };
+            
+            setDocs(prev => [...prev, newDoc]);
+            setActiveProject(newProject);
+        }
+        toast({ title: "Projet créé !", description: `Le projet "${result.projectPlan?.title}" a été initialisé.`})
     };
     
     const updateActiveProject = (updatedProject: ProjectPlan) => {
@@ -509,12 +591,16 @@ export default function MessengerClient() {
     }
 
     const MainContent = () => {
+        if (view === 'newProject') {
+            return <NewProjectView onProjectCreated={handleProjectCreated} onCancel={() => setView('welcome')} />
+        }
+
         if (!activeProject) {
             return (
                 <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground p-8">
                     <BrainCircuit className="mx-auto h-20 w-20 text-muted-foreground/30" />
                     <p className="mt-6 text-xl font-semibold text-foreground">Bienvenue sur Pulse</p>
-                    <p className="mt-2">Sélectionnez un projet pour commencer à le gérer.</p>
+                    <p className="mt-2">Sélectionnez un projet pour commencer ou créez-en un nouveau.</p>
                 </div>
             );
         }
@@ -544,7 +630,7 @@ export default function MessengerClient() {
                     <DocManager onDataChange={fetchDocs} />
                 </TabsContent>
                 <TabsContent value="chat" className="flex-1 min-h-0 -mt-2">
-                    <OriaChatWindow partner={oriaPartner} onBack={() => setActiveProject(null)} activeProject={activeProject} />
+                    <OriaChatWindow partner={oriaPartner} onBack={() => {setActiveProject(null); setView('welcome')}} activeProject={activeProject} />
                 </TabsContent>
             </Tabs>
         );
@@ -579,7 +665,14 @@ export default function MessengerClient() {
                                             <p className="text-xs text-muted-foreground">Pulse</p>
                                         </div>
                                     </div>
-                                    <ProjectTracker activeProject={activeProject} setActiveProject={setActiveProject} onProjectDeleted={onProjectDeleted} projects={projects} loading={loading} />
+                                    <ProjectTracker 
+                                        activeProject={activeProject} 
+                                        setActiveProject={(p) => {setActiveProject(p); setView('welcome');}} 
+                                        onProjectDeleted={onProjectDeleted} 
+                                        projects={projects} 
+                                        loading={loading}
+                                        onCreateNew={() => {setActiveProject(null); setView('newProject');}}
+                                     />
                                     <div className="my-2 h-px bg-border"/>
                                     <RecentActivityFeed docs={docs} loading={loading} />
                                 </ScrollArea>
@@ -595,7 +688,3 @@ export default function MessengerClient() {
         </div>
     );
 }
-
-    
-
-    
