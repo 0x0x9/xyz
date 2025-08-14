@@ -4,7 +4,35 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
-import type { Doc, GenerateFluxOutput, GenerateMuseOutput, ProjectPlan, GenerateIdeasOutput, VideoScript, Nexus, GeneratePaletteOutput, GeneratePersonaOutput, GenerateSoundOutput, Frame, GenerateToneOutput, GenerateCodeOutput, GenerateDeckOutput, GenerateTextOutput, GenerateVoiceOutput, OriaChatOutput, ExplainCodeOutput, DebugCodeOutput, AgendaEvent, ReformatTextWithPromptOutput, GenerateCodeInput, ExplainCodeInput, RefactorCodeInput, GenerateLightMoodOutput } from '@/ai/types';
+import type { Doc, GenerateFluxOutput, GenerateMuseOutput, ProjectPlan, GenerateIdeasOutput, VideoScript, Nexus, GeneratePaletteOutput, GeneratePersonaOutput, GenerateSoundOutput, Frame, GenerateToneOutput, GenerateCodeOutput, GenerateDeckOutput, GenerateTextOutput, GenerateVoiceOutput, OriaChatOutput, ExplainCodeOutput, DebugCodeOutput, AgendaEvent, ReformatTextWithPromptOutput, GenerateCodeInput, ExplainCodeInput, RefactorCodeInput, GenerateLightMoodOutput, ConvertImageOutput } from '@/ai/types';
+import {
+    GenerateFluxInputSchema,
+    GenerateScheduleInputSchema,
+    GenerateTextInputSchema,
+    GenerateMuseInputSchema,
+    CopilotLyricsInputSchema,
+    GenerateIdeasInputSchema,
+    GenerateMotionInputSchema,
+    GenerateImageInputSchema,
+    GenerateNexusInputSchema,
+    GeneratePaletteInputSchema,
+    GeneratePersonaInputSchema,
+    GenerateSoundInputSchema,
+    GenerateToneInputSchema,
+    GenerateLightMoodInputSchema,
+    GenerateCodeInputSchema,
+    ExplainCodeInputSchema,
+    DebugCodeInputSchema,
+    RefactorCodeInputSchema,
+    GenerateDeckInputSchema,
+    GenerateVoiceInputSchema,
+    ReformatTextWithPromptInputSchema,
+    ConvertImageInputSchema,
+    GenerateFrameInputSchema,
+    OriaChatInputSchema,
+    ParseEventInputSchema,
+} from '@/ai/types';
+
 
 // AI Flow Imports
 import { generateFrame } from '@/ai/flows/generate-frame';
@@ -46,18 +74,30 @@ let mockSharedDocs: Record<string, any> = {
 };
 const resultsStore: Record<string, any> = {};
 
+// Helper to handle safe parsing and error state return
+function safeParse<T>(schema: z.ZodSchema<T>, formData: FormData, prevState: any) {
+    const data = Object.fromEntries(formData);
+    const parseResult = schema.safeParse(data);
+
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
+        return { success: false, data: null, error, state: { ...prevState, message: 'error', error } };
+    }
+    return { success: true, data: parseResult.data, error: null, state: prevState };
+}
 
 // --- AI ACTIONS ---
 
 export async function fluxAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateFluxOutput | null, error: string | null, id: number, prompt: string, job: string }> {
-    const prompt = formData.get('prompt') as string;
-    const job = formData.get('job') as string;
+    const { success, data, error, state } = safeParse(GenerateFluxInputSchema, formData, prevState);
+    if (!success) return state;
+
     try {
-        const result = await generateFlux({ prompt, job });
-        return { ...prevState, message: 'success', result, error: null, prompt, job };
+        const result = await generateFlux(data);
+        return { ...prevState, message: 'success', result, error: null, prompt: data.prompt, job: data.job ?? '' };
     } catch (e: any) {
         console.error('Error in fluxAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, prompt, job };
+        return { ...prevState, message: 'error', result: null, error: e.message, prompt: data.prompt, job: data.job ?? '' };
     }
 }
 
@@ -123,10 +163,14 @@ export async function createManualProjectAction(prevState: any, formData: FormDa
 
 
 export async function generateFrameAction(prevState: any, formData: FormData): Promise<{ message: string, error: string | null, id: number, result: Frame | null }> {
-    const prompt = formData.get('prompt') as string;
-    const photoDataUri = formData.get('photoDataUri') as string;
+    const { success, data, error, state } = safeParse(GenerateFrameInputSchema, formData, prevState);
+    if (!success) return state;
+    if (!data.prompt && !data.photoDataUri) {
+         return { ...prevState, message: 'error', result: null, error: "Une description ou une image est requise." };
+    }
+    
     try {
-        const result = await generateFrame({ prompt, photoDataUri: photoDataUri || undefined });
+        const result = await generateFrame({ prompt: data.prompt, photoDataUri: data.photoDataUri || undefined });
         return { ...prevState, message: 'success', result, error: null };
     } catch (e: any) {
         console.error('Error in generateFrameAction:', e);
@@ -136,11 +180,12 @@ export async function generateFrameAction(prevState: any, formData: FormData): P
 
 
 export async function oriaChatAction(prevState: any, formData: FormData): Promise<{ message: string, error: string | null, id: number, result: OriaChatOutput | null }> {
-    const prompt = formData.get('prompt') as string;
     const history = JSON.parse(formData.get('history') as string || '[]');
-    const context = formData.get('context') as 'homepage' | 'xos' | 'dock' || 'xos';
+    const { success, data, error, state } = safeParse(OriaChatInputSchema.omit({ history: true }), formData, prevState);
+    if (!success) return { ...state, id: prevState.id + 1 };
+    
     try {
-        const result = await oria({ prompt, history, context });
+        const result = await oria({ prompt: data.prompt, context: data.context, history });
         return { message: 'success', error: null, id: prevState.id + 1, result };
     } catch (e: any) {
         console.error('Error in oriaChatAction:', e);
@@ -149,24 +194,28 @@ export async function oriaChatAction(prevState: any, formData: FormData): Promis
 }
 
 export async function generateScheduleAction(prevState: any, formData: FormData): Promise<{ message: string, plan: ProjectPlan | null, error: string | null, id: number, prompt: string }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(GenerateScheduleInputSchema, formData, prevState);
+    if (!success) return { ...state, prompt: '' };
+
     try {
-        const plan = await generateSchedule({ prompt });
-        return { ...prevState, message: 'success', plan, error: null, prompt };
+        const plan = await generateSchedule(data);
+        return { ...prevState, message: 'success', plan, error: null, prompt: data.prompt };
     } catch(e: any) {
         console.error('Error in generateScheduleAction:', e);
-        return { ...prevState, message: 'error', plan: null, error: e.message, prompt };
+        return { ...prevState, message: 'error', plan: null, error: e.message, prompt: data.prompt };
     }
 }
 
 export async function generateTextAction(prevState: any, formData: FormData): Promise<{ message: string, text: string, error: string | null, id: number, prompt: string }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(GenerateTextInputSchema, formData, prevState);
+    if (!success) return { ...state, text: '', prompt: '' };
+
     try {
-        const result = await generateText({ prompt });
-        return { message: 'success', text: result.text, error: null, id: prevState.id + 1, prompt };
+        const result = await generateText(data);
+        return { message: 'success', text: result.text, error: null, id: prevState.id + 1, prompt: data.prompt };
     } catch (e: any) {
         console.error('Error in generateTextAction:', e);
-        return { message: 'error', text: '', error: e.message, id: prevState.id + 1, prompt };
+        return { message: 'error', text: '', error: e.message, id: prevState.id + 1, prompt: data.prompt };
     }
 }
 
@@ -184,9 +233,11 @@ export async function parseEventAction(
     prevState: any, 
     formData: FormData
 ): Promise<{ success: boolean; event: AgendaEvent | null; error: string | null; id: number }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(ParseEventInputSchema.extend({ currentDate: z.string().optional() }), formData, prevState);
+    if (!success) return { ...state, success: false, event: null, id: prevState.id + 1 };
+    
     try {
-        const result = await parseEvent({ prompt, currentDate: new Date().toISOString() });
+        const result = await parseEvent({ prompt: data.prompt, currentDate: new Date().toISOString() });
         return { id: prevState.id + 1, success: true, event: result, error: null };
     } catch (e: any) {
         console.error('Error in parseEventAction:', e);
@@ -195,126 +246,142 @@ export async function parseEventAction(
 }
 
 export async function generateMuseAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateMuseOutput | null, error: string | null, id: number, theme: string, mood: string, tempo: string, references: string }> {
-    const theme = formData.get('theme') as string;
-    const mood = formData.get('mood') as string;
-    const tempo = formData.get('tempo') as string;
-    const references = formData.get('references') as string;
+    const { success, data, error, state } = safeParse(GenerateMuseInputSchema, formData, prevState);
+    const formValues = Object.fromEntries(formData);
+    if (!success) return { ...state, ...formValues, references: formValues.references || '' };
+
     try {
-        const result = await generateMuse({ theme, mood, tempo, references });
-        return { ...prevState, message: 'success', result, error: null, theme, mood, tempo, references };
+        const result = await generateMuse(data);
+        return { ...prevState, message: 'success', result, error: null, ...data, references: data.references || '' };
     } catch (e: any) {
         console.error('Error in generateMuseAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, theme, mood, tempo, references };
+        return { ...prevState, message: 'error', result: null, error: e.message, ...data, references: data.references || '' };
     }
 }
 
 export async function copilotLyricsAction(prevState: any, formData: FormData): Promise<{ success: boolean, suggestions: string[] | null, error: string | null, action: 'ENHANCE' | 'RHYMES' | undefined }> {
-    const textToEdit = formData.get('textToEdit') as string;
-    const fullText = formData.get('fullText') as string;
-    const mood = formData.get('mood') as string;
-    const action = formData.get('action') as 'ENHANCE' | 'RHYMES';
+    const { success, data, error, state } = safeParse(CopilotLyricsInputSchema, formData, prevState);
+    if (!success) return { success: false, suggestions: null, error: error, action: undefined };
+    
     try {
-        const result = await copilotLyrics({ textToEdit, fullText, mood, action });
-        return { success: true, suggestions: result.suggestions, error: null, action };
+        const result = await copilotLyrics(data);
+        return { success: true, suggestions: result.suggestions, error: null, action: data.action };
     } catch (e: any) {
         console.error('Error in copilotLyricsAction:', e);
-        return { success: false, suggestions: null, error: e.message, action };
+        return { success: false, suggestions: null, error: e.message, action: data.action };
     }
 }
 
 export async function generateIdeasAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateIdeasOutput | null, error: string | null, id: number, prompt: string }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(GenerateIdeasInputSchema, formData, prevState);
+    if (!success) return { ...state, prompt: '' };
+
     try {
-        const result = await generateIdeas({ prompt });
-        return { ...prevState, message: 'success', result, error: null, prompt };
+        const result = await generateIdeas(data);
+        return { ...prevState, message: 'success', result, error: null, prompt: data.prompt };
     } catch (e: any) {
         console.error('Error in generateIdeasAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, prompt };
+        return { ...prevState, message: 'error', result: null, error: e.message, prompt: data.prompt };
     }
 }
 
 export async function generateMotionAction(prevState: any, formData: FormData): Promise<{ message: string, result: VideoScript | null, error: string | null, id: number, prompt: string }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(GenerateMotionInputSchema, formData, prevState);
+    if (!success) return { ...state, prompt: '' };
+
     try {
-        const result = await generateMotion({ prompt });
-        return { ...prevState, message: 'success', result, error: null, prompt };
+        const result = await generateMotion(data);
+        return { ...prevState, message: 'success', result, error: null, prompt: data.prompt };
     } catch(e: any) {
         console.error('Error in generateMotionAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, prompt };
+        return { ...prevState, message: 'error', result: null, error: e.message, prompt: data.prompt };
     }
 }
 
 export async function generateImageAction(prevState: any, formData: FormData): Promise<{ message: string, imageDataUri: string | null, error: string | null, prompt: string, style?: string, id: number }> {
-    const prompt = formData.get('prompt') as string;
-    const style = formData.get('style') as string;
+    const { success, data, error, state } = safeParse(GenerateImageInputSchema, formData, prevState);
+    if (!success) return { ...state, imageDataUri: null, prompt: '', style: 'none' };
+
     try {
-        const { imageDataUri } = await generateImage({ prompt, style });
-        return { ...prevState, message: 'success', imageDataUri, error: null, prompt, style };
+        const { imageDataUri } = await generateImage(data);
+        return { ...prevState, message: 'success', imageDataUri, error: null, prompt: data.prompt, style: data.style };
     } catch (e: any) {
         console.error('Error in generateImageAction:', e);
-        return { ...prevState, message: 'error', imageDataUri: null, error: e.message, prompt, style };
+        return { ...prevState, message: 'error', imageDataUri: null, error: e.message, prompt: data.prompt, style: data.style };
     }
 }
 
 export async function generateNexusAction(prevState: any, formData: FormData): Promise<{ message: string, result: Nexus | null, error: string | null, id: number, prompt: string }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(GenerateNexusInputSchema, formData, prevState);
+    if (!success) return { ...state, prompt: '' };
+    
     try {
-        const result = await generateNexus({ prompt });
-        return { ...prevState, message: 'success', result, error: null, prompt };
+        const result = await generateNexus(data);
+        return { ...prevState, message: 'success', result, error: null, prompt: data.prompt };
     } catch (e: any) {
         console.error('Error in generateNexusAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, prompt };
+        return { ...prevState, message: 'error', result: null, error: e.message, prompt: data.prompt };
     }
 }
 
-export async function generatePaletteAction(prevState: any, formData: FormData): Promise<{ message: string, result: GeneratePaletteOutput | null, error: 'string' | null, id: number, prompt: string }> {
-    const prompt = formData.get('prompt') as string;
+export async function generatePaletteAction(prevState: any, formData: FormData): Promise<{ message: string, result: GeneratePaletteOutput | null, error: string | null, id: number, prompt: string }> {
+    const { success, data, error, state } = safeParse(GeneratePaletteInputSchema, formData, prevState);
+    if (!success) return { ...state, prompt: '' };
+
     try {
-        const result = await generatePalette({ prompt });
-        return { ...prevState, message: 'success', result, error: null, prompt };
+        const result = await generatePalette(data);
+        return { ...prevState, message: 'success', result, error: null, prompt: data.prompt };
     } catch(e: any) {
         console.error('Error in generatePaletteAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, prompt };
+        return { ...prevState, message: 'error', result: null, error: e.message as string, prompt: data.prompt };
     }
 }
 
 export async function generatePersonaAction(prevState: any, formData: FormData): Promise<{ message: string, result: GeneratePersonaOutput | null, error: string | null, id: number, prompt: string }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(GeneratePersonaInputSchema, formData, prevState);
+    if (!success) return { ...state, prompt: '' };
+
     try {
-        const result = await generatePersona({ prompt });
-        return { ...prevState, message: 'success', result, error: null, prompt };
+        const result = await generatePersona(data);
+        return { ...prevState, message: 'success', result, error: null, prompt: data.prompt };
     } catch(e: any) {
         console.error('Error in generatePersonaAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, prompt };
+        return { ...prevState, message: 'error', result: null, error: e.message, prompt: data.prompt };
     }
 }
 
 export async function generateSoundAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateSoundOutput | null, error: string | null, id: number, prompt: string }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(GenerateSoundInputSchema, formData, prevState);
+    if (!success) return { ...state, prompt: '' };
+
     try {
-        const result = await generateSound({ prompt });
-        return { ...prevState, message: 'success', result, error: null, prompt };
+        const result = await generateSound(data);
+        return { ...prevState, message: 'success', result, error: null, prompt: data.prompt };
     } catch(e: any) {
         console.error('Error in generateSoundAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, prompt };
+        return { ...prevState, message: 'error', result: null, error: e.message, prompt: data.prompt };
     }
 }
 
 export async function generateToneAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateToneOutput | null, error: string | null, id: number, prompt: string }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(GenerateToneInputSchema, formData, prevState);
+    if (!success) return { ...state, prompt: '' };
+    
     try {
-        const result = await generateTone({ prompt });
-        return { ...prevState, message: 'success', result, error: null, prompt };
+        const result = await generateTone(data);
+        return { ...prevState, message: 'success', result, error: null, prompt: data.prompt };
     } catch (e: any) {
         console.error('Error in generateToneAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, prompt };
+        return { ...prevState, message: 'error', result: null, error: e.message, prompt: data.prompt };
     }
 }
 
 export async function generateLightMoodAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateLightMoodOutput | null, error: string | null, id: number }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(GenerateLightMoodInputSchema, formData, prevState);
+    if (!success) return state;
+
     try {
-        const result = await generateLightMood({ prompt });
+        const result = await generateLightMood(data);
         return { ...prevState, message: 'success', result, error: null };
     } catch (e: any) {
         console.error('Error in generateLightMoodAction:', e);
@@ -322,59 +389,29 @@ export async function generateLightMoodAction(prevState: any, formData: FormData
     }
 }
 
-
-const CodeActionSchema = z.object({
-    prompt: z.string().min(1),
-    language: z.string().min(1)
-});
-
-const ExplainCodeActionSchema = z.object({
-    code: z.string().min(1),
-    language: z.string().min(1)
-});
-
-const RefactorCodeActionSchema = z.object({
-    prompt: z.string().min(1),
-    code: z.string().min(1),
-    language: z.string().min(1)
-});
-
 export async function generateCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null }> {
-    const parse = CodeActionSchema.safeParse({
-        prompt: formData.get('prompt'),
-        language: formData.get('language'),
-    });
+    const parse = GenerateCodeInputSchema.safeParse(Object.fromEntries(formData));
     if (!parse.success) {
         return { id: prevState.id + 1, result: null, error: "Prompt et langage sont requis." };
     }
     return codeActions.generateCodeAction(prevState, formData);
 }
 export async function explainCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: ExplainCodeOutput | null, error: string | null }> {
-    const parse = ExplainCodeActionSchema.safeParse({
-        code: formData.get('code'),
-        language: formData.get('language'),
-    });
+    const parse = ExplainCodeInputSchema.safeParse(Object.fromEntries(formData));
     if (!parse.success) {
         return { id: prevState.id + 1, result: null, error: "Code et langage sont requis." };
     }
     return codeActions.explainCodeAction(prevState, formData);
 }
 export async function debugCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: DebugCodeOutput | null, error: string | null }> {
-    const parse = ExplainCodeActionSchema.safeParse({
-        code: formData.get('code'),
-        language: formData.get('language'),
-    });
+    const parse = DebugCodeInputSchema.safeParse(Object.fromEntries(formData));
     if (!parse.success) {
         return { id: prevState.id + 1, result: null, error: "Code et langage sont requis." };
     }
     return codeActions.debugCodeAction(prevState, formData);
 }
 export async function refactorCodeAction(prevState: any, formData: FormData): Promise<{ id: number, result: GenerateCodeOutput | null, error: string | null }> {
-    const parse = RefactorCodeActionSchema.safeParse({
-        prompt: formData.get('prompt'),
-        code: formData.get('code'),
-        language: formData.get('language'),
-    });
+    const parse = RefactorCodeInputSchema.safeParse(Object.fromEntries(formData));
     if (!parse.success) {
         return { id: prevState.id + 1, result: null, error: "Prompt, code et langage sont requis." };
     }
@@ -382,25 +419,28 @@ export async function refactorCodeAction(prevState: any, formData: FormData): Pr
 }
 
 export async function generateDeckAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateDeckOutput | null, error: string | null, id: number, prompt: string }> {
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(GenerateDeckInputSchema, formData, prevState);
+    if (!success) return { ...state, prompt: '' };
+
     try {
-        const result = await generateDeck({ prompt });
-        return { ...prevState, message: 'success', result, error: null, prompt };
+        const result = await generateDeck(data);
+        return { ...prevState, message: 'success', result, error: null, prompt: data.prompt };
     } catch (e: any) {
         console.error('Error in generateDeckAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, prompt };
+        return { ...prevState, message: 'error', result: null, error: e.message, prompt: data.prompt };
     }
 }
 
 export async function generateVoiceAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateVoiceOutput | null, error: string | null, id: number, text: string, voice: string }> {
-    const text = formData.get('text') as string;
-    const voice = formData.get('voice') as string || 'Algenib';
+    const { success, data, error, state } = safeParse(GenerateVoiceInputSchema, formData, prevState);
+    if (!success) return { ...state, text: '', voice: 'Algenib' };
+
     try {
-        const result = await generateVoice({ text, voice });
-        return { ...prevState, message: 'success', result, error: null, text, voice };
+        const result = await generateVoice(data);
+        return { ...prevState, message: 'success', result, error: null, text: data.text, voice: data.voice };
     } catch (e: any) {
         console.error('Error in generateVoiceAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message, text, voice };
+        return { ...prevState, message: 'error', result: null, error: e.message, text: data.text, voice: data.voice };
     }
 }
 
@@ -408,10 +448,11 @@ export async function reformatTextAction(
     prevState: any, 
     formData: FormData
 ): Promise<{ message: string; result: ReformatTextWithPromptOutput | null; error: string | null; id: number }> {
-    const text = formData.get('text') as string;
-    const prompt = formData.get('prompt') as string;
+    const { success, data, error, state } = safeParse(ReformatTextWithPromptInputSchema, formData, prevState);
+    if (!success) return { ...state, id: prevState.id + 1, message: 'error', result: null };
+
     try {
-        const result = await reformatTextWithPrompt({ text, prompt });
+        const result = await reformatTextWithPrompt(data);
         return { ...prevState, id: prevState.id + 1, message: 'success', result, error: null };
     } catch(e: any) {
         console.error('Error in reformatTextAction:', e);
@@ -419,19 +460,30 @@ export async function reformatTextAction(
     }
 }
 
-export async function convertImageAction(prevState: any, formData: FormData) {
-    const image = formData.get('image') as string;
-    const outputFormat = formData.get('outputFormat') as 'jpeg' | 'png' | 'webp';
-    const removeTransparency = formData.get('removeTransparency') === 'on';
+export async function convertImageAction(prevState: any, formData: FormData): Promise<{ message: string; result: ConvertImageOutput | null; error: string | null; id: number }> {
+    const rawData = {
+        image: formData.get('image'),
+        outputFormat: formData.get('outputFormat'),
+        removeTransparency: formData.get('removeTransparency') === 'on'
+    };
+    const { success, data, error, state } = safeParse(ConvertImageInputSchema, new FormData(), { ...prevState, ...rawData });
+    
+    // Note: Zod can't parse FormData directly with booleans. We manually create the object.
+    const parseResult = ConvertImageInputSchema.safeParse(rawData);
+    if (!parseResult.success) {
+        const errorMessage = parseResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
+        return { ...prevState, id: prevState.id + 1, message: 'error', result: null, error: errorMessage };
+    }
 
     try {
-        const result = await convertImage({ image, outputFormat, removeTransparency });
-        return { ...prevState, message: 'success', result, error: null };
+        const result = await convertImage(parseResult.data);
+        return { ...prevState, id: prevState.id + 1, message: 'success', result, error: null };
     } catch(e: any) {
         console.error('Error in convertImageAction:', e);
-        return { ...prevState, message: 'error', result: null, error: e.message };
+        return { ...prevState, id: prevState.id + 1, message: 'error', result: null, error: e.message };
     }
 }
+
 
 export async function getActionResult(id: string) {
     const data = resultsStore[id];
@@ -526,4 +578,5 @@ export async function uploadMuseDocumentAction(data: { name: string; content: st
         return { success: false, error: error.message || "An unknown error occurred" };
     }
 }
+
 
