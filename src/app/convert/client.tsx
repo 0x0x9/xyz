@@ -13,7 +13,7 @@ import { Upload, X, FileKey, Sparkles, Download, Image as ImageIcon, Loader2, Fi
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import type { ConvertImageOutput, ReformatTextWithPromptOutput } from '@/ai/types';
+import type { ConvertImageOutput } from '@/ai/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { motion } from 'framer-motion';
@@ -32,15 +32,23 @@ function SubmitButton({ pending, text = "Lancer la conversion"}: { pending: bool
 }
 
 function ImageConverter() {
-    const initialState = { message: '', error: null, result: null, id: 0 };
+    const initialState: { id: number, result: ConvertImageOutput | null, error: string | null } = { id: 0, result: null, error: null };
     const [state, formAction] = useFormState(convertImageAction, initialState);
     
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { toast } = useToast();
     
+    useEffect(() => {
+        if(state.error) {
+            toast({ variant: 'destructive', title: 'Erreur', description: state.error });
+        }
+    }, [state, toast]);
+
     const { pending } = useFormStatus();
 
-    const handleDownload = (dataUri: string, format: string) => {
+    const handleDownload = (dataUri: string) => {
+        const format = dataUri.split(';')[0].split('/')[1];
         const link = document.createElement("a");
         link.href = dataUri;
         link.download = `converted-image.${format}`;
@@ -127,7 +135,7 @@ function ImageConverter() {
                         <div className="relative w-full max-w-sm aspect-square rounded-lg border-2 border-dashed bg-muted/20">
                              <Image src={(state.result as ConvertImageOutput).convertedImageUri} alt="Image convertie" layout="fill" objectFit="contain" className="p-2"/>
                         </div>
-                        <Button onClick={() => handleDownload((state.result as ConvertImageOutput).convertedImageUri, 'jpeg')}>
+                        <Button onClick={() => handleDownload((state.result as ConvertImageOutput).convertedImageUri)}>
                             <Download className="mr-2 h-4 w-4" />
                             Télécharger l'image convertie
                         </Button>
@@ -139,10 +147,16 @@ function ImageConverter() {
 }
 
 function DocumentConverter() {
-    const initialState = { message: '', error: null, result: null, id: 0 };
+    const initialState = { result: null, error: null, id: 0 };
     const [state, formAction] = useFormState(reformatTextAction, initialState);
     const { toast } = useToast();
     const { pending } = useFormStatus();
+
+     useEffect(() => {
+        if (state.error) {
+            toast({ variant: 'destructive', title: 'Erreur', description: state.error });
+        }
+    }, [state, toast]);
 
     const handleCopy = () => {
         if (!state.result?.reformattedText) return;
@@ -259,3 +273,5 @@ export default function ConvertClient() {
     </Card>
   );
 }
+
+    

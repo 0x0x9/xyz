@@ -7,18 +7,16 @@ import { debugCode } from '@/ai/flows/debug-code';
 import { refactorCode } from '@/ai/flows/refactor-code';
 import { generateFlux } from '@/ai/flows/generate-flux';
 import { generateSchedule } from '@/ai/flows/generate-schedule';
-import { generateImage } from '@/ai/flows/generate-image';
 import { generatePalette } from '@/ai/flows/generate-palette';
 import { generateTone } from '@/ai/flows/generate-tone';
 import { generatePersona } from '@/ai/flows/generate-persona';
-import { generateIdeas } from '@/ai/flows/generate-ideas';
+import { generateIdeas, generateContent } from '@/ai/flows/content-generator';
 import { generateMotion } from '@/ai/flows/generate-motion';
 import { generateVoice } from '@/ai/flows/generate-voice';
 import { generateDeck } from '@/ai/flows/generate-deck';
 import { generateFrame } from '@/ai/flows/generate-frame';
 import { generateSound } from '@/ai/flows/generate-sound';
 import { generateNexus } from '@/ai/flows/generate-nexus';
-import { reformatTextWithPrompt } from '@/ai/flows/reformat-text-with-prompt';
 import { convertImage } from '@/ai/flows/convert-image';
 import { generateLightMood } from '@/ai/flows/generate-light-mood';
 import { generateMoodboard } from '@/ai/flows/generate-moodboard';
@@ -31,9 +29,11 @@ import { getSignedUrl } from '@/ai/flows/get-signed-url';
 import { listDocuments } from '@/ai/flows/list-documents';
 import { renameDocument } from '@/ai/flows/rename-document';
 import { shareDocument } from '@/ai/flows/share-document';
-import { uploadDocument } from '@/ai/flows/upload-document';
-import { createManualProject, oriaChat, parseEvent } from '@/ai/flows/client-actions';
+import { uploadDocument, uploadMuseDocumentAction } from '@/ai/flows/upload-document';
+import { parseEvent } from '@/ai/flows/parse-event';
+import { oria } from '@/ai/flows/oria';
 
+import type { z } from 'zod';
 import type {
   GenerateCodeOutput,
   ExplainCodeOutput,
@@ -41,7 +41,6 @@ import type {
   RefactorCodeInput,
   GenerateFluxOutput,
   ProjectPlan,
-  GenerateImageOutput,
   GeneratePaletteOutput,
   GenerateToneOutput,
   GeneratePersonaOutput,
@@ -52,7 +51,6 @@ import type {
   GenerateFrameOutput,
   GenerateSoundOutput,
   GenerateNexusOutput,
-  ReformatTextWithPromptOutput,
   ConvertImageOutput,
   GenerateLightMoodOutput,
   GenerateMoodboardOutput,
@@ -60,6 +58,7 @@ import type {
   GenerateMuseOutput,
   OriaChatOutput,
   AgendaEvent,
+  ReformatTextWithPromptOutput,
 } from '@/ai/types';
 
 import {
@@ -69,7 +68,6 @@ import {
   RefactorCodeInputSchema,
   GenerateFluxInputSchema,
   GenerateScheduleInputSchema,
-  GenerateImageInputSchema,
   GeneratePaletteInputSchema,
   GenerateToneInputSchema,
   GeneratePersonaInputSchema,
@@ -80,137 +78,168 @@ import {
   GenerateFrameInputSchema,
   GenerateSoundInputSchema,
   GenerateNexusInputSchema,
-  ReformatTextWithPromptInputSchema,
   ConvertImageInputSchema,
   GenerateLightMoodInputSchema,
   CopilotLyricsInputSchema,
   GenerateMuseInputSchema,
   OriaChatInputSchema,
   ParseEventInputSchema,
+  ReformatTextWithPromptInputSchema,
 } from '@/ai/types';
 
-const createErrorResponse = (e: any, id: number) => {
+const createErrorResponse = (e: any, id: number, message: string) => {
   const errorMessage = e.message || 'An unknown error occurred.';
-  console.error('AI Action Error:', errorMessage);
+  console.error(`AI Action Error (${message}):`, errorMessage);
   return { id: id + 1, result: null, error: errorMessage };
 };
 
 // Generic function to create server actions
 function createAction<TInput, TOutput>(
-  schema: Zod.Schema<TInput>,
-  flow: (input: TInput) => Promise<TOutput>
+  schema: z.Schema<TInput>,
+  flow: (input: TInput) => Promise<TOutput>,
+  actionName: string
 ) {
   return async (
     prevState: any,
     formData: FormData
   ): Promise<{ id: number; result: TOutput | null; error: string | null; }> => {
-    const parseResult = schema.safeParse(Object.fromEntries(formData));
+    const rawData = Object.fromEntries(formData);
+
+    // Specific handling for checkbox
+    if (actionName === 'convertImage' && !(rawData as any).removeTransparency) {
+        (rawData as any).removeTransparency = false;
+    }
+
+    const parseResult = schema.safeParse(rawData);
     if (!parseResult.success) {
-      const error = parseResult.error.errors.map(e => e.message).join(', ');
-      return { id: prevState.id + 1, result: null, error };
+        console.error("Zod validation failed for:", actionName, parseResult.error.errors);
+        const error = parseResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
+        return { id: prevState.id + 1, result: null, error };
     }
     try {
       const result = await flow(parseResult.data);
       return { id: prevState.id + 1, result, error: null };
     } catch (e: any) {
-      return createErrorResponse(e, prevState.id);
+      return createErrorResponse(e, prevState.id, actionName);
     }
   };
 }
 
-export const generateCodeAction = createAction(GenerateCodeInputSchema, generateCode);
-export const explainCodeAction = createAction(ExplainCodeInputSchema, explainCode);
-export const debugCodeAction = createAction(DebugCodeInputSchema, debugCode);
-export const refactorCodeAction = createAction(RefactorCodeInputSchema, refactorCode);
-export const fluxAction = createAction(GenerateFluxInputSchema, generateFlux);
-export const generateScheduleAction = createAction(GenerateScheduleInputSchema, generateSchedule);
-export const generateImageAction = async (prevState: any, formData: FormData): Promise<{ id: number, message: string, imageDataUri: string | null, error: string | null, prompt: string }> => {
-    const parseResult = GenerateImageInputSchema.safeParse(Object.fromEntries(formData));
-    if (!parseResult.success) {
-      const error = parseResult.error.errors.map(e => e.message).join(', ');
-      return { id: prevState.id + 1, message: 'error', imageDataUri: null, error, prompt: '' };
+
+export const generateCodeAction = createAction(GenerateCodeInputSchema, generateCode, 'generateCode');
+export const explainCodeAction = createAction(ExplainCodeInputSchema, explainCode, 'explainCode');
+export const debugCodeAction = createAction(DebugCodeInputSchema, debugCode, 'debugCode');
+export const refactorCodeAction = createAction(RefactorCodeInputSchema, refactorCode, 'refactorCode');
+export const fluxAction = createAction(GenerateFluxInputSchema, generateFlux, 'flux');
+export const generateScheduleAction = createAction(GenerateScheduleInputSchema, generateSchedule, 'generateSchedule');
+export const generatePaletteAction = createAction(GeneratePaletteInputSchema, generatePalette, 'generatePalette');
+export const generateToneAction = createAction(GenerateToneInputSchema, generateTone, 'generateTone');
+export const generatePersonaAction = createAction(GeneratePersonaInputSchema, generatePersona, 'generatePersona');
+export const generateIdeasAction = createAction(GenerateIdeasInputSchema, (input) => generateContent({contentType: 'ideas', ...input}), 'generateIdeas');
+export const generateMotionAction = createAction(GenerateMotionInputSchema, generateMotion, 'generateMotion');
+export const generateVoiceAction = createAction(GenerateVoiceInputSchema, generateVoice, 'generateVoice');
+export const generateDeckAction = createAction(GenerateDeckInputSchema, generateDeck, 'generateDeck');
+export const generateFrameAction = createAction(GenerateFrameInputSchema, generateFrame, 'generateFrame');
+export const generateSoundAction = createAction(GenerateSoundInputSchema, generateSound, 'generateSound');
+export const generateNexusAction = createAction(GenerateNexusInputSchema, generateNexus, 'generateNexus');
+export const generateLightMoodAction = createAction(GenerateLightMoodInputSchema, generateLightMood, 'generateLightMood');
+export const copilotLyricsAction = createAction(CopilotLyricsInputSchema, copilotLyrics, 'copilotLyrics');
+export const generateMuseAction = createAction(GenerateMuseInputSchema, generateMuse, 'generateMuse');
+export const createFolderAction = createAction(createFolder.inputSchema, createFolder, 'createFolder');
+export const deleteDocumentAction = createAction(deleteDocument.inputSchema, deleteDocument, 'deleteDocument');
+export const deleteFolderAction = createAction(deleteFolder.inputSchema, deleteFolder, 'deleteFolder');
+export const getSignedUrlAction = createAction(getSignedUrl.inputSchema, getSignedUrl, 'getSignedUrl');
+export const renameDocumentAction = createAction(renameDocument.inputSchema, renameDocument, 'renameDocument');
+export const shareDocumentAction = createAction(shareDocument.inputSchema, shareDocument, 'shareDocument');
+export const uploadDocumentAction = createAction(uploadDocument.inputSchema, uploadDocument, 'uploadDocument');
+export const uploadMuseDocumentAction = uploadDocumentAction;
+export const oriaChatAction = createAction(OriaChatInputSchema, oria, 'oriaChat');
+export const reformatTextAction = createAction(ReformatTextWithPromptInputSchema, (input) => generateContent({
+    contentType: 'reformat',
+    prompt: input.prompt,
+    textToReformat: input.text,
+}).then(res => ({ reformattedText: res.data as string })), 'reformatText');
+
+
+// Custom Actions that don't fit the generic pattern
+
+export async function createManualProjectAction(prevState: any, formData: FormData): Promise<{ success: boolean; project: ProjectPlan | null; error: string | null; }> {
+    const data = {
+        title: formData.get('title') as string,
+        creativeBrief: formData.get('creativeBrief') as string,
+    };
+    if (!data.title || !data.creativeBrief) {
+        return { success: false, project: null, error: "Le titre et le brief sont requis." };
+    }
+    const project: ProjectPlan = {
+        id: `manual-${Date.now()}`,
+        title: data.title,
+        creativeBrief: data.creativeBrief,
+        tasks: [],
+        imagePrompts: [],
+        events: []
     }
     try {
-      const result = await generateImage(parseResult.data);
-      return { id: prevState.id + 1, message: 'success', imageDataUri: result.imageDataUri, error: null, prompt: parseResult.data.prompt };
-    } catch (e: any) {
-      return { id: prevState.id + 1, message: 'error', imageDataUri: null, error: e.message, prompt: parseResult.data.prompt };
+        const dataUri = `data:application/json;base64,${btoa(unescape(encodeURIComponent(JSON.stringify(project))))}`;
+        await uploadDocument({
+            name: `maestro-projets/${data.title.replace(/\s/g, '_')}.json`,
+            content: dataUri,
+            mimeType: 'application/json'
+        });
+        return { success: true, project, error: null };
+    } catch(e: any) {
+        return { success: false, project: null, error: e.message };
     }
 }
-export const generatePaletteAction = createAction(GeneratePaletteInputSchema, generatePalette);
-export const generateToneAction = createAction(GenerateToneInputSchema, generateTone);
-export const generatePersonaAction = createAction(GeneratePersonaInputSchema, generatePersona);
-export const generateIdeasAction = createAction(GenerateIdeasInputSchema, generateIdeas);
-export const generateMotionAction = createAction(GenerateMotionInputSchema, generateMotion);
-export const generateVoiceAction = createAction(GenerateVoiceInputSchema, generateVoice);
-export const generateDeckAction = createAction(GenerateDeckInputSchema, generateDeck);
-export const generateFrameAction = createAction(GenerateFrameInputSchema, generateFrame);
-export const generateSoundAction = createAction(GenerateSoundInputSchema, generateSound);
-export const generateNexusAction = createAction(GenerateNexusInputSchema, generateNexus);
-export const reformatTextAction = createAction(ReformatTextWithPromptInputSchema, reformatTextWithPrompt);
-export const convertImageAction = async (prevState: any, formData: FormData): Promise<{ id: number, message: string, result: ConvertImageOutput | null, error: string | null }> => {
-    const imageFile = formData.get('imageFile') as File;
-    const outputFormat = formData.get('outputFormat') as 'jpeg' | 'png' | 'webp';
-    const removeTransparency = formData.get('removeTransparency') === 'on';
 
-    if (!imageFile || imageFile.size === 0) {
-        // Fallback to data URI if file is not there (e.g. from a previous state)
-        const imageUri = formData.get('image') as string;
-        if (!imageUri) return { id: prevState.id + 1, message: 'error', result: null, error: 'Aucune image fournie.' };
-        
-        const result = await convertImage({ image: imageUri, outputFormat, removeTransparency });
-        return { id: prevState.id + 1, message: 'success', result, error: null };
+
+export const convertImageAction = async (prevState: any, formData: FormData): Promise<{ id: number; result: ConvertImageOutput | null; error: string | null; }> => {
+    const rawData = {
+        imageFile: formData.get('imageFile') as File | null,
+        image: formData.get('image') as string,
+        outputFormat: formData.get('outputFormat') as 'jpeg' | 'png' | 'webp',
+        removeTransparency: formData.get('removeTransparency') === 'on',
+    };
+
+    if (!rawData.imageFile?.size && !rawData.image) {
+        return { id: prevState.id + 1, result: null, error: 'Aucune image fournie.' };
+    }
+    
+    let imageAsDataUri = rawData.image;
+    if (rawData.imageFile?.size) {
+         try {
+            const buffer = await rawData.imageFile.arrayBuffer();
+            const base64 = Buffer.from(buffer).toString('base64');
+            imageAsDataUri = `data:${rawData.imageFile.type};base64,${base64}`;
+        } catch (e) {
+            return createErrorResponse(e, prevState.id, 'imageRead');
+        }
     }
 
-    const image = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target?.result as string);
-        reader.onerror = (e) => reject(e);
-        reader.readAsDataURL(imageFile);
-    });
-
     try {
-        const result = await convertImage({ image, outputFormat, removeTransparency });
-        return { id: prevState.id + 1, message: 'success', result, error: null };
+        const result = await convertImage({ image: imageAsDataUri, outputFormat: rawData.outputFormat, removeTransparency: rawData.removeTransparency });
+        return { id: prevState.id + 1, result, error: null };
     } catch (e: any) {
-        return createErrorResponse(e, prevState.id);
+      return createErrorResponse(e, prevState.id, 'convertImage');
     }
 };
 
-export const generateLightMoodAction = createAction(GenerateLightMoodInputSchema, generateLightMood);
-
-export async function generateMoodboardAction(prompts: string[]): Promise<{ message: string, imageDataUris: string[] | null, error: string | null }> {
+export async function generateMoodboardAction(prompts: string[]): Promise<{ message: 'success' | 'error', imageDataUris: string[] | null, error: string | null }> {
     try {
-        const result = await generateMoodboard({ prompts });
-        return { message: 'success', imageDataUris: result.imageDataUris, error: null };
+        const imagePromises = prompts.map(prompt => generateContent({
+            prompt,
+            style: 'photorealistic',
+            contentType: 'image'
+        }));
+        const imageResults = await Promise.all(imagePromises);
+        const imageDataUris = imageResults.map(result => result.data as string);
+        return { message: 'success', imageDataUris, error: null };
     } catch(e: any) {
         return { message: 'error', imageDataUris: null, error: e.message };
     }
 }
-export const copilotLyricsAction = async (prevState: any, formData: FormData): Promise<{ success: boolean, suggestions: string[] | null, error: string | null, action: 'ENHANCE' | 'RHYMES' | undefined }> => {
-    const parseResult = CopilotLyricsInputSchema.safeParse(Object.fromEntries(formData));
-    if (!parseResult.success) {
-      const error = parseResult.error.errors.map(e => e.message).join(', ');
-      return { success: false, suggestions: null, error, action: undefined };
-    }
-    try {
-        const result = await copilotLyrics(parseResult.data);
-        return { success: true, suggestions: result.suggestions, error: null, action: parseResult.data.action };
-    } catch (e: any) {
-        return { success: false, suggestions: null, error: e.message, action: parseResult.data.action };
-    }
-};
 
-export const generateMuseAction = createAction(GenerateMuseInputSchema, generateMuse);
-export const createFolderAction = createAction(createFolder.inputSchema, createFolder);
-export const deleteDocumentAction = createAction(deleteDocument.inputSchema, deleteDocument);
-export const deleteFolderAction = createAction(deleteFolder.inputSchema, deleteFolder);
-export const getSignedUrlAction = createAction(getSignedUrl.inputSchema, getSignedUrl);
-export const listDocumentsAction = async () => listDocuments();
-export const renameDocumentAction = createAction(renameDocument.inputSchema, renameDocument);
-export const shareDocumentAction = createAction(shareDocument.inputSchema, shareDocument);
-export const uploadDocumentAction = createAction(uploadDocument.inputSchema, uploadDocument);
-export const oriaChatAction = createAction(OriaChatInputSchema, oriaChat);
+
 export const parseEventAction = async (prevState: any, formData: FormData): Promise<{ id: number, success: boolean, event: AgendaEvent | null, error: string | null }> => {
     const prompt = formData.get('prompt') as string;
     if (!prompt) return { id: prevState.id + 1, success: false, event: null, error: 'Prompt is required.' };
@@ -222,20 +251,24 @@ export const parseEventAction = async (prevState: any, formData: FormData): Prom
         return { id: prevState.id + 1, success: false, event: null, error: e.message };
     }
 };
-export const uploadMuseDocumentAction = uploadDocumentAction;
 
-export async function getActionResult(resultId: string): Promise<{ result: any; prompt: string | null } | null> {
-    if (typeof window !== 'undefined') {
-        const stored = localStorage.getItem(resultId);
-        if (stored) {
+export async function listDocumentsAction() {
+  return listDocuments();
+}
+
+export async function getActionResult(resultId: string): Promise<{ result: any; prompt?: string } | null> {
+    if (typeof window === 'undefined') return null;
+    const stored = localStorage.getItem(resultId);
+    if (stored) {
+        try {
             localStorage.removeItem(resultId);
-            try {
-                return JSON.parse(stored);
-            } catch (e) {
-                console.error("Failed to parse stored result", e);
-                return null;
-            }
+            return JSON.parse(stored);
+        } catch (e) {
+            console.error("Failed to parse stored result", e);
+            return null;
         }
     }
     return null;
 }
+
+    
