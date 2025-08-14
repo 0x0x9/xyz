@@ -61,6 +61,13 @@ type Activity = {
     generationInfo?: { icon: React.ElementType; text: string } | null;
 };
 
+type Project = {
+    id: string;
+    name: string;
+    path: string;
+    plan: ProjectPlan | null;
+};
+
 const actionInfoMap = {
     GENERATED: { text: 'génération', icon: Sparkles, color: 'text-purple-400' },
     CREATED: { text: 'création', icon: UploadCloud, color: 'text-green-400' },
@@ -134,11 +141,11 @@ const RecentActivityFeed = ({ docs, loading }: { docs: Doc[], loading: boolean }
 
 
 // Sub-components
-function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, projects, loading, onCreateNew }: { activeProject: ProjectPlan | null, setActiveProject: (project: ProjectPlan | null) => void, onProjectDeleted: (deletedId: string) => void, projects: ProjectPlan[], loading: boolean, onCreateNew: () => void }) {
-    const [projectToDelete, setProjectToDelete] = useState<ProjectPlan | null>(null);
+function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, projects, loading, onCreateNew }: { activeProject: Project | null, setActiveProject: (project: Project | null) => void, onProjectDeleted: (deletedId: string) => void, projects: Project[], loading: boolean, onCreateNew: () => void }) {
+    const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
     const { toast } = useToast();
 
-    const calculateProgress = useCallback((tasks: ProjectPlan['tasks']) => {
+    const calculateProgress = useCallback((tasks?: ProjectPlan['tasks']) => {
         if (!tasks || tasks.length === 0) return 0;
         const allChecklistItems = tasks.flatMap(task => task.checklist);
         if (allChecklistItems.length === 0) return 0;
@@ -152,7 +159,7 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
         try {
             // This is a mock action. In a real app, this would delete from a database.
             // await deleteDocumentAction({ docId: projectToDelete.id });
-             toast({ title: "Projet supprimé", description: `"${projectToDelete.title}" a été supprimé. (Simulation)` });
+             toast({ title: "Projet supprimé", description: `"${projectToDelete.name}" a été supprimé. (Simulation)` });
             const deletedId = projectToDelete.id;
             setProjectToDelete(null);
             onProjectDeleted(deletedId);
@@ -193,9 +200,9 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
                                 <BrainCircuit className="h-5 w-5 text-primary" />
                             </div>
                             <div className="flex-1 overflow-hidden">
-                                <p className="font-semibold truncate text-sm">{proj.title}</p>
+                                <p className="font-semibold truncate text-sm">{proj.name}</p>
                                 <div className="w-full bg-muted rounded-full h-1.5 mt-1.5">
-                                    <Progress value={calculateProgress(proj.tasks)} className="h-1.5" />
+                                    <Progress value={calculateProgress(proj.plan?.tasks)} className="h-1.5" />
                                 </div>
                             </div>
                         </button>
@@ -219,7 +226,7 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
                     <AlertDialogHeader>
                         <AlertDialogTitle>Supprimer le projet ?</AlertDialogTitle>
                         <AlertDialogDescription>
-                           Êtes-vous sûr de vouloir supprimer le projet "{projectToDelete?.title}" ? Cette action est irréversible.
+                           Êtes-vous sûr de vouloir supprimer le projet "{projectToDelete?.name}" ? Cette action est irréversible.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -276,7 +283,7 @@ function NewProjectView({ onProjectCreated, onCancel }: { onProjectCreated: (res
     const initialState = { message: '', result: null, error: null, id: 0, prompt: '', job: '' };
     const [state, formAction] = useFormState(fluxAction, initialState);
     const [view, setView] = useState<'ai' | 'manual'>('ai');
-    
+    const { toast } = useToast();
     const { pending } = useFormStatus();
 
     useEffect(() => {
@@ -284,9 +291,9 @@ function NewProjectView({ onProjectCreated, onCancel }: { onProjectCreated: (res
             onProjectCreated(state.result);
         }
         if(state.error) {
-            alert(`Erreur: ${state.error}`);
+            toast({variant: 'destructive', title: 'Erreur (X)flux', description: state.error});
         }
-    }, [state, onProjectCreated]);
+    }, [state, onProjectCreated, toast]);
 
     return (
         <div className="h-full flex flex-col items-center justify-center text-center p-8">
@@ -329,7 +336,7 @@ function NewProjectView({ onProjectCreated, onCancel }: { onProjectCreated: (res
     )
 }
 
-function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartner, onBack: () => void, activeProject: ProjectPlan | null }) {
+function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartner, onBack: () => void, activeProject: Project | null }) {
     const formRef = useRef<HTMLFormElement>(null);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
     const [messages, setMessages] = useState<OriaHistoryMessage[]>([]);
@@ -365,17 +372,17 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
         if (scrollAreaRef.current) {
             scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
         }
-    }, [messages]);
+    }, [messages, pending]);
     
     const getProjectContext = () => {
-        if (!activeProject) return 'aucun';
+        if (!activeProject?.plan) return 'aucun';
         
-        const tasksSummary = activeProject.tasks.map(task => 
+        const tasksSummary = activeProject.plan.tasks.map(task => 
             `- ${task.title} (${task.category}): ${task.checklist.filter(c => c.completed).length}/${task.checklist.length} complétées. Description: ${task.description}`
         ).join('\n');
 
-        return `L'utilisateur travaille sur le projet "${activeProject.title}".
-        Brief créatif : "${activeProject.creativeBrief}".
+        return `L'utilisateur travaille sur le projet "${activeProject.name}".
+        Brief créatif : "${activeProject.plan.creativeBrief}".
         Liste des tâches :
         ${tasksSummary}`;
     };
@@ -391,7 +398,7 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
                 </div>
                 <div>
                     <h3 className="font-semibold">{partner.displayName}</h3>
-                    {activeProject && <p className="text-xs text-muted-foreground truncate max-w-xs">Contexte : {activeProject.title}</p>}
+                    {activeProject && <p className="text-xs text-muted-foreground truncate max-w-xs">Contexte : {activeProject.name}</p>}
                 </div>
             </header>
             <ScrollArea className="flex-1 p-6" ref={scrollAreaRef}>
@@ -459,28 +466,39 @@ function OriaChatWindow({ partner, onBack, activeProject }: { partner: ChatPartn
     )
 }
 
-function ProjectPlanView({ project, setProject }: { project: ProjectPlan, setProject: (p: ProjectPlan) => void }) {
-    const categories = [...new Set(project.tasks.map(task => task.category))];
+function ProjectPlanView({ project, setProject }: { project: Project, setProject: (p: Project) => void }) {
+    if (!project.plan) {
+         return (
+            <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground p-8">
+                <BrainCircuit className="mx-auto h-20 w-20 text-muted-foreground/30" />
+                <p className="mt-6 text-xl font-semibold text-foreground">Aucun plan de projet (Maestro) trouvé.</p>
+                <p className="mt-2">Générez un plan pour ce projet en discutant avec Oria.</p>
+            </div>
+        );
+    }
+    const categories = [...new Set(project.plan.tasks.map(task => task.category))];
 
     const handleChecklistChange = (taskIndex: number, itemIndex: number, checked: boolean) => {
         const updatedProject = JSON.parse(JSON.stringify(project));
-        updatedProject.tasks[taskIndex].checklist[itemIndex].completed = checked;
-        setProject(updatedProject);
+        if (updatedProject.plan) {
+            updatedProject.plan.tasks[taskIndex].checklist[itemIndex].completed = checked;
+            setProject(updatedProject);
+        }
     };
 
     return (
         <ScrollArea className="h-full">
             <div className="p-4 md:p-6 space-y-8">
-                <h2 className="text-2xl font-bold">{project.title}</h2>
+                <h2 className="text-2xl font-bold">{project.name}</h2>
                 <blockquote className="border-l-4 border-primary pl-4 text-muted-foreground italic">
-                    {project.creativeBrief}
+                    {project.plan.creativeBrief}
                 </blockquote>
                 <div className="space-y-8">
                     {categories.map(category => (
                         <div key={category}>
                             <h3 className="text-xl font-semibold mb-4">{category}</h3>
                             <div className="space-y-4">
-                                {project.tasks.filter(t => t.category === category).map((task, taskIndex) => (
+                                {project.plan!.tasks.filter(t => t.category === category).map((task, taskIndex) => (
                                     <div key={taskIndex} className="p-4 rounded-lg bg-background/50 border border-white/10">
                                         <h4 className="font-semibold">{task.title}</h4>
                                         <p className="text-sm text-muted-foreground mb-3">{task.description}</p>
@@ -490,7 +508,7 @@ function ProjectPlanView({ project, setProject }: { project: ProjectPlan, setPro
                                                     <Checkbox
                                                         id={`task-${taskIndex}-item-${itemIndex}`}
                                                         checked={item.completed}
-                                                        onCheckedChange={(checked) => handleChecklistChange(project.tasks.findIndex(t => t.title === task.title), itemIndex, !!checked)}
+                                                        onCheckedChange={(checked) => handleChecklistChange(project.plan!.tasks.findIndex(t => t.title === task.title), itemIndex, !!checked)}
                                                     />
                                                     <label htmlFor={`task-${taskIndex}-item-${itemIndex}`} className="text-sm text-foreground/90 has-[:checked]:line-through has-[:checked]:text-muted-foreground cursor-pointer">
                                                         {item.text}
@@ -509,7 +527,7 @@ function ProjectPlanView({ project, setProject }: { project: ProjectPlan, setPro
     )
 }
 
-function TopMenuBar({ activeProject, onCreateNew, onProjectDeleted, onSaveProject, toggleSidebar, isSidebarVisible }: { activeProject: ProjectPlan | null, onCreateNew: () => void, onProjectDeleted: (id: string) => void, onSaveProject: () => void, toggleSidebar: () => void, isSidebarVisible: boolean }) {
+function TopMenuBar({ activeProject, onCreateNew, onProjectDeleted, onSaveProject, toggleSidebar, isSidebarVisible }: { activeProject: Project | null, onCreateNew: () => void, onProjectDeleted: (id: string) => void, onSaveProject: () => void, toggleSidebar: () => void, isSidebarVisible: boolean }) {
     const { theme, setTheme } = useTheme();
 
     const handleDeleteProject = async () => {
@@ -559,7 +577,7 @@ export default function MessengerClient() {
     const [loading, setLoading] = useState(true);
     const [docs, setDocs] = useState<Doc[]>([]);
         
-    const [activeProject, setActiveProject] = useState<ProjectPlan | null>(null);
+    const [activeProject, setActiveProject] = useState<Project | null>(null);
     const [showSidebar, setShowSidebar] = useState(true);
     const [view, setView] = useState<'welcome' | 'newProject'>('welcome');
     
@@ -586,24 +604,28 @@ export default function MessengerClient() {
     }, [fetchDocs]);
 
     const projects = useMemo(() => {
-        return docs
-            .filter(doc => doc.name.startsWith('maestro-') && doc.mimeType === 'application/json')
-            .map(doc => {
-                // In a real app, you would fetch and parse the content. Here we simulate.
-                return {
-                    id: doc.id,
-                    title: doc.name.replace('maestro-', '').replace('.json', '').replace(/_/g, ' '),
+        const projectFolders = docs.filter(doc => doc.mimeType === 'application/x-directory');
+        return projectFolders.map(folder => {
+            const planDoc = docs.find(d => d.path.startsWith(folder.path) && d.name.endsWith('.json') && d.name.includes('maestro'));
+            let plan = null;
+            // In a real app, you'd fetch and parse the content of planDoc.
+            // Here, we just simulate finding it.
+            if (planDoc) {
+                plan = {
+                    id: planDoc.id,
+                    title: folder.name.replace('/', ''),
                     creativeBrief: 'Un brief créatif inspirant pour ce projet génial.',
                     tasks: [
-                        { title: 'Définir la vision', description: 'Clarifier les objectifs', category: 'Stratégie & Recherche', duration: '1 jour', checklist: [{text: 'Faire un brainstorming', completed: Math.random() > 0.5}, {text: 'Valider le concept', completed: Math.random() > 0.5}]},
-                        { title: 'Créer le contenu', description: 'Produire les livrables', category: 'Création & Production', duration: '5 jours', checklist: [{text: 'Rédiger les textes', completed: false}, {text: 'Créer les visuels', completed: false}]}
+                         { title: 'Définir la vision', description: 'Clarifier les objectifs', category: 'Stratégie & Recherche', duration: '1 jour', checklist: [{text: 'Faire un brainstorming', completed: Math.random() > 0.5}, {text: 'Valider le concept', completed: Math.random() > 0.5}]},
+                         { title: 'Créer le contenu', description: 'Produire les livrables', category: 'Création & Production', duration: '5 jours', checklist: [{text: 'Rédiger les textes', completed: false}, {text: 'Créer les visuels', completed: false}]}
                     ],
                     events: [],
                     imagePrompts: []
-                } as ProjectPlan;
-            });
+                };
+            }
+            return { id: folder.id, name: folder.name.replace('/', ''), path: folder.path, plan };
+        });
     }, [docs]);
-
     
     const onProjectDeleted = (deletedId: string) => {
         if (activeProject && activeProject.id === deletedId) {
@@ -614,28 +636,13 @@ export default function MessengerClient() {
     };
 
     const handleProjectCreated = (result: GenerateFluxOutput | ProjectPlan) => {
-        const isFluxResult = 'projectPlan' in result;
-        const newProjectPlan = isFluxResult ? result.projectPlan : result;
-
-        if (newProjectPlan) {
-            const newDoc: Doc = {
-                 id: newProjectPlan.id!,
-                 name: `maestro-${newProjectPlan.title.replace(/\s/g, '_')}.json`,
-                 path: `maestro-${newProjectPlan.title.replace(/\s/g, '_')}.json`,
-                 mimeType: 'application/json',
-                 size: JSON.stringify(newProjectPlan).length,
-                 createdAt: new Date().toISOString(),
-                 updatedAt: new Date().toISOString(),
-                 shareId: null,
-            };
-            setDocs(prev => [...prev, newDoc]);
-            setActiveProject(newProjectPlan);
-            setView('welcome'); // Go back to project view
-             toast({ title: "Projet créé !", description: `Le projet "${newProjectPlan.title}" a été initialisé.`})
-        }
+        fetchDocs(); // Re-fetch all documents to include the new project
+        setActiveProject(null); // Deselect active project
+        setView('welcome'); // Go back to project view
+        toast({ title: "Projet créé !", description: `Le projet a bien été initialisé.`})
     };
     
-    const updateActiveProject = (updatedProject: ProjectPlan) => {
+    const updateActiveProject = (updatedProject: Project) => {
         setActiveProject(updatedProject);
         // This part is for local state update. A real app would persist this.
     }
@@ -677,7 +684,7 @@ export default function MessengerClient() {
                     <ProjectPlanView project={activeProject} setProject={updateActiveProject} />
                 </TabsContent>
                 <TabsContent value="files" className="flex-1 min-h-0 -mt-2 p-1">
-                    <DocManager onDataChange={fetchDocs} />
+                    <DocManager onDataChange={fetchDocs} initialPath={activeProject.path} />
                 </TabsContent>
                 <TabsContent value="chat" className="flex-1 min-h-0 -mt-2">
                     <OriaChatWindow partner={oriaPartner} onBack={() => {setActiveProject(null); setView('welcome')}} activeProject={activeProject} />

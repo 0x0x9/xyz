@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
@@ -48,13 +49,13 @@ const formatBytes = (bytes: number, decimals = 2) => {
 };
 
 
-export default function DocManager({ onDataChange, onFileSelect, extraActions }: { onDataChange?: () => void, onFileSelect?: (doc: Doc) => void, extraActions?: React.ReactNode }) {
+export default function DocManager({ onDataChange, onFileSelect, extraActions, initialPath = '' }: { onDataChange?: () => void, onFileSelect?: (doc: Doc) => void, extraActions?: React.ReactNode, initialPath?: string }) {
     const [docs, setDocs] = useState<Doc[]>([]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const { toast } = useToast();
     
-    const [currentPath, setCurrentPath] = useState('');
+    const [currentPath, setCurrentPath] = useState(initialPath);
     const [previewFile, setPreviewFile] = useState<Doc | null>(null);
     const [previewContent, setPreviewContent] = useState<string>('');
     const [isEditing, setIsEditing] = useState(false);
@@ -87,9 +88,12 @@ export default function DocManager({ onDataChange, onFileSelect, extraActions }:
         const folders = new Set<string>();
         const files: Doc[] = [];
 
-        for (const doc of docs) {
-            if (!doc.path.startsWith(currentPath)) continue;
+        const pathFilter = (doc: Doc) => {
+            if (!initialPath) return true; // Show all if no project path filter
+            return doc.path.startsWith(initialPath);
+        }
 
+        for (const doc of docs.filter(pathFilter)) {
             const relativePath = doc.path.substring(currentPath.length);
             const segments = relativePath.split('/');
 
@@ -106,7 +110,7 @@ export default function DocManager({ onDataChange, onFileSelect, extraActions }:
             files: files.sort((a,b) => a.name.localeCompare(b.name)), 
             folders: Array.from(folders).sort() 
         };
-    }, [docs, currentPath]);
+    }, [docs, currentPath, initialPath]);
 
     useEffect(() => {
         if (viewMode === 'icons') {
@@ -276,9 +280,12 @@ export default function DocManager({ onDataChange, onFileSelect, extraActions }:
     };
 
 
-    const breadcrumbs = ['Accueil', ...currentPath.split('/').filter(Boolean)];
+    const breadcrumbs = [initialPath.replace('/', '') || 'Accueil', ...currentPath.substring(initialPath.length).split('/').filter(Boolean)];
     const handleBreadcrumbClick = (index: number) => {
-        const newPath = breadcrumbs.slice(1, index + 1).join('/') + (index > 0 ? '/' : '');
+        let newPath = initialPath;
+        if (index > 0) {
+            newPath += breadcrumbs.slice(1, index + 1).join('/') + '/';
+        }
         setCurrentPath(newPath);
     };
 
