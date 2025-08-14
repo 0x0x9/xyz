@@ -40,9 +40,9 @@ import { Textarea } from '@/components/ui/textarea';
 
 import { useToast } from '@/hooks/use-toast';
 import { Loader, Wand2, Bug, BrainCircuit, Save, TerminalSquare, FileText, AppWindow, Upload, Image as ImageIconLucide, PanelLeftOpen, PanelLeftClose, LayoutTemplate, X, Sparkles } from 'lucide-react';
-import { refactorCodeAction, debugCodeAction, explainCodeAction } from '@/ai/flows/code-actions';
-import { generateFrameAction } from '@/ai/flows/generate-frame';
-import { uploadDocumentAction } from '@/ai/flows/upload-document';
+import { refactorCodeAction, debugCodeAction, explainCodeAction } from '@/app/actions';
+import { generateFrameAction } from '@/app/actions';
+import { uploadDocumentAction } from '@/app/actions';
 import { Skeleton } from './ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from 'next/image';
@@ -96,12 +96,12 @@ const FrameGeneratorPanel = ({ onProjectGenerated }: { onProjectGenerated: (code
     }
     
     useEffect(() => {
-        if (state.message === 'success' && state.result) {
+        if (state.id > 0 && state.result) {
             onProjectGenerated({ html: state.result.htmlCode, css: state.result.cssCode, js: state.result.jsCode || '' });
             formRef.current?.reset();
             setImageDataUri(null);
             toast({ title: "Maquette générée !", description: "Le projet a été chargé dans l'éditeur." });
-        } else if (state.message === 'error' && state.error) {
+        } else if (state.id > 0 && state.error) {
             toast({ variant: 'destructive', title: 'Erreur (X)frame', description: state.error });
         }
     }, [state, onProjectGenerated, toast]);
@@ -310,34 +310,34 @@ const FileBasedEditor = ({
     };
     
      useEffect(() => {
-        if (explainState.result) {
+        if (explainState.id > 0 && explainState.result) {
             setDialogTitle("Explication du code");
             setExplanation(explainState.result.explanation);
         }
-        if (explainState.error) toast({ variant: 'destructive', title: `Erreur d'explication`, description: explainState.error });
+        if (explainState.id > 0 && explainState.error) toast({ variant: 'destructive', title: `Erreur d'explication`, description: explainState.error });
         if (explainState.id > 0) setIsLoadingAi(false);
     }, [explainState, toast]);
 
     useEffect(() => {
-        if (debugState.result) {
+        if (debugState.id > 0 && debugState.result) {
             setCode(extractCodeFromMarkdown(debugState.result.fixedCode));
             setIsDirty(true);
             setDialogTitle("Rapport de débogage");
             setExplanation(debugState.result.explanation);
         }
-        if (debugState.error) toast({ variant: 'destructive', title: `Erreur de débogage`, description: debugState.error });
+        if (debugState.id > 0 && debugState.error) toast({ variant: 'destructive', title: `Erreur de débogage`, description: debugState.error });
         if (debugState.id > 0) setIsLoadingAi(false);
     }, [debugState, toast]);
 
     useEffect(() => {
-        if (refactorState.result) {
+        if (refactorState.id > 0 && refactorState.result) {
             setCode(extractCodeFromMarkdown(refactorState.result.code));
             setIsDirty(true);
             setDialogTitle("Code amélioré");
             setExplanation(refactorState.result.explanation);
             setRefactorPrompt('');
         }
-        if (refactorState.error) toast({ variant: 'destructive', title: `Erreur d'amélioration`, description: refactorState.error });
+        if (refactorState.id > 0 && refactorState.error) toast({ variant: 'destructive', title: `Erreur d'amélioration`, description: refactorState.error });
         if (refactorState.id > 0) setIsLoadingAi(false);
     }, [refactorState, toast]);
 
