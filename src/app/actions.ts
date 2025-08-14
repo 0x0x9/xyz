@@ -10,7 +10,7 @@ import { generateSchedule } from '@/ai/flows/generate-schedule';
 import { generatePalette } from '@/ai/flows/generate-palette';
 import { generateTone } from '@/ai/flows/generate-tone';
 import { generatePersona } from '@/ai/flows/generate-persona';
-import { generateIdeas, generateContent } from '@/ai/flows/content-generator';
+import { generateContent } from '@/ai/flows/content-generator';
 import { generateMotion } from '@/ai/flows/generate-motion';
 import { generateVoice } from '@/ai/flows/generate-voice';
 import { generateDeck } from '@/ai/flows/generate-deck';
@@ -29,7 +29,7 @@ import { getSignedUrl } from '@/ai/flows/get-signed-url';
 import { listDocuments } from '@/ai/flows/list-documents';
 import { renameDocument } from '@/ai/flows/rename-document';
 import { shareDocument } from '@/ai/flows/share-document';
-import { uploadDocument, uploadMuseDocumentAction } from '@/ai/flows/upload-document';
+import { uploadDocument } from '@/ai/flows/upload-document';
 import { parseEvent } from '@/ai/flows/parse-event';
 import { oria } from '@/ai/flows/oria';
 
@@ -86,6 +86,7 @@ import {
   ParseEventInputSchema,
   ReformatTextWithPromptInputSchema,
 } from '@/ai/types';
+import { oriaChat, createManualProject } from '@/ai/flows/client-actions';
 
 const createErrorResponse = (e: any, id: number, message: string) => {
   const errorMessage = e.message || 'An unknown error occurred.';
@@ -154,6 +155,7 @@ export const shareDocumentAction = createAction(shareDocument.inputSchema, share
 export const uploadDocumentAction = createAction(uploadDocument.inputSchema, uploadDocument, 'uploadDocument');
 export const uploadMuseDocumentAction = uploadDocumentAction;
 export const oriaChatAction = createAction(OriaChatInputSchema, oria, 'oriaChat');
+
 export const reformatTextAction = createAction(ReformatTextWithPromptInputSchema, (input) => generateContent({
     contentType: 'reformat',
     prompt: input.prompt,
@@ -164,32 +166,7 @@ export const reformatTextAction = createAction(ReformatTextWithPromptInputSchema
 // Custom Actions that don't fit the generic pattern
 
 export async function createManualProjectAction(prevState: any, formData: FormData): Promise<{ success: boolean; project: ProjectPlan | null; error: string | null; }> {
-    const data = {
-        title: formData.get('title') as string,
-        creativeBrief: formData.get('creativeBrief') as string,
-    };
-    if (!data.title || !data.creativeBrief) {
-        return { success: false, project: null, error: "Le titre et le brief sont requis." };
-    }
-    const project: ProjectPlan = {
-        id: `manual-${Date.now()}`,
-        title: data.title,
-        creativeBrief: data.creativeBrief,
-        tasks: [],
-        imagePrompts: [],
-        events: []
-    }
-    try {
-        const dataUri = `data:application/json;base64,${btoa(unescape(encodeURIComponent(JSON.stringify(project))))}`;
-        await uploadDocument({
-            name: `maestro-projets/${data.title.replace(/\s/g, '_')}.json`,
-            content: dataUri,
-            mimeType: 'application/json'
-        });
-        return { success: true, project, error: null };
-    } catch(e: any) {
-        return { success: false, project: null, error: e.message };
-    }
+    return createManualProject(prevState, formData);
 }
 
 
@@ -270,5 +247,3 @@ export async function getActionResult(resultId: string): Promise<{ result: any; 
     }
     return null;
 }
-
-    
