@@ -3,7 +3,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    serverComponentsExternalPackages: ['@genkit-ai/core']
+    serverComponentsExternalPackages: ['@genkit-ai/core', '@genkit-ai/googleai']
   },
   typescript: {
     ignoreBuildErrors: true,
