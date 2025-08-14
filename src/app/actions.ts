@@ -31,6 +31,7 @@ import {
     GenerateFrameInputSchema,
     OriaChatInputSchema,
     ParseEventInputSchema,
+    GenerateVideoInputSchema,
 } from '@/ai/types';
 
 
@@ -57,6 +58,7 @@ import { generateVoice } from '@/ai/flows/generate-voice';
 import { reformatTextWithPrompt } from '@/ai/flows/reformat-text-with-prompt';
 import { convertImage } from '@/ai/flows/convert-image';
 import { generateLightMood } from '@/ai/flows/generate-light-mood';
+import { generateVideo } from '@/ai/flows/generate-video';
 import * as codeActions from '@/ai/flows/code-actions';
 
 
@@ -74,23 +76,15 @@ let mockSharedDocs: Record<string, any> = {
 };
 const resultsStore: Record<string, any> = {};
 
-// Helper to handle safe parsing and error state return
-function safeParse<T>(schema: z.ZodSchema<T>, formData: FormData, prevState: any) {
-    const data = Object.fromEntries(formData);
-    const parseResult = schema.safeParse(data);
-
-    if (!parseResult.success) {
-        const error = parseResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
-        return { success: false, data: null, error, state: { ...prevState, message: 'error', error } };
-    }
-    return { success: true, data: parseResult.data, error: null, state: prevState };
-}
-
 // --- AI ACTIONS ---
 
 export async function fluxAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateFluxOutput | null, error: string | null, id: number, prompt: string, job: string }> {
-    const { success, data, error, state } = safeParse(GenerateFluxInputSchema, formData, prevState);
-    if (!success) return state;
+    const parseResult = GenerateFluxInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generateFlux(data);
@@ -163,8 +157,11 @@ export async function createManualProjectAction(prevState: any, formData: FormDa
 
 
 export async function generateFrameAction(prevState: any, formData: FormData): Promise<{ message: string, error: string | null, id: number, result: Frame | null }> {
-    const { success, data, error, state } = safeParse(GenerateFrameInputSchema, formData, prevState);
-    if (!success) return state;
+    const parseResult = GenerateFrameInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        return { ...prevState, message: 'error', error: parseResult.error.errors.map(e => e.message).join(', ') };
+    }
+    const data = parseResult.data;
     if (!data.prompt && !data.photoDataUri) {
          return { ...prevState, message: 'error', result: null, error: "Une description ou une image est requise." };
     }
@@ -181,8 +178,13 @@ export async function generateFrameAction(prevState: any, formData: FormData): P
 
 export async function oriaChatAction(prevState: any, formData: FormData): Promise<{ message: string, error: string | null, id: number, result: OriaChatOutput | null }> {
     const history = JSON.parse(formData.get('history') as string || '[]');
-    const { success, data, error, state } = safeParse(OriaChatInputSchema.omit({ history: true }), formData, prevState);
-    if (!success) return { ...state, id: prevState.id + 1 };
+    const parseResult = OriaChatInputSchema.omit({ history: true }).safeParse(Object.fromEntries(formData));
+    
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { message: 'error', error, id: prevState.id + 1, result: null };
+    }
+    const data = parseResult.data;
     
     try {
         const result = await oria({ prompt: data.prompt, context: data.context, history });
@@ -194,8 +196,12 @@ export async function oriaChatAction(prevState: any, formData: FormData): Promis
 }
 
 export async function generateScheduleAction(prevState: any, formData: FormData): Promise<{ message: string, plan: ProjectPlan | null, error: string | null, id: number, prompt: string }> {
-    const { success, data, error, state } = safeParse(GenerateScheduleInputSchema, formData, prevState);
-    if (!success) return { ...state, prompt: '' };
+    const parseResult = GenerateScheduleInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', plan: null, error, prompt: '' };
+    }
+    const data = parseResult.data;
 
     try {
         const plan = await generateSchedule(data);
@@ -207,8 +213,12 @@ export async function generateScheduleAction(prevState: any, formData: FormData)
 }
 
 export async function generateTextAction(prevState: any, formData: FormData): Promise<{ message: string, text: string, error: string | null, id: number, prompt: string }> {
-    const { success, data, error, state } = safeParse(GenerateTextInputSchema, formData, prevState);
-    if (!success) return { ...state, text: '', prompt: '' };
+    const parseResult = GenerateTextInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', text: '', error, prompt: '' };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generateText(data);
@@ -233,8 +243,12 @@ export async function parseEventAction(
     prevState: any, 
     formData: FormData
 ): Promise<{ success: boolean; event: AgendaEvent | null; error: string | null; id: number }> {
-    const { success, data, error, state } = safeParse(ParseEventInputSchema.extend({ currentDate: z.string().optional() }), formData, prevState);
-    if (!success) return { ...state, success: false, event: null, id: prevState.id + 1 };
+    const parseResult = ParseEventInputSchema.extend({ currentDate: z.string().optional() }).safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, success: false, error, event: null, id: prevState.id + 1 };
+    }
+    const data = parseResult.data;
     
     try {
         const result = await parseEvent({ prompt: data.prompt, currentDate: new Date().toISOString() });
@@ -246,9 +260,13 @@ export async function parseEventAction(
 }
 
 export async function generateMuseAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateMuseOutput | null, error: string | null, id: number, theme: string, mood: string, tempo: string, references: string }> {
-    const { success, data, error, state } = safeParse(GenerateMuseInputSchema, formData, prevState);
+    const parseResult = GenerateMuseInputSchema.safeParse(Object.fromEntries(formData));
     const formValues = Object.fromEntries(formData);
-    if (!success) return { ...state, ...formValues, references: formValues.references || '' };
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, ...formValues, message: 'error', result: null, error, references: formValues.references || '' };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generateMuse(data);
@@ -260,8 +278,12 @@ export async function generateMuseAction(prevState: any, formData: FormData): Pr
 }
 
 export async function copilotLyricsAction(prevState: any, formData: FormData): Promise<{ success: boolean, suggestions: string[] | null, error: string | null, action: 'ENHANCE' | 'RHYMES' | undefined }> {
-    const { success, data, error, state } = safeParse(CopilotLyricsInputSchema, formData, prevState);
-    if (!success) return { success: false, suggestions: null, error: error, action: undefined };
+    const parseResult = CopilotLyricsInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { success: false, suggestions: null, error: error, action: undefined };
+    }
+    const data = parseResult.data;
     
     try {
         const result = await copilotLyrics(data);
@@ -273,8 +295,12 @@ export async function copilotLyricsAction(prevState: any, formData: FormData): P
 }
 
 export async function generateIdeasAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateIdeasOutput | null, error: string | null, id: number, prompt: string }> {
-    const { success, data, error, state } = safeParse(GenerateIdeasInputSchema, formData, prevState);
-    if (!success) return { ...state, prompt: '' };
+    const parseResult = GenerateIdeasInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error, prompt: '' };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generateIdeas(data);
@@ -286,8 +312,12 @@ export async function generateIdeasAction(prevState: any, formData: FormData): P
 }
 
 export async function generateMotionAction(prevState: any, formData: FormData): Promise<{ message: string, result: VideoScript | null, error: string | null, id: number, prompt: string }> {
-    const { success, data, error, state } = safeParse(GenerateMotionInputSchema, formData, prevState);
-    if (!success) return { ...state, prompt: '' };
+    const parseResult = GenerateMotionInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error, prompt: '' };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generateMotion(data);
@@ -299,8 +329,12 @@ export async function generateMotionAction(prevState: any, formData: FormData): 
 }
 
 export async function generateImageAction(prevState: any, formData: FormData): Promise<{ message: string, imageDataUri: string | null, error: string | null, prompt: string, style?: string, id: number }> {
-    const { success, data, error, state } = safeParse(GenerateImageInputSchema, formData, prevState);
-    if (!success) return { ...state, imageDataUri: null, prompt: '', style: 'none' };
+    const parseResult = GenerateImageInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', imageDataUri: null, error, prompt: '', style: 'none' };
+    }
+    const data = parseResult.data;
 
     try {
         const { imageDataUri } = await generateImage(data);
@@ -312,8 +346,12 @@ export async function generateImageAction(prevState: any, formData: FormData): P
 }
 
 export async function generateNexusAction(prevState: any, formData: FormData): Promise<{ message: string, result: Nexus | null, error: string | null, id: number, prompt: string }> {
-    const { success, data, error, state } = safeParse(GenerateNexusInputSchema, formData, prevState);
-    if (!success) return { ...state, prompt: '' };
+    const parseResult = GenerateNexusInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error, prompt: '' };
+    }
+    const data = parseResult.data;
     
     try {
         const result = await generateNexus(data);
@@ -325,8 +363,12 @@ export async function generateNexusAction(prevState: any, formData: FormData): P
 }
 
 export async function generatePaletteAction(prevState: any, formData: FormData): Promise<{ message: string, result: GeneratePaletteOutput | null, error: string | null, id: number, prompt: string }> {
-    const { success, data, error, state } = safeParse(GeneratePaletteInputSchema, formData, prevState);
-    if (!success) return { ...state, prompt: '' };
+    const parseResult = GeneratePaletteInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error, prompt: '' };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generatePalette(data);
@@ -338,8 +380,12 @@ export async function generatePaletteAction(prevState: any, formData: FormData):
 }
 
 export async function generatePersonaAction(prevState: any, formData: FormData): Promise<{ message: string, result: GeneratePersonaOutput | null, error: string | null, id: number, prompt: string }> {
-    const { success, data, error, state } = safeParse(GeneratePersonaInputSchema, formData, prevState);
-    if (!success) return { ...state, prompt: '' };
+    const parseResult = GeneratePersonaInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error, prompt: '' };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generatePersona(data);
@@ -351,8 +397,12 @@ export async function generatePersonaAction(prevState: any, formData: FormData):
 }
 
 export async function generateSoundAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateSoundOutput | null, error: string | null, id: number, prompt: string }> {
-    const { success, data, error, state } = safeParse(GenerateSoundInputSchema, formData, prevState);
-    if (!success) return { ...state, prompt: '' };
+    const parseResult = GenerateSoundInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error, prompt: '' };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generateSound(data);
@@ -364,8 +414,12 @@ export async function generateSoundAction(prevState: any, formData: FormData): P
 }
 
 export async function generateToneAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateToneOutput | null, error: string | null, id: number, prompt: string }> {
-    const { success, data, error, state } = safeParse(GenerateToneInputSchema, formData, prevState);
-    if (!success) return { ...state, prompt: '' };
+    const parseResult = GenerateToneInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error, prompt: '' };
+    }
+    const data = parseResult.data;
     
     try {
         const result = await generateTone(data);
@@ -377,8 +431,12 @@ export async function generateToneAction(prevState: any, formData: FormData): Pr
 }
 
 export async function generateLightMoodAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateLightMoodOutput | null, error: string | null, id: number }> {
-    const { success, data, error, state } = safeParse(GenerateLightMoodInputSchema, formData, prevState);
-    if (!success) return state;
+    const parseResult = GenerateLightMoodInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generateLightMood(data);
@@ -419,8 +477,12 @@ export async function refactorCodeAction(prevState: any, formData: FormData): Pr
 }
 
 export async function generateDeckAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateDeckOutput | null, error: string | null, id: number, prompt: string }> {
-    const { success, data, error, state } = safeParse(GenerateDeckInputSchema, formData, prevState);
-    if (!success) return { ...state, prompt: '' };
+    const parseResult = GenerateDeckInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error, prompt: '' };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generateDeck(data);
@@ -432,8 +494,12 @@ export async function generateDeckAction(prevState: any, formData: FormData): Pr
 }
 
 export async function generateVoiceAction(prevState: any, formData: FormData): Promise<{ message: string, result: GenerateVoiceOutput | null, error: string | null, id: number, text: string, voice: string }> {
-    const { success, data, error, state } = safeParse(GenerateVoiceInputSchema, formData, prevState);
-    if (!success) return { ...state, text: '', voice: 'Algenib' };
+    const parseResult = GenerateVoiceInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, message: 'error', result: null, error, text: '', voice: 'Algenib' };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await generateVoice(data);
@@ -448,8 +514,12 @@ export async function reformatTextAction(
     prevState: any, 
     formData: FormData
 ): Promise<{ message: string; result: ReformatTextWithPromptOutput | null; error: string | null; id: number }> {
-    const { success, data, error, state } = safeParse(ReformatTextWithPromptInputSchema, formData, prevState);
-    if (!success) return { ...state, id: prevState.id + 1, message: 'error', result: null };
+    const parseResult = ReformatTextWithPromptInputSchema.safeParse(Object.fromEntries(formData));
+    if (!parseResult.success) {
+        const error = parseResult.error.errors.map(e => e.message).join(', ');
+        return { ...prevState, id: prevState.id + 1, message: 'error', result: null, error };
+    }
+    const data = parseResult.data;
 
     try {
         const result = await reformatTextWithPrompt(data);
@@ -466,9 +536,7 @@ export async function convertImageAction(prevState: any, formData: FormData): Pr
         outputFormat: formData.get('outputFormat'),
         removeTransparency: formData.get('removeTransparency') === 'on'
     };
-    const { success, data, error, state } = safeParse(ConvertImageInputSchema, new FormData(), { ...prevState, ...rawData });
     
-    // Note: Zod can't parse FormData directly with booleans. We manually create the object.
     const parseResult = ConvertImageInputSchema.safeParse(rawData);
     if (!parseResult.success) {
         const errorMessage = parseResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
@@ -578,5 +646,3 @@ export async function uploadMuseDocumentAction(data: { name: string; content: st
         return { success: false, error: error.message || "An unknown error occurred" };
     }
 }
-
-
