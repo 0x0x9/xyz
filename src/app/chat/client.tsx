@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader, GitBranch, Share2, UploadCloud, Pencil, Plus, Presentation, FilePlus, Save, ChevronsRight } from 'lucide-react';
+import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader, GitBranch, Share2, UploadCloud, Pencil, Plus, Presentation, FilePlus, Save, ChevronsRight, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { OriaHistoryMessage, ProjectPlan, Doc, GenerateFluxOutput } from '@/ai/types';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -28,6 +28,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import Link from 'next/link';
 
 
 // Types
@@ -543,6 +544,19 @@ function TopMenuBar({ activeProject, onCreateNew, onProjectDeleted, onSaveProjec
                         {isSidebarVisible ? <PanelLeftClose className="h-5 w-5" /> : <PanelLeftOpen className="h-5 w-5" />}
                     </Button>
                 </MenubarTrigger>
+            </MenubarMenu>
+            <MenubarMenu>
+                 <MenubarTrigger asChild>
+                    <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                        <Home className="h-4 w-4" />
+                        Accueil
+                    </Button>
+                </MenubarTrigger>
+                <MenubarContent className="glass-card">
+                    <MenubarItem asChild>
+                        <Link href="/">Retour au site (X)yzz</Link>
+                    </MenubarItem>
+                </MenubarContent>
             </MenubarMenu>
              <MenubarMenu>
                 <MenubarTrigger>Projet</MenubarTrigger>
