@@ -122,18 +122,22 @@ export const GenerateNexusInputSchema = z.object({
 });
 export type GenerateNexusInput = z.infer<typeof GenerateNexusInputSchema>;
 
-const baseNexusNodeSchema = z.object({
+// Correctly define recursive schema for NexusNode
+type NexusNode = {
+    id: string;
+    label: string;
+    children?: NexusNode[];
+};
+
+const baseNexusNodeSchema: z.ZodType<Omit<NexusNode, 'children'>> = z.object({
   id: z.string().describe("Un identifiant unique pour le nœud (ex: 'root.1.2')."),
   label: z.string().describe("Le texte affiché pour ce nœud."),
 });
 
-type NexusNode = z.infer<typeof baseNexusNodeSchema> & {
-  children?: NexusNode[];
-};
-
 export const NexusNodeSchema: z.ZodType<NexusNode> = baseNexusNodeSchema.extend({
   children: z.lazy(() => NexusNodeSchema.array()).optional(),
 });
+
 
 export const GenerateNexusOutputSchema = z.object({
   mindMap: NexusNodeSchema.describe("Le nœud racine de la carte mentale générée."),
@@ -454,6 +458,21 @@ export const GenerateLightMoodOutputSchema = z.object({
   imagePrompts: z.array(z.string()).length(4).describe("Une liste de 4 prompts d'image détaillés."),
 });
 export type GenerateLightMoodOutput = z.infer<typeof GenerateLightMoodOutputSchema>;
+
+// From: src/ai/flows/generate-video.ts
+export const GenerateVideoInputSchema = z.object({
+  prompt: z.string().describe("A text description of the video to generate."),
+  photoDataUri: z.string().optional().describe("An optional starting image for image-to-video generation, as a data URI."),
+  durationSeconds: z.number().optional().default(5).describe("The duration of the video in seconds."),
+  aspectRatio: z.enum(['16:9', '9:16']).optional().default('16:9').describe("The aspect ratio of the video."),
+});
+export type GenerateVideoInput = z.infer<typeof GenerateVideoInputSchema>;
+
+export const GenerateVideoOutputSchema = z.object({
+  videoDataUri: z.string().describe("The generated video as a data URI."),
+  contentType: z.string().describe("The MIME type of the video, e.g., 'video/mp4'."),
+});
+export type GenerateVideoOutput = z.infer<typeof GenerateVideoOutputSchema>;
 
 // IMPORTANT: The Oria schemas must be defined LAST, after all the schemas
 // they might reference in their `data` union type.

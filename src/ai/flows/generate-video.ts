@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI flow for generating video from text or image prompts.
@@ -13,21 +14,8 @@ import { z } from 'zod';
 import * as fs from 'fs';
 import { Readable } from 'stream';
 import type { MediaPart } from 'genkit';
+import { GenerateVideoInputSchema, GenerateVideoOutputSchema, GenerateVideoInput, GenerateVideoOutput } from '@/ai/types';
 
-// Define Zod schemas for input and output
-const GenerateVideoInputSchema = z.object({
-  prompt: z.string().describe("A text description of the video to generate."),
-  photoDataUri: z.string().optional().describe("An optional starting image for image-to-video generation, as a data URI."),
-  durationSeconds: z.number().optional().default(5).describe("The duration of the video in seconds."),
-  aspectRatio: z.enum(['16:9', '9:16']).optional().default('16:9').describe("The aspect ratio of the video."),
-});
-export type GenerateVideoInput = z.infer<typeof GenerateVideoInputSchema>;
-
-const GenerateVideoOutputSchema = z.object({
-  videoDataUri: z.string().describe("The generated video as a data URI."),
-  contentType: z.string().describe("The MIME type of the video, e.g., 'video/mp4'."),
-});
-export type GenerateVideoOutput = z.infer<typeof GenerateVideoOutputSchema>;
 
 // Helper function to download the video and convert to data URI
 async function processVideo(videoPart: MediaPart): Promise<{ videoDataUri: string, contentType: string }> {
