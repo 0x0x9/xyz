@@ -1,3 +1,4 @@
+
 'use server';
 
 import {
@@ -12,10 +13,9 @@ import { generateSchedule } from './generate-schedule';
 import { generatePalette } from './generate-palette';
 import { generateTone } from './generate-tone';
 import { generatePersona } from './generate-persona';
-import { generateIdeas } from './generate-ideas';
+import { generateContent } from './content-generator';
 import { generateDeck } from './generate-deck';
 import { generateFrame } from './generate-frame';
-import { generateText } from './generate-text';
 import { generateMotion } from './generate-motion';
 import { generateNexus } from './generate-nexus';
 import { generateCode } from './generate-code';
@@ -110,9 +110,10 @@ const generateFluxFlow = ai.defineFlow(
       personas: (p) =>
         generatePersona({ prompt: `${p.prompt} crée les personas cibles.` }),
       ideas: (p) =>
-        generateIdeas({
+        generateContent({
+          contentType: 'ideas',
           prompt: `${p.prompt} propose des idées créatives (titres, styles, prompts d'image).`,
-        }),
+        }).then(res => res.data),
       deck: (p) =>
         generateDeck({
           prompt: `${p.prompt} crée une présentation de lancement.`,
@@ -120,9 +121,10 @@ const generateFluxFlow = ai.defineFlow(
       frame: (p) =>
         generateFrame({ prompt: `${p.prompt} crée une landing page.` }),
       text: (p) =>
-        generateText({
+        generateContent({
+          contentType: 'text',
           prompt: `${p.prompt} rédige un article de blog pour annoncer le lancement.`,
-        }),
+        }).then(res => ({ text: res.data })),
       motion: (p) =>
         generateMotion({ prompt: `${p.prompt} crée une courte vidéo teaser.` }),
       nexus: (p) =>
