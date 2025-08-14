@@ -1,20 +1,13 @@
 'use server';
 
-/**
- * @fileOverview Un agent IA chef d'orchestre, (X)flux, qui transforme une idée en un projet complet.
- *
- * - generateFlux - Une fonction qui analyse un objectif, sélectionne les outils pertinents, puis génère les livrables.
- */
-
-import { ai } from '@/ai/genkit';
 import {
   GenerateFluxInputSchema,
   type GenerateFluxInput,
   FluxAnalysisOutputSchema,
   GenerateFluxOutputSchema,
   type GenerateFluxOutput,
-  VideoScriptSchema,
 } from '@/ai/types';
+import { ai } from '@/ai/genkit';
 import { generateSchedule } from './generate-schedule';
 import { generatePalette } from './generate-palette';
 import { generateTone } from './generate-tone';
@@ -29,8 +22,9 @@ import { generateCode } from './generate-code';
 import { parseEvent } from './parse-event';
 
 export async function generateFlux(input: GenerateFluxInput): Promise<GenerateFluxOutput> {
-  return fluxFlow(input);
+  return generateFluxFlow(input);
 }
+
 
 const analysisPrompt = ai.definePrompt({
   name: 'fluxAnalysisPrompt',
@@ -72,8 +66,7 @@ Analysez la demande et le métier pour retourner la liste des ID d'outils les pl
   },
 });
 
-
-const fluxFlow = ai.defineFlow(
+const generateFluxFlow = ai.defineFlow(
   {
     name: 'fluxFlow',
     inputSchema: GenerateFluxInputSchema,
@@ -83,7 +76,9 @@ const fluxFlow = ai.defineFlow(
     // Phase 1: Analyse de la demande pour choisir les outils
     const { output: analysis } = await analysisPrompt(input);
     if (!analysis?.tools) {
-      throw new Error("(X)flux n'a pas pu déterminer les outils nécessaires pour votre projet.");
+      throw new Error(
+        "(X)flux n'a pas pu déterminer les outils nécessaires pour votre projet."
+      );
     }
 
     const toolsToRun = new Set(analysis.tools);
@@ -96,51 +91,80 @@ const fluxFlow = ai.defineFlow(
     output.projectPlan = projectPlan;
 
     if (!projectPlan?.title || !projectPlan?.creativeBrief) {
-      throw new Error("La génération du plan de projet a échoué ou n'a pas retourné de titre/brief.");
+      throw new Error(
+        "La génération du plan de projet a échoué ou n'a pas retourné de titre/brief."
+      );
     }
-    
+
     // Construct a more detailed context prompt for sub-generators
     const fullContextPrompt = `Pour un projet avec l'objectif suivant : "${input.prompt}", un plan a été généré. Le titre du projet est "${projectPlan.title}" et son brief créatif est : "${projectPlan.creativeBrief}". Sur cette base, effectue la tâche suivante :`;
 
     // Phase 3: Préparation des promesses pour les outils sélectionnés
-    const toolGeneratorMap: { [key: string]: (p: {prompt: string}) => Promise<any> } = {
-        palette: (p) => generatePalette({ prompt: `${p.prompt} génère une palette de couleurs.` }),
-        tone: (p) => generateTone({ prompt: `${p.prompt} définis la voix de la marque.` }),
-        personas: (p) => generatePersona({ prompt: `${p.prompt} crée les personas cibles.` }),
-        ideas: (p) => generateIdeas({ prompt: `${p.prompt} propose des idées créatives (titres, styles, prompts d'image).` }),
-        deck: (p) => generateDeck({ prompt: `${p.prompt} crée une présentation de lancement.` }),
-        frame: (p) => generateFrame({ prompt: `${p.prompt} crée une landing page.` }),
-        text: (p) => generateText({ prompt: `${p.prompt} rédige un article de blog pour annoncer le lancement.` }),
-        motion: (p) => generateMotion({ prompt: `${p.prompt} crée une courte vidéo teaser.` }),
-        nexus: (p) => generateNexus({ prompt: `${p.prompt} crée une carte mentale.` }),
-        code: (p) => generateCode({ prompt: `Basé sur le projet "${projectPlan.title}", génère un composant React simple avec TailwindCSS qui affiche le titre et le brief du projet : "${projectPlan.creativeBrief}"`, language: 'typescript' }),
-        agenda: (_) => parseEvent({ prompt: `Planifier une réunion de lancement pour "${projectPlan.title}" demain à 10h`, currentDate: new Date().toISOString() })
+    const toolGeneratorMap: {
+      [key: string]: (p: { prompt: string }) => Promise<any>;
+    } = {
+      palette: (p) =>
+        generatePalette({ prompt: `${p.prompt} génère une palette de couleurs.` }),
+      tone: (p) =>
+        generateTone({ prompt: `${p.prompt} définis la voix de la marque.` }),
+      personas: (p) =>
+        generatePersona({ prompt: `${p.prompt} crée les personas cibles.` }),
+      ideas: (p) =>
+        generateIdeas({
+          prompt: `${p.prompt} propose des idées créatives (titres, styles, prompts d'image).`,
+        }),
+      deck: (p) =>
+        generateDeck({
+          prompt: `${p.prompt} crée une présentation de lancement.`,
+        }),
+      frame: (p) =>
+        generateFrame({ prompt: `${p.prompt} crée une landing page.` }),
+      text: (p) =>
+        generateText({
+          prompt: `${p.prompt} rédige un article de blog pour annoncer le lancement.`,
+        }),
+      motion: (p) =>
+        generateMotion({ prompt: `${p.prompt} crée une courte vidéo teaser.` }),
+      nexus: (p) =>
+        generateNexus({ prompt: `${p.prompt} crée une carte mentale.` }),
+      code: (p) =>
+        generateCode({
+          prompt: `Basé sur le projet "${projectPlan.title}", génère un composant React simple avec TailwindCSS qui affiche le titre et le brief du projet : "${projectPlan.creativeBrief}"`,
+          language: 'typescript',
+        }),
+      agenda: (_) =>
+        parseEvent({
+          prompt: `Planifier une réunion de lancement pour "${projectPlan.title}" demain à 10h`,
+          currentDate: new Date().toISOString(),
+        }),
     };
 
     for (const tool of toolsToRun) {
       const toolKey = tool as string;
       if (toolKey !== 'projectPlan' && toolGeneratorMap[toolKey]) {
-          toolPromises[toolKey] = toolGeneratorMap[toolKey]({ prompt: fullContextPrompt });
+        toolPromises[toolKey] = toolGeneratorMap[toolKey]({
+          prompt: fullContextPrompt,
+        });
       }
     }
-    
+
     // Phase 4: Exécution des promesses et assemblage des résultats
     const toolNames = Object.keys(toolPromises);
     const results = await Promise.allSettled(Object.values(toolPromises));
 
     results.forEach((result, index) => {
-        const toolName = toolNames[index] as keyof GenerateFluxOutput;
-        if (result.status === 'fulfilled') {
-            // Special case for agenda which needs to be an array
-            if (toolName === 'agenda') {
-                output[toolName] = [result.value];
-            } else {
-                (output as any)[toolName] = result.value;
-            }
+      const toolName = toolNames[index] as keyof GenerateFluxOutput;
+      if (result.status === 'fulfilled') {
+        // Special case for agenda which needs to be an array
+        if (toolName === 'agenda') {
+          output[toolName] = [result.value];
         } else {
-            console.warn(`(X)flux: L'outil '${toolName}' a échoué.`, result.reason);
-            // On ne fait rien, le champ restera undefined.
+          (output as any)[toolName] = result.value;
         }
+      } else {
+        console.warn(`(X)flux: L'outil '${toolName}' a échoué.`, result.reason);
+        // On ne fait rien, le champ restera undefined.
+      }
     });
 
     return output;

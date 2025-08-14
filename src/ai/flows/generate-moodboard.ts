@@ -9,12 +9,16 @@
 
 
 import type { GenerateMoodboardInput, GenerateMoodboardOutput } from '@/ai/types';
-import { generateImage } from './generate-image';
+import { generateContent } from './content-generator';
 
 
 export async function generateMoodboard(input: GenerateMoodboardInput): Promise<GenerateMoodboardOutput> {
-  const imagePromises = input.prompts.map(prompt => generateImage({ prompt, style: 'photorealistic' }));
+  const imagePromises = input.prompts.map(prompt => generateContent({
+    prompt,
+    style: 'photorealistic',
+    contentType: 'image'
+  }));
   const imageResults = await Promise.all(imagePromises);
-  const imageDataUris = imageResults.map(result => result.imageDataUri);
+  const imageDataUris = imageResults.map(result => result.data as string);
   return { imageDataUris };
 }

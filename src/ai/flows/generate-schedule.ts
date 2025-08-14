@@ -1,11 +1,4 @@
-
 'use server';
-
-/**
- * @fileOverview Un agent IA, Maestro, qui génère des plans de projet.
- *
- * - generateSchedule - Une fonction qui prend une description de projet et retourne un plan d'action.
- */
 
 import { ai } from '@/ai/genkit';
 import {
@@ -16,7 +9,9 @@ import {
 } from '@/ai/types';
 import { z } from 'zod';
 
-export async function generateSchedule(input: GenerateScheduleInput): Promise<ProjectPlan> {
+export async function generateSchedule(
+  input: GenerateScheduleInput
+): Promise<ProjectPlan> {
   return scheduleFlow(input);
 }
 

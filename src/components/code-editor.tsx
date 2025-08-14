@@ -40,7 +40,9 @@ import { Textarea } from '@/components/ui/textarea';
 
 import { useToast } from '@/hooks/use-toast';
 import { Loader, Wand2, Bug, BrainCircuit, Save, TerminalSquare, FileText, AppWindow, Upload, Image as ImageIconLucide, PanelLeftOpen, PanelLeftClose, LayoutTemplate, X, Sparkles } from 'lucide-react';
-import { refactorCodeAction, debugCodeAction, explainCodeAction, generateFrameAction, uploadDocumentAction } from '@/app/actions';
+import { refactorCodeAction, debugCodeAction, explainCodeAction } from '@/ai/flows/code-actions';
+import { generateFrameAction } from '@/ai/flows/generate-frame';
+import { uploadDocumentAction } from '@/ai/flows/upload-document';
 import { Skeleton } from './ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from 'next/image';

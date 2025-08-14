@@ -16,7 +16,6 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
-import { updateProfileAction, disconnectDeviceAction } from '@/app/actions';
 import { useAuth } from '@/components/auth-component';
 import { useIsClient } from '@/hooks/use-is-client';
 
@@ -27,6 +26,22 @@ const initialUser = {
   plan: 'XOS Pro',
   renewalDate: '24 Août 2024',
 };
+
+// Mock Server Actions - In a real app, these would be in `app/actions.ts`
+const updateProfileAction = async (data: { name: string; email: string }) => {
+    console.log('Updating profile:', data);
+    await new Promise(res => setTimeout(res, 500));
+    // Simulate success
+    return { success: true };
+};
+
+const disconnectDeviceAction = async (data: { deviceId: number }) => {
+    console.log('Disconnecting device:', data);
+    await new Promise(res => setTimeout(res, 500));
+    // Simulate success
+    return { success: true };
+};
+
 
 const mockProjects = [
     { id: 1, title: 'Projet Nébuleuse (Court-métrage)', imageUrl: 'https://images.unsplash.com/photo-1534433369931-29f1b1382103?auto=format&fit=crop&w=300&q=80', hint: 'nebula space stars' },
@@ -78,7 +93,6 @@ function EditProfileModal({ open, onOpenChange, user, onUserUpdate }: { open: bo
         const name = formData.get('name') as string;
         const email = formData.get('email') as string;
         
-        // This is where you'd call a server action
         const result = await updateProfileAction({ name, email });
 
         if (result.success) {
@@ -86,7 +100,7 @@ function EditProfileModal({ open, onOpenChange, user, onUserUpdate }: { open: bo
             toast({ title: "Profil mis à jour", description: "Vos modifications ont été enregistrées."});
             onOpenChange(false);
         } else {
-            toast({ variant: 'destructive', title: "Erreur", description: result.error });
+            toast({ variant: 'destructive', title: "Erreur", description: "La mise à jour du profil a échoué." });
         }
     }
 
@@ -165,7 +179,7 @@ export default function AccountClient() {
             setDevices(prev => prev.filter(device => device.id !== deviceId));
             toast({ title: "Appareil déconnecté", description: "L'accès depuis cet appareil a été révoqué." });
         } else {
-            toast({ variant: 'destructive', title: "Erreur", description: result.error });
+            toast({ variant: 'destructive', title: "Erreur", description: "La déconnexion a échoué." });
         }
     };
 

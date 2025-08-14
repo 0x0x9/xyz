@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useFormState, useFormStatus } from 'react-dom';
-import { generateScheduleAction, generateMoodboardAction, uploadDocumentAction } from '@/app/actions';
+import { generateScheduleAction, generateMoodboardAction, uploadDocumentAction } from '@/ai/flows/generate-schedule';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -116,7 +116,7 @@ function ResultsDisplay({ plan, moodboard, isLoadingMoodboard, onReset }: { plan
                 tasks: plan.tasks,
             };
 
-            await uploadDocumentAction({ name: fileName, content: dataUri, mimeType: 'application/json', metadata });
+            await uploadDocumentAction({ name: fileName, content: dataUri, mimeType: 'application/json' });
             toast({ title: 'Succès', description: `"${fileName}" a été enregistré sur (X)cloud.` });
         } catch (error: any) {
             toast({ variant: 'destructive', title: "Erreur d'enregistrement", description: error.message });
@@ -288,9 +288,8 @@ function ResultsDisplay({ plan, moodboard, isLoadingMoodboard, onReset }: { plan
     );
 }
 
-function MaestroForm({ state, onReset }: {
+function MaestroForm({ state }: {
     state: { message: string, plan: ProjectPlan | null, error: string, id: number, prompt: string },
-    onReset: () => void;
 }) {
     const { pending } = useFormStatus();
     
@@ -381,14 +380,14 @@ export default function MaestroGenerator({ initialResult, prompt }: { initialRes
       const fetchMoodboard = async () => {
         setIsLoadingMoodboard(true);
         setMoodboard([]);
-        const result = await generateMoodboardAction(plan.imagePrompts);
-        if (result.message === 'success' && result.imageDataUris) {
-          setMoodboard(result.imageDataUris);
+        const { imageDataUris, error } = await generateMoodboardAction(plan.imagePrompts);
+        if (imageDataUris) {
+          setMoodboard(imageDataUris);
         } else {
           toast({
             variant: 'destructive',
             title: 'Erreur Moodboard',
-            description: result.error,
+            description: error,
           });
         }
         setIsLoadingMoodboard(false);
@@ -408,7 +407,7 @@ export default function MaestroGenerator({ initialResult, prompt }: { initialRes
     <form ref={formRef} action={formAction} key={key}>
         <div className="max-w-7xl mx-auto">
             {showForm && (
-                <MaestroForm state={initialState} onReset={handleReset} />
+                <MaestroForm state={initialState} />
             )}
             
             {pending && (

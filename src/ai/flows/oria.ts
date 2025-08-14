@@ -43,11 +43,10 @@ import {
   GenerateImageOutputSchema,
 } from '@/ai/types';
 
-import { generateText } from './generate-text';
+import { generateContent } from './content-generator';
 import { generatePalette } from './generate-palette';
 import { generateTone } from './generate-tone';
 import { generatePersona } from './generate-persona';
-import { generateIdeas } from './generate-ideas';
 import { generateMotion } from './generate-motion';
 import { generateVoice } from './generate-voice';
 import { generateCode } from './generate-code';
@@ -72,7 +71,10 @@ const textTool = ai.defineTool(
     inputSchema: GenerateTextInputSchema,
     outputSchema: GenerateTextOutputSchema,
   },
-  async (input) => generateText(input)
+  async (input) => {
+      const result = await generateContent({ contentType: 'text', prompt: input.prompt });
+      return { text: result.data as string };
+  }
 );
 
 const paletteTool = ai.defineTool(
@@ -115,7 +117,10 @@ const promptorTool = ai.defineTool(
     inputSchema: GenerateIdeasInputSchema,
     outputSchema: GenerateIdeasOutputSchema,
   },
-  async (input) => generateIdeas(input)
+  async (input) => {
+      const result = await generateContent({ contentType: 'ideas', prompt: input.prompt });
+      return result.data as GenerateIdeasOutput;
+  }
 );
 
 const motionTool = ai.defineTool(

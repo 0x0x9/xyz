@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
-import { fluxAction } from '@/app/actions';
+import { fluxAction } from '@/ai/flows/generate-flux';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -93,7 +93,7 @@ function ResultsDisplay({ result, prompt, onReset, openApp }: { result: Generate
         if (openApp) {
              const appMapping: { [key in keyof GenerateFluxOutput]?: string } = {
                 projectPlan: 'maestro', personas: 'persona', ideas: 'promptor', deck: 'deck',
-                frame: 'editor', text: 'editor', motion: 'motion', nexus: 'nexus',
+                frame: 'editor', text: 'text', motion: 'motion', nexus: 'nexus',
                 code: 'code', agenda: 'agenda',
             };
 
@@ -109,9 +109,9 @@ function ResultsDisplay({ result, prompt, onReset, openApp }: { result: Generate
                     const appId = appMapping[typedKey]!;
                     let props: Record<string, any> = { prompt: result.projectPlan?.creativeBrief };
 
-                    if (typedKey === 'frame') props = { initialProjectCodes: { html: result.frame!.htmlCode, css: result.frame!.cssCode, js: result.frame!.jsCode }};
-                    else if (typedKey === 'text') props = { initialFile: { code: result.text!.text, language: 'markdown' } };
-                    else props = { initialResult: result[typedKey] };
+                    if (typedKey === 'frame') props = { ...props, initialProjectCodes: { html: result.frame!.htmlCode, css: result.frame!.cssCode, js: result.frame!.jsCode }};
+                    else if (typedKey === 'text') props = { ...props, initialFile: { code: result.text!.text, language: 'markdown' } };
+                    else props = { ...props, initialFile: { code: result.code!.code, language: 'typescript' } };
 
                     appsToOpen.push({ appId, props });
                 }
