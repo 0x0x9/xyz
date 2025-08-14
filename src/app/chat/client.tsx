@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
@@ -8,11 +9,11 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader, GitBranch, Share2, UploadCloud, Pencil, Plus, Presentation } from 'lucide-react';
+import { Send, ArrowLeft, MessageSquare, BrainCircuit, Trash2, Edit, PanelLeftOpen, FolderOpen, PanelRightClose, PanelLeftClose, Sparkles, Loader, GitBranch, Share2, UploadCloud, Pencil, Plus, Presentation, FilePlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { OriaHistoryMessage, ProjectPlan, Doc, GenerateFluxOutput } from '@/ai/types';
 import { AnimatePresence, motion } from 'framer-motion';
-import { oriaChatAction, deleteDocumentAction, listDocumentsAction, fluxAction } from '@/app/actions';
+import { oriaChatAction, deleteDocumentAction, listDocumentsAction, fluxAction, createManualProjectAction } from '@/app/actions';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import DocManager from '@/components/doc-manager';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
@@ -26,6 +27,7 @@ import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
 
 // Types
@@ -232,10 +234,46 @@ function ProjectTracker({ activeProject, setActiveProject, onProjectDeleted, pro
     );
 }
 
+function ManualProjectForm({ onProjectCreated, onCancel }: { onProjectCreated: (project: ProjectPlan) => void, onCancel: () => void }) {
+    const initialState = { success: false, error: null };
+    const [state, formAction] = useFormState(createManualProjectAction, initialState);
+    const { pending } = useFormStatus();
 
-function NewProjectView({ onProjectCreated, onCancel }: { onProjectCreated: (result: GenerateFluxOutput) => void, onCancel: () => void}) {
+    useEffect(() => {
+        if (state.success && state.project) {
+            onProjectCreated(state.project);
+        }
+        if (!state.success && state.error) {
+            alert(`Erreur: ${state.error}`);
+        }
+    }, [state, onProjectCreated]);
+
+    return (
+        <form action={formAction} className="w-full max-w-lg mt-8 space-y-4 text-left">
+            <div className="space-y-2">
+                <Label htmlFor="title">Titre du projet</Label>
+                <Input id="title" name="title" placeholder="Ex: Lancement de ma chaîne YouTube" required disabled={pending} />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="creativeBrief">Description / Brief Créatif</Label>
+                <Textarea id="creativeBrief" name="creativeBrief" placeholder="Décrivez l'objectif principal et la vision de votre projet." rows={4} required disabled={pending} />
+            </div>
+            <div className="flex gap-4 pt-4">
+                <Button type="button" variant="ghost" onClick={onCancel} disabled={pending}>Annuler</Button>
+                <Button type="submit" disabled={pending} className="flex-1">
+                    {pending ? <Loader className="animate-spin mr-2"/> : <FilePlus className="mr-2 h-4 w-4"/>}
+                    {pending ? 'Création...' : 'Créer le projet'}
+                </Button>
+            </div>
+        </form>
+    );
+}
+
+
+function NewProjectView({ onProjectCreated, onCancel }: { onProjectCreated: (result: any) => void, onCancel: () => void}) {
     const initialState = { message: '', result: null, error: null, id: 0, prompt: '', job: '' };
     const [state, formAction] = useFormState(fluxAction, initialState);
+    const [view, setView] = useState<'ai' | 'manual'>('ai');
     const { pending } = useFormStatus();
 
     useEffect(() => {
@@ -249,31 +287,41 @@ function NewProjectView({ onProjectCreated, onCancel }: { onProjectCreated: (res
 
     return (
         <div className="h-full flex flex-col items-center justify-center text-center p-8">
-            <Sparkles className="mx-auto h-20 w-20 text-muted-foreground/30" />
-            <h2 className="mt-6 text-xl font-semibold text-foreground">Créer un nouveau projet</h2>
-            <p className="mt-2 text-muted-foreground">Décrivez votre objectif et laissez (X)flux générer tous les livrables de départ.</p>
-            <form action={formAction} className="w-full max-w-lg mt-8 space-y-4">
-                 <Textarea
-                    name="prompt"
-                    placeholder="Exemple : Je suis une artiste et je veux lancer une collection de NFT sur le thème de l'espace."
-                    rows={3}
-                    required
-                    minLength={15}
-                    className="bg-background/50 text-base text-center"
-                    disabled={pending}
-                />
-                 <Input 
-                    name="job"
-                    placeholder="Votre métier ? (ex: Développeur, Artiste...) - Optionnel"
-                    className="bg-background/50 text-base text-center"
-                    disabled={pending}
-                />
-                <Button type="submit" size="lg" disabled={pending} className="w-full">
-                    {pending ? <Loader className="animate-spin mr-2"/> : <Sparkles className="mr-2 h-4 w-4"/>}
-                    {pending ? 'Génération en cours...' : 'Lancer (X)flux'}
-                </Button>
-                 <Button variant="ghost" onClick={onCancel} disabled={pending}>Annuler</Button>
-            </form>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={view}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="w-full flex flex-col items-center"
+                >
+                    {view === 'ai' ? (
+                        <>
+                            <Sparkles className="mx-auto h-20 w-20 text-muted-foreground/30" />
+                            <h2 className="mt-6 text-xl font-semibold text-foreground">Créer un nouveau projet avec l'IA</h2>
+                            <p className="mt-2 text-muted-foreground">Décrivez votre objectif et laissez (X)flux générer tous les livrables de départ.</p>
+                            <form action={formAction} className="w-full max-w-lg mt-8 space-y-4">
+                                <Textarea name="prompt" placeholder="Exemple : Je suis une artiste et je veux lancer une collection de NFT sur le thème de l'espace." rows={3} required minLength={15} className="bg-background/50 text-base text-center" disabled={pending} />
+                                <Input name="job" placeholder="Votre métier ? (ex: Développeur, Artiste...) - Optionnel" className="bg-background/50 text-base text-center" disabled={pending} />
+                                <Button type="submit" size="lg" disabled={pending} className="w-full">
+                                    {pending ? <Loader className="animate-spin mr-2"/> : <Sparkles className="mr-2 h-4 w-4"/>}
+                                    {pending ? 'Génération en cours...' : 'Lancer (X)flux'}
+                                </Button>
+                                <Button type="button" variant="link" onClick={() => setView('manual')} disabled={pending}>Ou créer manuellement</Button>
+                            </form>
+                        </>
+                    ) : (
+                         <>
+                            <FilePlus className="mx-auto h-20 w-20 text-muted-foreground/30" />
+                            <h2 className="mt-6 text-xl font-semibold text-foreground">Créer un projet manuellement</h2>
+                            <p className="mt-2 text-muted-foreground">Définissez vous-même les bases de votre projet.</p>
+                            <ManualProjectForm onProjectCreated={onProjectCreated} onCancel={() => setView('ai')} />
+                        </>
+                    )}
+                </motion.div>
+            </AnimatePresence>
+            <Button variant="ghost" onClick={onCancel} disabled={pending} className="mt-8">Retour</Button>
         </div>
     )
 }
@@ -560,32 +608,26 @@ export default function MessengerClient() {
         setDocs(prev => prev.filter(p => p.id !== deletedId));
     };
 
-    const handleProjectCreated = (result: GenerateFluxOutput) => {
-        // Here, you would typically save the result to your backend
-        // and then refetch the project list. For this mock, we'll
-        // simulate adding the new project to our state.
-        if (result.projectPlan) {
-            const newProject: ProjectPlan = {
-                ...result.projectPlan,
-                id: `flux-${Date.now()}`,
-            };
-            
-            // Simulate saving the project plan
+    const handleProjectCreated = (result: GenerateFluxOutput | ProjectPlan) => {
+        const isFluxResult = 'projectPlan' in result;
+        const newProjectPlan = isFluxResult ? result.projectPlan : result;
+
+        if (newProjectPlan) {
             const newDoc: Doc = {
-                 id: newProject.id,
-                 name: `maestro-${newProject.title.replace(/\s/g, '_')}.json`,
-                 path: `maestro-${newProject.title.replace(/\s/g, '_')}.json`,
+                 id: newProjectPlan.id!,
+                 name: `maestro-${newProjectPlan.title.replace(/\s/g, '_')}.json`,
+                 path: `maestro-${newProjectPlan.title.replace(/\s/g, '_')}.json`,
                  mimeType: 'application/json',
-                 size: JSON.stringify(newProject).length,
+                 size: JSON.stringify(newProjectPlan).length,
                  createdAt: new Date().toISOString(),
                  updatedAt: new Date().toISOString(),
                  shareId: null,
             };
-            
             setDocs(prev => [...prev, newDoc]);
-            setActiveProject(newProject);
+            setActiveProject(newProjectPlan);
+            setView('welcome'); // Go back to project view
+             toast({ title: "Projet créé !", description: `Le projet "${newProjectPlan.title}" a été initialisé.`})
         }
-        toast({ title: "Projet créé !", description: `Le projet "${result.projectPlan?.title}" a été initialisé.`})
     };
     
     const updateActiveProject = (updatedProject: ProjectPlan) => {

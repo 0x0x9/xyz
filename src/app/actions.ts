@@ -61,6 +61,67 @@ export async function fluxAction(prevState: any, formData: FormData): Promise<{ 
     }
 }
 
+export async function createManualProjectAction(prevState: any, formData: FormData): Promise<{ success: boolean; error: string | null; project?: ProjectPlan }> {
+    const title = formData.get('title') as string;
+    const creativeBrief = formData.get('creativeBrief') as string;
+
+    if (!title || !creativeBrief) {
+        return { success: false, error: 'Le titre et le brief sont requis.' };
+    }
+
+    try {
+        const newProjectPlan: ProjectPlan = {
+            id: `manual-${uuidv4()}`,
+            title,
+            creativeBrief,
+            tasks: [
+                 {
+                    title: "Définir la stratégie",
+                    description: "Clarifier les objectifs et la vision du projet.",
+                    category: "Stratégie & Recherche",
+                    duration: "2 jours",
+                    checklist: [
+                        { text: "Organiser une réunion de lancement", completed: false },
+                        { text: "Valider le brief créatif", completed: false },
+                    ]
+                },
+                {
+                    title: "Créer les premiers contenus",
+                    description: "Produire les premiers éléments visuels et textuels.",
+                    category: "Création & Production",
+                    duration: "1 semaine",
+                    checklist: [
+                        { text: "Rédiger le texte de la page d'accueil", completed: false },
+                        { text: "Créer le logo et la charte graphique", completed: false },
+                    ]
+                }
+            ],
+            imagePrompts: [],
+            events: [],
+        };
+        
+        // Simulate saving to a "database"
+        const projectDoc: Doc = {
+            id: newProjectPlan.id!,
+            name: `maestro-${newProjectPlan.title.replace(/\s+/g, '_')}.json`,
+            path: `maestro-${newProjectPlan.title.replace(/\s+/g, '_')}.json`,
+            mimeType: 'application/json',
+            size: JSON.stringify(newProjectPlan).length,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            shareId: null,
+        };
+
+        mockDocs.push(projectDoc);
+        
+        return { success: true, error: null, project: newProjectPlan };
+    } catch (e: any) {
+        console.error('Error in createManualProjectAction:', e);
+        return { success: false, error: e.message };
+    }
+}
+
+
 export async function generateFrameAction(prevState: any, formData: FormData): Promise<{ message: string, error: string | null, id: number, result: Frame | null }> {
     const prompt = formData.get('prompt') as string;
     const photoDataUri = formData.get('photoDataUri') as string;
@@ -465,3 +526,4 @@ export async function uploadMuseDocumentAction(data: { name: string; content: st
         return { success: false, error: error.message || "An unknown error occurred" };
     }
 }
+

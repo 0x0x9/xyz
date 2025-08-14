@@ -208,6 +208,7 @@ const ChecklistItemSchema = z.object({
 });
 
 export const ProjectPlanSchema = z.object({
+  id: z.string().optional().describe("ID unique pour le projet, peut être généré côté client/serveur."),
   title: z
     .string()
     .describe("Un titre créatif et engageant pour le projet. Doit être en français et refléter l'essence de l'idée."),
