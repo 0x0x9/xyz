@@ -1,7 +1,7 @@
 'use server';
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
+import { z } from 'genkit';
 import { DocSchema } from '@/ai/types';
 
 // In a real application, this would fetch from a database or cloud storage.
@@ -114,6 +114,8 @@ const mockDocs = [
     updatedAt: '2024-07-25T14:00:00Z',
     shareId: null,
   },
+  // Previous mock data for compatibility
+  { id: 'maestro-projet-nebula.json', name: 'maestro-projet-nebula.json', path: 'maestro-projet-nebula.json', mimeType: 'application/json', size: 8192, createdAt: '2024-07-21T11:20:00Z', updatedAt: '2024-07-22T09:00:00Z', shareId: null },
 ];
 
 const listDocumentsFlow = ai.defineFlow(
