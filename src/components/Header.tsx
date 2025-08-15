@@ -95,7 +95,7 @@ const discoverLinks = [
     { href: "/about", label: "Notre Vision", icon: Info, description: "Découvrez la mission et l'équipe (X)yzz." },
     { href: "/features", label: "L'Écosystème (X)OS", icon: Layers, description: "Explorez notre système d'exploitation unifié." },
     { href: "/hardware", label: "Matériel", icon: Cpu, description: "Les machines conçues pour la performance." },
-    { href: "/tools", label: "Suite d'Outils IA", icon: Sparkles, description: "Un arsenal créatif complet à votre service." },
+    { href: "/avantages", label: "Nos Avantages", icon: Sparkles, description: "Pourquoi (X)yzz est différent." },
     { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
 ];
 
