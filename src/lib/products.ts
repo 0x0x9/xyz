@@ -40,7 +40,7 @@ export const products: Product[] = [
       "Processeur": "Intel® Core i9-14900K ou AMD Ryzen 9 7950X — 24 cœurs / 32 threads.",
       "Carte graphique": "NVIDIA RTX 4080 Super ou AMD Radeon RX 7900 XTX (Autres GPU disponibles).",
       "Mémoire vive": "96 Go DDR5 (extensible à 192Go).",
-      "Stockage": "20 To (SSD NVMe Gen4 8 To + 12 To HDD) avec emplacement libre pour extension.",
+      "Stockage": "20 To (SSD NVMe Gen4 8 To + 12 To HDD) +  emplacement libre pour extension.",
       "Refroidissement": "Système hybride silencieux (air/liquide) avec ventilation adaptative.",
       "Boîtier": "Moyen-tour compact en alliage d’aluminium noir satiné, éclairage sobre configurable.",
       "Connectique": "4×USB-C, 4×USB 3.2, 2×DisplayPort 2.1, HDMI 2.1, Ethernet 2.5 GbE, SD Express, Wi-Fi 6E.",
@@ -49,7 +49,7 @@ export const products: Product[] = [
       "Garantie": "2 ans (extensible) + support prioritaire pour les créatifs pro."
     }
   },
-   {
+  {
     id: 8,
     name: "(X)-book",
     description: "La puissance d'une station de travail dans un format portable et élégant, pour créer n'importe où.",
@@ -60,6 +60,13 @@ export const products: Product[] = [
     isFeatured: true,
     configurable: false,
     features: ["Écran Liquid Retina XDR 14 pouces", "Puce (X)OS Fusion A1 avec Neural Engine", "Jusqu'à 18h d'autonomie", "Clavier Magique rétroéclairé", "Châssis unibody en aluminium recyclé"],
+    specs: {
+        "Processeur": "Puce (X)OS Fusion A1",
+        "Mémoire": "32 Go de mémoire unifiée",
+        "Stockage": "1 To SSD",
+        "Écran": "Écran Liquid Retina XDR 14,2 pouces",
+        "Batterie": "Jusqu'à 18 heures d'autonomie"
+    }
   },
   {
     id: 9,
@@ -73,7 +80,21 @@ export const products: Product[] = [
     category: 'Matériel',
     isFeatured: false,
     configurable: false,
-    features: ["(X)OS complet", "Dual-OS Windows/macOS", "32 Go RAM", "1 To SSD", "(X)Cloud inclus"],
+    features: [
+        "Processeur Intel Core i5 dernière génération",
+        "(X)OS complet avec dual-boot Windows/macOS", 
+        "32 Go de RAM DDR5", 
+        "1 To de stockage SSD NVMe ultra-rapide", 
+        "Carte graphique NVIDIA RTX 4060",
+        "1 an d'abonnement (X)Cloud inclus"
+    ],
+    specs: {
+        "Processeur": "Intel Core i5-13600K",
+        "Carte graphique": "NVIDIA GeForce RTX 4060",
+        "Mémoire": "32 Go DDR5",
+        "Stockage": "1 To SSD NVMe Gen4",
+        "Connectique": "2x USB-C, 6x USB 3.1, HDMI 2.1, DisplayPort 1.4, Ethernet 1GbE"
+    }
   },
   {
     id: 2,
