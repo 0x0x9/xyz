@@ -79,7 +79,7 @@ export const products: Product[] = [
     hint: "sleek modern desktop computer",
     category: 'Matériel',
     isFeatured: false,
-    configurable: false,
+    configurable: true,
     features: [
         "Processeur Intel Core i7 ou AMD Ryzen 7", 
         "(X)OS préinstallé avec compatibilité Windows/macOS", 
