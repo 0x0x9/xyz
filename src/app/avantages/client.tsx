@@ -67,7 +67,7 @@ const performanceData = [
 export default function AvantegesClient() {
 
     return (
-        <div className="space-y-24 md:space-y-36 pt-24">
+        <div className="space-y-24 md:space-y-36 pt-40">
             <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
