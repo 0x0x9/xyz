@@ -54,13 +54,12 @@ const initialDevices = [
     { id: 2, name: 'MacBook Pro 16"', icon: MonitorSmartphone, location: 'Lyon, FR', lastSeen: 'il y a 2 jours' },
 ];
 
-const SectionCard = ({ icon, title, description, children, className }: { icon: React.ElementType, title: string, description: string, children: React.ReactNode, className?: string }) => {
-    const Icon = icon;
+const SectionCard = ({ icon, title, description, children, className }: { icon: React.ReactNode, title: string, description: string, children: React.ReactNode, className?: string }) => {
     return (
         <Card className={`glass-card h-full ${className}`}>
             <CardHeader className="flex flex-row items-center gap-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
-                    <Icon className="h-6 w-6 text-primary" />
+                    {icon}
                 </div>
                 <div>
                     <CardTitle>{title}</CardTitle>
@@ -218,7 +217,7 @@ export default function AccountClient() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Plan & Billing */}
                 <SectionCard
-                    icon={CreditCard}
+                    icon={<CreditCard className="h-6 w-6 text-primary" />}
                     title="Abonnement & Facturation"
                     description="Gérez votre abonnement et vos factures."
                     className="lg:col-span-1"
@@ -238,7 +237,7 @@ export default function AccountClient() {
 
                 {/* Preferences */}
                  <SectionCard
-                    icon={Settings}
+                    icon={<Settings className="h-6 w-6 text-primary" />}
                     title="Préférences"
                     description="Personnalisez votre expérience."
                     className="lg:col-span-2"
@@ -275,7 +274,7 @@ export default function AccountClient() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Creative History */}
                 <SectionCard
-                    icon={Sparkles}
+                    icon={<Sparkles className="h-6 w-6 text-primary" />}
                     title="Historique Créatif"
                     description="Vos dernières créations avec les outils (X)yzz."
                 >
@@ -295,21 +294,24 @@ export default function AccountClient() {
                 </SectionCard>
                  {/* Security & Devices */}
                  <SectionCard
-                    icon={Shield}
+                    icon={<Shield className="h-6 w-6 text-primary" />}
                     title="Appareils Connectés"
                     description="Gérez les appareils ayant accès à votre compte."
                 >
                     <div className="space-y-4">
-                        {devices.map(device => (
-                             <div key={device.id} className="flex items-center gap-4 p-3 rounded-lg bg-background/50">
-                                <device.icon className="h-8 w-8 text-muted-foreground shrink-0"/>
-                                <div className="flex-1">
-                                    <p className="font-semibold text-sm">{device.name}</p>
-                                    <p className="text-xs text-muted-foreground">{device.location} • {device.lastSeen}</p>
+                        {devices.map(device => {
+                             const Icon = device.icon;
+                             return (
+                                 <div key={device.id} className="flex items-center gap-4 p-3 rounded-lg bg-background/50">
+                                    <Icon className="h-8 w-8 text-muted-foreground shrink-0"/>
+                                    <div className="flex-1">
+                                        <p className="font-semibold text-sm">{device.name}</p>
+                                        <p className="text-xs text-muted-foreground">{device.location} • {device.lastSeen}</p>
+                                    </div>
+                                    <Button onClick={() => handleDisconnectDevice(device.id)} size="sm" variant="ghost" className="text-destructive hover:text-destructive hover:bg-destructive/10"><LogOut className="mr-2 h-4 w-4"/>Déconnecter</Button>
                                 </div>
-                                <Button onClick={() => handleDisconnectDevice(device.id)} size="sm" variant="ghost" className="text-destructive hover:text-destructive hover:bg-destructive/10"><LogOut className="mr-2 h-4 w-4"/>Déconnecter</Button>
-                            </div>
-                        ))}
+                             )
+                        })}
                     </div>
                 </SectionCard>
             </div>
