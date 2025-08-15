@@ -1,9 +1,7 @@
-
-'use client';
-import StorePageClient from './client';
+import StoreClient from './client';
 
 const StorePage = () => {
-  return <StorePageClient />;
+  return <StoreClient />;
 };
 
 export default StorePage;

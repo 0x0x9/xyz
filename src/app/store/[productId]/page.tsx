@@ -1,8 +1,6 @@
 
 import { notFound } from 'next/navigation';
 import { products, type Product } from '@/lib/products';
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import ProductClient from './client';
 
 export function generateStaticParams() {
@@ -27,13 +25,7 @@ const ProductPage = async ({ params: { productId } }: { params: { productId: str
   ).slice(0, 4);
 
   return (
-    <>
-      <Header />
-      <main className="flex-1">
-        <ProductClient product={product} relatedProducts={relatedProducts} />
-      </main>
-      <Footer />
-    </>
+      <ProductClient product={product} relatedProducts={relatedProducts} />
   );
 }
 
