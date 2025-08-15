@@ -142,6 +142,25 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                  </div>
             </section>
             
+             {product.id === 1 && (
+                <section className="container mx-auto px-4 md:px-6">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold">En mouvement</h2>
+                        <p className="text-muted-foreground mt-2 max-w-xl mx-auto">Découvrez la (X)-φ (fi) sous tous ses angles.</p>
+                    </div>
+                    <div className="aspect-video w-full max-w-5xl mx-auto rounded-2xl overflow-hidden glass-card p-2">
+                        <iframe
+                            src="https://www.youtube.com/embed/ozGQ2q4l4ys?autoplay=0&loop=1&playlist=ozGQ2q4l4ys&controls=1&showinfo=0&autohide=1"
+                            title="(X)-φ (fi) Product Video"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="w-full h-full rounded-lg"
+                        ></iframe>
+                    </div>
+                </section>
+            )}
+            
             {product.specs && (
                  <section className="container mx-auto px-4 md:px-6">
                      <div className="text-center">
@@ -202,5 +221,3 @@ export default function ProductClient({ product, relatedProducts }: { product: P
         </div>
     );
 }
-
-    
