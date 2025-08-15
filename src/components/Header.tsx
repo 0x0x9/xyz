@@ -65,6 +65,7 @@ import {
   Heart,
   Home,
   ShoppingBag,
+  Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
@@ -91,10 +92,10 @@ const navLinks = [
 ];
 
 const discoverLinks = [
-    { href: "/welcome", label: "(X)OS & Vision", icon: Home, description: "Découvrez notre OS unifié révolutionnaire." },
+    { href: "/about", label: "Notre Vision", icon: Info, description: "Découvrez la mission et l'équipe (X)yzz." },
+    { href: "/features", label: "L'Écosystème (X)OS", icon: Layers, description: "Explorez notre système d'exploitation unifié." },
+    { href: "/hardware", label: "Matériel", icon: Cpu, description: "Les machines conçues pour la performance." },
     { href: "/tools", label: "Suite d'Outils IA", icon: Sparkles, description: "Un arsenal créatif complet à votre service." },
-    { href: "/hardware", label: "Matériel", icon: Cpu, description: "Les machines conçues pour la performance créative." },
-    { href: "/light", label: "(X)light", icon: Lightbulb, description: "Votre sanctuaire pour l'inspiration créative." },
     { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
 ];
 
