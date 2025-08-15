@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -55,7 +56,7 @@ export default function StoreClient() {
                          animate={{ opacity: 1, y: 0 }}
                          transition={{ duration: 0.5, delay: 0.3 }}
                     >
-                        <Link href="/welcome">
+                        <Link href="/features">
                             <Card className="glass-card h-full p-8 flex flex-col justify-between text-center relative overflow-hidden group transition-all duration-300 hover:border-primary/30 hover:-translate-y-2">
                                 <div className="absolute -top-1/4 -right-1/4 w-1/2 h-1/2 bg-primary/30 rounded-full blur-3xl transition-all duration-500 group-hover:scale-150" />
                                 <Sparkles className="h-12 w-12 text-primary mx-auto mb-4" />
