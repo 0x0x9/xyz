@@ -118,7 +118,7 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
     return (
         <div className="space-y-16">
             <div className="text-center">
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Configurez votre Station X-1</h2>
+                <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Configurez votre (X)-φ (fi)</h2>
                 <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">Personnalisez chaque composant pour créer la machine qui correspond parfaitement à vos ambitions créatives.</p>
             </div>
             {(Object.keys(options) as ComponentType[]).map((type) => (

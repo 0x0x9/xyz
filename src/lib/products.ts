@@ -15,17 +15,20 @@ export type Product = {
 
 export const products: Product[] = [
   {
-    id: 11,
+    id: 1,
     name: "(X)-φ (fi)",
     description: "Le summum de la puissance créative. Pour celles et ceux qui repoussent les limites de ce qu’une machine peut faire… et de ce qu’un esprit peut créer. Ce n'est pas qu'un ordinateur. C’est un studio, une galerie, une scène, un lab.",
     price: 4499.00,
     images: [
-        "https://images.unsplash.com/photo-1603792013941-2c13e639a03f?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1587593665183-a773cb21f845?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1588229712046-5682b1377854?auto=format&fit=crop&w=800&q=80"
     ],
-    hint: "ultimate performance computer",
+    hint: "powerful desktop computer",
     category: 'Matériel',
     isFeatured: true,
-    configurable: false,
+    configurable: true,
     features: [
       "Puissance de calcul extrême pour la 3D, le dev et le montage 8K.",
       "Flexibilité totale avec la double compatibilité GPU (NVIDIA/AMD).",
@@ -45,23 +48,6 @@ export const products: Product[] = [
       "Abonnement Inclus": "1 an d'abonnement (X) SYNC pour la synchronisation multi-plateforme.",
       "Garantie": "2 ans (extensible) + support prioritaire pour les créatifs pro."
     }
-  },
-  {
-    id: 1,
-    name: "(X)-alpha",
-    description: "La station de travail pour les professionnels exigeants. Le Triple-OS et l'IA intégrée ouvrent des possibilités créatives infinies.",
-    price: 3499.00,
-    images: [
-        "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1587593665183-a773cb21f845?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1588229712046-5682b1377854?auto=format&fit=crop&w=800&q=80"
-    ],
-    hint: "powerful desktop computer",
-    category: 'Matériel',
-    isFeatured: true,
-    configurable: true,
-    features: ["Processeur Neural X-Core de dernière génération", "Alliance Multi-GPU (NVIDIA & AMD)", "Jusqu'à 256Go de Mémoire Unifiée Adaptative", "Connectivité ultra-rapide Thunderbolt 5", "Système de refroidissement Cryo-Silencieux"],
   },
    {
     id: 8,
@@ -160,5 +146,3 @@ export const products: Product[] = [
     configurable: false,
   },
 ];
-
-    

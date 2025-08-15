@@ -35,7 +35,7 @@ function AnimatedSection({ children, className }: { children: React.ReactNode, c
 };
 
 const performanceData = [
-    { name: 'X-1 Station', 'Rendu 3D': 95, 'Compilation de code': 98, 'Simulation IA': 92 },
+    { name: '(X)-φ (fi)', 'Rendu 3D': 95, 'Compilation de code': 98, 'Simulation IA': 92 },
     { name: 'Mac Pro (équivalent)', 'Rendu 3D': 75, 'Compilation de code': 80, 'Simulation IA': 70 },
     { name: 'PC Haut de Gamme', 'Rendu 3D': 85, 'Compilation de code': 88, 'Simulation IA': 78 },
 ];
@@ -82,7 +82,7 @@ export default function HardwareClient() {
                          className="relative z-10 px-4 space-y-6"
                     >
                         <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white [text-shadow:0_4px_20px_rgba(0,0,0,0.5)]">
-                            Station X-1
+                            (X)-φ (fi)
                         </h1>
                         <p className="text-xl md:text-2xl lg:text-3xl text-white/80 max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
                             La puissance n'est que le début.
@@ -95,7 +95,7 @@ export default function HardwareClient() {
                             </Button>
                              <Button size="lg" asChild className="rounded-full text-lg" variant="outline">
                                 <Link href="/store/1">
-                                    Configurer votre X-1
+                                    Configurer votre (X)-φ
                                 </Link>
                             </Button>
                         </div>
@@ -110,7 +110,7 @@ export default function HardwareClient() {
                         Des performances qui défient la réalité.
                     </h2>
                     <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                       La Station X-1 a été conçue pour les workflows les plus exigeants. Voyez par vous-même comment elle se mesure à la concurrence.
+                       La (X)-φ (fi) a été conçue pour les workflows les plus exigeants. Voyez par vous-même comment elle se mesure à la concurrence.
                     </p>
                 </AnimatedSection>
                 <AnimatedSection className="mt-16">
@@ -151,7 +151,7 @@ export default function HardwareClient() {
                     >
                          <Image
                             src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=1600&q=80"
-                            alt="Système de refroidissement liquide de la Station X-1"
+                            alt="Système de refroidissement liquide de la (X)-φ (fi)"
                             fill
                             className="object-cover"
                             data-ai-hint="liquid cooling"
@@ -177,7 +177,7 @@ export default function HardwareClient() {
                     >
                         <Image
                             src="https://images.unsplash.com/photo-1587593665183-a773cb21f845?auto=format&fit=crop&w=1600&q=80"
-                            alt="Châssis ouvert de la Station X-1 montrant l'accès aux composants"
+                            alt="Châssis ouvert de la (X)-φ (fi) montrant l'accès aux composants"
                             fill
                             className="object-cover"
                             data-ai-hint="open computer"
@@ -189,7 +189,7 @@ export default function HardwareClient() {
                            Conçue pour évoluer.
                         </h2>
                         <p className="mt-6 text-lg md:text-xl text-white/80">
-                           Accès sans outils. Composants standards. La Station X-1 est conçue pour être mise à niveau facilement, garantissant que votre investissement dure dans le temps.
+                           Accès sans outils. Composants standards. La (X)-φ (fi) est conçue pour être mise à niveau facilement, garantissant que votre investissement dure dans le temps.
                         </p>
                     </AnimatedSection>
                 </div>
@@ -204,7 +204,7 @@ export default function HardwareClient() {
                      <div className="mt-8 flex flex-wrap justify-center gap-4">
                         <Button size="lg" asChild className="rounded-full text-lg">
                             <Link href="/store/1">
-                                Acheter la Station X-1 <ArrowRight className="ml-2 h-5 w-5" />
+                                Acheter la (X)-φ (fi) <ArrowRight className="ml-2 h-5 w-5" />
                             </Link>
                         </Button>
                     </div>

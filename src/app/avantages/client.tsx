@@ -25,7 +25,7 @@ const advantages = [
     {
         icon: Cpu,
         title: "Synergie Matériel-Logiciel Totale",
-        description: "Notre matériel, comme la Station X-1, est conçu en parfaite symbiose avec (X)OS et sa capacité multi-GPU (NVIDIA + AMD) pour des performances brutes et une stabilité à toute épreuve.",
+        description: "Notre matériel, comme la (X)-φ (fi), est conçu en parfaite symbiose avec (X)OS et sa capacité multi-GPU (NVIDIA + AMD) pour des performances brutes et une stabilité à toute épreuve.",
         videoId: "YUEb23FQVhA"
     },
 ];
@@ -59,7 +59,7 @@ const comparisonData = [
 ];
 
 const performanceData = [
-    { name: 'Station X-1 (Multi-GPU)', 'Rendu 3D (Cycles)': 142, 'Compilation de code (LLVM)': 135, 'Simulation IA (PyTorch)': 155 },
+    { name: '(X)-φ (fi) (Multi-GPU)', 'Rendu 3D (Cycles)': 142, 'Compilation de code (LLVM)': 135, 'Simulation IA (PyTorch)': 155 },
     { name: 'Mac Pro (M4 Ultra)', 'Rendu 3D (Cycles)': 100, 'Compilation de code (LLVM)': 110, 'Simulation IA (PyTorch)': 95 },
     { name: 'PC Haut de Gamme (RTX 4090)', 'Rendu 3D (Cycles)': 115, 'Compilation de code (LLVM)': 100, 'Simulation IA (PyTorch)': 110 },
 ];
@@ -112,7 +112,7 @@ export default function AvantegesClient() {
                         Des performances qui défient la réalité.
                     </h2>
                      <p className="mt-4 max-w-2xl mx-auto text-muted-foreground md:text-lg">
-                       Grâce à notre synergie matériel-logiciel, la Station X-1 surpasse les configurations les plus puissantes du marché, y compris les dernières puces Apple.
+                       Grâce à notre synergie matériel-logiciel, la (X)-φ (fi) surpasse les configurations les plus puissantes du marché, y compris les dernières puces Apple.
                     </p>
                 </div>
                 <PerformanceChart data={performanceData} />
