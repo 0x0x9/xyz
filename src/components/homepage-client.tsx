@@ -28,7 +28,8 @@ import {
   Users,
   CheckCircle,
   MonitorPlay,
-  Download
+  Download,
+  Zap
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
@@ -300,6 +301,14 @@ const HomePageClient = () => {
             buttonHref="/hardware"
             videoId="ozGQ2q4l4ys"
             icon={Cpu}
+        />
+         <ImmersiveFeatureSection
+            title="Pourquoi (X)yzz.ai est différent."
+            description="Plongez au cœur de notre technologie et découvrez ce qui nous rend uniques. Explorez nos avantages concurrentiels en détail."
+            buttonText="Comparer nos avantages"
+            buttonHref="/avantages"
+            videoId="wLiwRGYaVnw"
+            icon={Zap}
         />
         
         <section id="hardware" className="my-24 md:my-32 container mx-auto px-4 md:px-6">

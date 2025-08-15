@@ -86,15 +86,10 @@ import { Separator } from "./ui/separator";
 import { useAuth } from './auth-component';
 import { useIsClient } from '@/hooks/use-is-client';
 
-const navLinks = [
-  { href: "/store", label: "Boutique" },
-  { href: "/careers", label: "Carrières" },
-];
-
 const discoverLinks = [
     { href: "/about", label: "Notre Vision", icon: Info, description: "Découvrez la mission et l'équipe (X)yzz." },
-    { href: "/avantages", label: "(X)core : Nos Avantages", icon: Zap, description: "Pourquoi nous sommes différents." },
-    { href: "/features", label: "Écosystème (X)OS", icon: Layers, description: "Explorez notre système d'exploitation unifié." },
+    { href: "/avantages", label: "Avantages (X)core", icon: Zap, description: "Explorez ce qui nous rend uniques." },
+    { href: "/features", label: "Écosystème (X)OS", icon: Layers, description: "Découvrez notre système d'exploitation." },
     { href: "/hardware", label: "Matériel", icon: Cpu, description: "Les machines conçues pour la performance." },
     { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
 ];
