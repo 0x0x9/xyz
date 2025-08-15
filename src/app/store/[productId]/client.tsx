@@ -1,19 +1,21 @@
+
 'use client';
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, CheckCircle, Shield, Truck, ArrowRight, ArrowLeft } from 'lucide-react';
-import { useCart } from '@/hooks/use-cart-store';
-import { useToast } from '@/hooks/use-toast';
+import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft, Cpu } from 'lucide-react';
+import { useCart } from "@/hooks/use-cart-store";
+import { useToast } from "@/hooks/use-toast";
 import { type Product } from '@/lib/products';
 import { PCConfigurator, type Configuration } from '@/components/ui/pc-configurator';
 import { useState, useEffect } from 'react';
 import { ProductCard } from '@/components/product-card';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import React from 'react';
 import Link from 'next/link';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const reassuranceItems = [
     { icon: Truck, text: "Livraison gratuite et rapide" },
@@ -72,63 +74,92 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                         </Link>
                     </Button>
                 </div>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="max-w-4xl mx-auto"
-                >
-                    <span className="text-primary font-semibold">{product.category}</span>
-                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mt-2">{product.name}</h1>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto mt-4">{product.description}</p>
-                    <p className="text-3xl font-bold mt-6">{totalPrice.toFixed(2)}€</p>
-                     <div className="mt-8 flex gap-4 justify-center">
-                        <Button size="lg" className="rounded-full text-lg" onClick={handleAddToCart}>
-                            <ShoppingCart className="mr-2 h-5 w-5" />
-                            Ajouter au panier
-                        </Button>
+                 <div className="grid md:grid-cols-2 gap-12 items-start text-left">
+                    {/* Image Carousel */}
+                    <div className="md:sticky top-28">
+                         <Carousel setApi={setApi} className="w-full group">
+                            <CarouselContent>
+                                {product.images.map((img, index) => (
+                                    <CarouselItem key={index}>
+                                        <div className="aspect-square relative glass-card rounded-2xl overflow-hidden">
+                                            <Image
+                                                src={img}
+                                                alt={`${product.name} - vue ${index + 1}`}
+                                                fill
+                                                className="object-contain p-8"
+                                                data-ai-hint={product.hint}
+                                                priority={index === 0}
+                                            />
+                                        </div>
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                             <CarouselPrevious className="left-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                             <CarouselNext className="right-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </Carousel>
+                        <div className="py-2 text-center text-sm text-muted-foreground">
+                            {product.images.length > 1 ? `${current} / ${count}` : ''}
+                        </div>
                     </div>
-                     <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
-                        {reassuranceItems.map((item, i) => (
-                            <div key={i} className="flex items-center gap-2">
-                                <item.icon className="h-4 w-4" />
-                                <span>{item.text}</span>
-                            </div>
-                        ))}
-                    </div>
-                </motion.div>
-                <motion.div
-                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="relative w-full max-w-6xl mx-auto mt-12"
-                >
-                    <Carousel setApi={setApi} className="w-full">
-                        <CarouselContent>
-                            {product.images.map((img, index) => (
-                                <CarouselItem key={index}>
-                                    <div className="aspect-[16/10] relative">
-                                        <Image
-                                            src={img}
-                                            alt={`${product.name} - vue ${index + 1}`}
-                                            fill
-                                            className="object-contain"
-                                            data-ai-hint={product.hint}
-                                            priority={index === 0}
-                                        />
-                                    </div>
-                                </CarouselItem>
+                    
+                    {/* Product Info */}
+                    <div className="space-y-8">
+                        <div>
+                            <span className="text-primary font-semibold">{product.category}</span>
+                            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mt-2">{product.name}</h1>
+                            <p className="text-lg text-muted-foreground mt-4">{product.description}</p>
+                        </div>
+
+                         <div className="space-y-4">
+                            {product.features && (
+                                <ul className="space-y-3">
+                                    {product.features.map((feature, i) => (
+                                        <li key={i} className="flex items-center gap-3 text-foreground/90">
+                                            <CheckCircle className="h-5 w-5 text-primary shrink-0" />
+                                            <span>{feature}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+
+                        <div className="space-y-4">
+                            <p className="text-4xl font-bold">{totalPrice.toFixed(2)}€</p>
+                            <Button size="lg" className="w-full text-lg h-14" onClick={handleAddToCart}>
+                                <ShoppingCart className="mr-3 h-6 w-6" />
+                                Ajouter au panier
+                            </Button>
+                        </div>
+                         <div className="flex flex-wrap justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground pt-4 border-t border-border">
+                            {reassuranceItems.map((item, i) => (
+                                <div key={i} className="flex items-center gap-2">
+                                    <item.icon className="h-4 w-4" />
+                                    <span>{item.text}</span>
+                                </div>
                             ))}
-                        </CarouselContent>
-                        <CarouselPrevious className="left-4" />
-                        <CarouselNext className="right-4" />
-                    </Carousel>
-                     <div className="py-2 text-center text-sm text-muted-foreground">
-                        {current} / {count}
+                        </div>
                     </div>
-                </motion.div>
+                 </div>
             </section>
             
+            {product.specs && (
+                 <section className="container mx-auto px-4 md:px-6">
+                     <div className="text-center">
+                        <h2 className="text-3xl md:text-4xl font-bold">Caractéristiques Techniques</h2>
+                    </div>
+                    <div className="mt-12 max-w-4xl mx-auto">
+                        <ul className="specs-list space-y-3">
+                            {Object.entries(product.specs).map(([key, value]) => (
+                                <li key={key} className="flex flex-col sm:flex-row justify-between p-4 rounded-lg glass-card bg-background/30">
+                                    <strong className="font-semibold text-foreground/90">{key}</strong>
+                                    <span className="text-muted-foreground sm:text-right">{value}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </section>
+            )}
+
             {product.configurable && (
                 <section className="container mx-auto px-4 md:px-6">
                     <PCConfigurator 
@@ -171,3 +202,5 @@ export default function ProductClient({ product, relatedProducts }: { product: P
         </div>
     );
 }
+
+    
