@@ -1,6 +1,27 @@
 
 'use server';
 
+import { z } from 'zod';
+import type {
+  GenerateCodeOutput, ExplainCodeOutput, DebugCodeOutput, GenerateFluxOutput,
+  ProjectPlan, GeneratePaletteOutput, GenerateToneOutput, GeneratePersonaOutput,
+  GenerateIdeasOutput, GenerateMotionOutput, GenerateVoiceOutput, GenerateDeckOutput,
+  GenerateFrameOutput, GenerateSoundOutput, GenerateNexusOutput, ConvertImageOutput,
+  GenerateLightMoodOutput, GenerateMoodboardOutput, CopilotLyricsOutput, GenerateMuseOutput,
+  OriaChatOutput, AgendaEvent, ReformatTextWithPromptOutput
+} from '@/ai/types';
+
+import {
+  GenerateCodeInputSchema, ExplainCodeInputSchema, DebugCodeInputSchema,
+  RefactorCodeInputSchema, GenerateFluxInputSchema, GenerateScheduleInputSchema,
+  GeneratePaletteInputSchema, GenerateToneInputSchema, GeneratePersonaInputSchema,
+  GenerateIdeasInputSchema, GenerateMotionInputSchema, GenerateVoiceInputSchema,
+  GenerateDeckInputSchema, GenerateFrameInputSchema, GenerateSoundInputSchema,
+  GenerateNexusInputSchema, ConvertImageInputSchema, GenerateLightMoodInputSchema,
+  CopilotLyricsInputSchema, GenerateMuseInputSchema, OriaChatInputSchema,
+  ParseEventInputSchema, ReformatTextWithPromptInputSchema
+} from '@/ai/types';
+
 import { generateCode } from '@/ai/flows/generate-code';
 import { explainCode } from '@/ai/flows/explain-code';
 import { debugCode } from '@/ai/flows/debug-code';
@@ -32,61 +53,8 @@ import { shareDocument } from '@/ai/flows/share-document';
 import { uploadDocument } from '@/ai/flows/upload-document';
 import { parseEvent } from '@/ai/flows/parse-event';
 import { oria } from '@/ai/flows/oria';
+import { createManualProject } from '@/ai/flows/client-actions';
 
-import type { z } from 'zod';
-import type {
-  GenerateCodeOutput,
-  ExplainCodeOutput,
-  DebugCodeOutput,
-  RefactorCodeInput,
-  GenerateFluxOutput,
-  ProjectPlan,
-  GeneratePaletteOutput,
-  GenerateToneOutput,
-  GeneratePersonaOutput,
-  GenerateIdeasOutput,
-  GenerateMotionOutput,
-  GenerateVoiceOutput,
-  GenerateDeckOutput,
-  GenerateFrameOutput,
-  GenerateSoundOutput,
-  GenerateNexusOutput,
-  ConvertImageOutput,
-  GenerateLightMoodOutput,
-  GenerateMoodboardOutput,
-  CopilotLyricsOutput,
-  GenerateMuseOutput,
-  OriaChatOutput,
-  AgendaEvent,
-  ReformatTextWithPromptOutput,
-} from '@/ai/types';
-
-import {
-  GenerateCodeInputSchema,
-  ExplainCodeInputSchema,
-  DebugCodeInputSchema,
-  RefactorCodeInputSchema,
-  GenerateFluxInputSchema,
-  GenerateScheduleInputSchema,
-  GeneratePaletteInputSchema,
-  GenerateToneInputSchema,
-  GeneratePersonaInputSchema,
-  GenerateIdeasInputSchema,
-  GenerateMotionInputSchema,
-  GenerateVoiceInputSchema,
-  GenerateDeckInputSchema,
-  GenerateFrameInputSchema,
-  GenerateSoundInputSchema,
-  GenerateNexusInputSchema,
-  ConvertImageInputSchema,
-  GenerateLightMoodInputSchema,
-  CopilotLyricsInputSchema,
-  GenerateMuseInputSchema,
-  OriaChatInputSchema,
-  ParseEventInputSchema,
-  ReformatTextWithPromptInputSchema,
-} from '@/ai/types';
-import { oriaChat, createManualProject } from '@/ai/flows/client-actions';
 
 const createErrorResponse = (e: any, id: number, message: string) => {
   const errorMessage = e.message || 'An unknown error occurred.';
