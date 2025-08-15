@@ -7,6 +7,7 @@ import { Layers, Zap, Cpu, Wand2, Check, X, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import PerformanceChart from '@/components/ui/performance-chart';
 
 const advantages = [
     {
@@ -24,7 +25,7 @@ const advantages = [
     {
         icon: Cpu,
         title: "Synergie Matériel-Logiciel Totale",
-        description: "Notre matériel, comme la Station X-1, est conçu en parfaite symbiose avec (X)OS. Cette intégration verticale garantit des performances brutes et une stabilité à toute épreuve.",
+        description: "Notre matériel, comme la Station X-1, est conçu en parfaite symbiose avec (X)OS et sa capacité multi-GPU (NVIDIA + AMD) pour des performances brutes et une stabilité à toute épreuve.",
         videoId: "YUEb23FQVhA"
     },
 ];
@@ -41,6 +42,11 @@ const comparisonData = [
         competitors: "Ensemble d'outils IA séparés et non connectés."
     },
     {
+        feature: "Flexibilité GPU",
+        xyzz: "Technologie multi-GPU hybride (NVIDIA + AMD).",
+        competitors: "Écosystème fermé (puces M-series uniquement)."
+    },
+    {
         feature: "Workflow de Projet",
         xyzz: "Génération de projet complet à partir d'une seule idée.",
         competitors: "Assemblage manuel de multiples services et logiciels."
@@ -50,6 +56,12 @@ const comparisonData = [
         xyzz: "Synergie matérielle et logicielle pour des performances maximales.",
         competitors: "Logiciels génériques sur du matériel non optimisé."
     }
+];
+
+const performanceData = [
+    { name: 'Station X-1 (Multi-GPU)', 'Rendu 3D (Cycles)': 142, 'Compilation de code (LLVM)': 135, 'Simulation IA (PyTorch)': 155 },
+    { name: 'Mac Pro (M4 Ultra)', 'Rendu 3D (Cycles)': 100, 'Compilation de code (LLVM)': 110, 'Simulation IA (PyTorch)': 95 },
+    { name: 'PC Haut de Gamme (RTX 4090)', 'Rendu 3D (Cycles)': 115, 'Compilation de code (LLVM)': 100, 'Simulation IA (PyTorch)': 110 },
 ];
 
 export default function AvantegesClient() {
@@ -92,6 +104,18 @@ export default function AvantegesClient() {
                         </motion.div>
                     ))}
                 </div>
+            </section>
+
+             <section className="container mx-auto px-4 md:px-6">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+                        Des performances qui défient la réalité.
+                    </h2>
+                     <p className="mt-4 max-w-2xl mx-auto text-muted-foreground md:text-lg">
+                       Grâce à notre synergie matériel-logiciel, la Station X-1 surpasse les configurations les plus puissantes du marché, y compris les dernières puces Apple.
+                    </p>
+                </div>
+                <PerformanceChart data={performanceData} />
             </section>
             
             <section className="container mx-auto px-4 md:px-6">

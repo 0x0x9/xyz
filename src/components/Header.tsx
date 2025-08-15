@@ -93,9 +93,9 @@ const navLinks = [
 
 const discoverLinks = [
     { href: "/about", label: "Notre Vision", icon: Info, description: "Découvrez la mission et l'équipe (X)yzz." },
-    { href: "/features", label: "L'Écosystème (X)OS", icon: Layers, description: "Explorez notre système d'exploitation unifié." },
+    { href: "/avantages", label: "(X)core : Nos Avantages", icon: Zap, description: "Pourquoi nous sommes différents." },
+    { href: "/features", label: "Écosystème (X)OS", icon: Layers, description: "Explorez notre système d'exploitation unifié." },
     { href: "/hardware", label: "Matériel", icon: Cpu, description: "Les machines conçues pour la performance." },
-    { href: "/avantages", label: "Nos Avantages", icon: Sparkles, description: "Pourquoi (X)yzz est différent." },
     { href: "/download", label: "Téléchargement", icon: Download, description: "Installez (X)OS sur votre machine." },
 ];
 
@@ -327,7 +327,7 @@ export function Header() {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="rounded-full flex items-center gap-2">
-                                <Image src={user.photoURL || 'https://placehold.co/100x100.png'} alt={user.displayName || "Avatar"} width={28} height={28} className="rounded-full" />
+                                <Image src={user.photoURL || 'https://placehold.co/100x100.png'} alt={user.displayName || "Avatar"} width={28} height={28} className="rounded-full" data-ai-hint="person portrait"/>
                                 {user.displayName}
                                 <ChevronDown className="h-4 w-4" />
                             </Button>
