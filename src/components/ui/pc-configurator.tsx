@@ -14,23 +14,21 @@ type ComponentType = 'cpu' | 'gpu' | 'ram' | 'storage';
 
 const options: Record<ComponentType, Option[]> = {
     cpu: [
-        { name: 'Intel Core i7 (Base)', priceModifier: 0 },
-        { name: 'Intel Core i9', priceModifier: 450 },
+        { name: 'Intel Core i7-14700K', priceModifier: 0 },
+        { name: 'AMD Ryzen 9 7900', priceModifier: 150 },
     ],
     gpu: [
-        { name: 'NVIDIA RTX 4070 (Base)', priceModifier: 0 },
-        { name: 'NVIDIA RTX 4080', priceModifier: 600 },
-        { name: 'NVIDIA RTX 4090', priceModifier: 1200 },
+        { name: 'NVIDIA RTX 4070 Ti Super', priceModifier: 0 },
+        { name: 'AMD Radeon RX 7800 XT', priceModifier: -100 },
     ],
     ram: [
-        { name: '32GB DDR5 (Base)', priceModifier: 0 },
+        { name: '32GB DDR5', priceModifier: 0 },
         { name: '64GB DDR5', priceModifier: 200 },
         { name: '128GB DDR5', priceModifier: 550 },
     ],
     storage: [
-        { name: '1TB NVMe SSD (Base)', priceModifier: 0 },
-        { name: '2TB NVMe SSD', priceModifier: 150 },
-        { name: '4TB NVMe SSD', priceModifier: 400 },
+        { name: '2TB NVMe SSD + 8TB HDD', priceModifier: 0 },
+        { name: '4TB NVMe SSD + 12TB HDD', priceModifier: 300 },
     ],
 };
 
@@ -79,7 +77,7 @@ const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSel
                         <div>
                             <p className="font-semibold">{option.name}</p>
                             <p className="text-sm text-muted-foreground">
-                                {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : 'Configuration de base'}
+                                {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : option.priceModifier < 0 ? `${option.priceModifier.toFixed(2)}€` : 'Configuration de base'}
                             </p>
                         </div>
                         {selected === option.name && <CheckCircle className="h-6 w-6 text-primary shrink-0" />}
@@ -118,7 +116,7 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
     return (
         <div className="space-y-16">
             <div className="text-center">
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Configurez votre (X)-φ (fi)</h2>
+                <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Configurez votre Workstation</h2>
                 <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">Personnalisez chaque composant pour créer la machine qui correspond parfaitement à vos ambitions créatives.</p>
             </div>
             {(Object.keys(options) as ComponentType[]).map((type) => (

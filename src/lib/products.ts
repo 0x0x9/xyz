@@ -71,7 +71,7 @@ export const products: Product[] = [
   {
     id: 9,
     name: "(X)-oméga",
-    description: "La porte d'entrée vers l'écosystème (X)yzz. Idéal pour les créatifs et développeurs qui veulent la puissance et la flexibilité.",
+    description: "Le choix logique des créatifs qui veulent créer vite, bien, et sans se ruiner. Un prix contenu, une vision ambitieuse, des performances solides.",
     price: 1999.00,
     images: [
         "https://images.unsplash.com/photo-1618384887924-c9b0b4597d95?auto=format&fit=crop&w=800&q=80",
@@ -81,19 +81,20 @@ export const products: Product[] = [
     isFeatured: false,
     configurable: false,
     features: [
-        "Processeur Intel Core i5 dernière génération",
-        "(X)OS complet avec dual-boot Windows/macOS", 
-        "32 Go de RAM DDR5", 
-        "1 To de stockage SSD NVMe ultra-rapide", 
-        "Carte graphique NVIDIA RTX 4060",
-        "1 an d'abonnement (X)Cloud inclus"
+        "Processeur Intel Core i7 ou AMD Ryzen 7", 
+        "(X)OS préinstallé avec compatibilité Windows/macOS", 
+        "32 Go de RAM DDR5 (extensible)", 
+        "Stockage SSD NVMe Gen4 ultra-rapide", 
+        "Carte graphique NVIDIA RTX série 40"
     ],
     specs: {
-        "Processeur": "Intel Core i5-13600K",
-        "Carte graphique": "NVIDIA GeForce RTX 4060",
+        "Processeur": "Intel Core i7-14700K ou AMD Ryzen 7 7800X3D",
+        "Carte graphique": "NVIDIA GeForce RTX 4070 Ti Super",
         "Mémoire": "32 Go DDR5",
-        "Stockage": "1 To SSD NVMe Gen4",
-        "Connectique": "2x USB-C, 6x USB 3.1, HDMI 2.1, DisplayPort 1.4, Ethernet 1GbE"
+        "Stockage": "2 To SSD NVMe Gen4 + 8To HDD",
+        "Connectique": "USB-C 10 Gbps, HDMI 2.1, DisplayPort 1.4, Ethernet 2.5 GbE",
+        "Boîtier": "Moyen-tour compact, aluminium brossé",
+        "Refroidissement": "Ventirad haute performance silencieux"
     }
   },
   {
