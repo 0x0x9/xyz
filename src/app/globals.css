@@ -24,12 +24,12 @@
     --input: 240 5.9% 90%;
     --ring: 217 91% 60%;
     --radius: 1rem;
-    --apple-blue: #007aff;
-    --apple-text: #1d1d1f;
-    --apple-secondary: #6e6e73;
-    --apple-light-bg: #f5f5f7;
-    --xyzz-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --glass-bg: rgba(255, 255, 255, 0.8);
+
+    /* Liquid Glass Tokens */
+    --glass-bg: rgba(255, 255, 255, 0.10);
+    --glass-stroke: rgba(255, 255, 255, 0.35);
+    --glass-blur: 20px;
+    --elev-1: 0 6px 18px rgba(0,0,0,0.08);
   }
 
   .dark {
@@ -53,10 +53,11 @@
     --input: 220 13% 18%;
     --ring: 217 91% 60%;
     --radius: 1rem;
-    --apple-text: #f5f5f7;
-    --apple-secondary: #86868b;
-    --apple-light-bg: #1a1a1a;
-    --glass-bg: rgba(29, 29, 31, 0.8);
+    
+    /* Liquid Glass Tokens */
+    --glass-bg: rgba(29, 29, 31, 0.15);
+    --glass-stroke: rgba(255, 255, 255, 0.15);
+    --elev-1: 0 8px 32px rgba(0,0,0,0.3);
   }
 }
 
@@ -190,55 +191,13 @@
   @keyframes xcloud-breathe { 0% { transform: scale(0.95); opacity: 0.2; } 100% { transform: scale(1.1); opacity: 0.3; } }
   @keyframes xcloud-float { 0% { transform: translateY(0); } 100% { transform: translateY(-40px); } }
 
-
   .glass-card {
-    @apply border shadow-xl;
-  }
-  
-  html.dark .glass-card {
-    @apply bg-neutral-900/40 border-white/10 backdrop-blur-2xl rounded-2xl shadow-black/50;
-  }
-  
-  html:not(.dark) .glass-card {
-      @apply bg-card/5 border-white/20 backdrop-blur-2xl rounded-2xl shadow-black/20;
-  }
-
-  /* Header Logo Orb Animation */
-  .header-logo-orb {
-    @apply absolute inset-0 rounded-full;
-    filter: blur(8px);
-  }
-
-  .header-logo-orb .blob {
-    @apply absolute rounded-full;
-    mix-blend-mode: screen;
-  }
-
-  .header-logo-orb .blob.one {
-    width: 60%;
-    height: 60%;
-    top: 0;
-    left: 0;
-    background: #00A9FF;
-    animation: blob-one 10s infinite ease-in-out;
-  }
-
-  .header-logo-orb .blob.two {
-    width: 50%;
-    height: 50%;
-    top: 0;
-    right: 0;
-    background: #8e44ad;
-    animation: blob-two 12s infinite ease-in-out;
-  }
-
-  .header-logo-orb .blob.three {
-    width: 55%;
-    height: 55%;
-    bottom: 0;
-    left: 20%;
-    background: #E84F8E;
-    animation: blob-three 8s infinite ease-in-out;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+    border: 1px solid var(--glass-stroke);
+    box-shadow: var(--elev-1);
+    @apply rounded-2xl;
   }
   
   /* Oria Orb Animation */

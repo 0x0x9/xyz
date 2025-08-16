@@ -37,7 +37,7 @@ export default function CheckoutClient() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-7xl mx-auto">
             
             {/* Left Column: Forms */}
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-7 space-y-8">
                 <form onSubmit={handlePayment} className="space-y-8">
                      {/* Contact & Shipping */}
                     <Card className="glass-card">
@@ -98,7 +98,6 @@ export default function CheckoutClient() {
                             </div>
                          </CardContent>
                     </Card>
-
                     <Button type="submit" size="lg" className="w-full text-lg h-14 rounded-xl" disabled={itemCount === 0 || !isClient}>
                         <Lock className="mr-2 h-5 w-5" />
                         Payer {isClient ? finalTotal.toFixed(2) : '...'}€
@@ -108,14 +107,14 @@ export default function CheckoutClient() {
 
             {/* Right Column: Order Summary */}
             <div className="lg:col-span-5">
-                 <Card className="glass-card sticky top-28">
+                 <div className="glass-card sticky top-28 rounded-2xl">
                     <CardHeader>
                         <CardTitle className="text-2xl">Récapitulatif</CardTitle>
                     </CardHeader>
                     <CardContent>
                         {!isClient ? (
                             <div className="space-y-4">
-                                <div className="flex gap-4"><Skeleton className="h-16 w-16" /><div className="flex-1 space-y-2"><Skeleton className="h-4 w-3/4" /><Skeleton className="h-4 w-1/2" /></div></div>
+                                <div className="flex gap-4"><Skeleton className="h-16 w-16 rounded-md" /><div className="flex-1 space-y-2"><Skeleton className="h-4 w-3/4" /><Skeleton className="h-4 w-1/2" /></div></div>
                                 <Separator className="bg-white/10" />
                                 <div className="space-y-2">
                                     <div className="flex justify-between"><Skeleton className="h-4 w-20" /><Skeleton className="h-4 w-16" /></div>
@@ -187,7 +186,7 @@ export default function CheckoutClient() {
                             </div>
                         )}
                     </CardContent>
-                </Card>
+                </div>
             </div>
         </div>
     );
