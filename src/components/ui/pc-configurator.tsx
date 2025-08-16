@@ -40,6 +40,7 @@ const optionsMap: Record<string, Record<ComponentType, Option[]>> = {
     ],
     gpu: [
         { name: 'NVIDIA RTX 4070 Ti Super', priceModifier: 0 },
+        { name: 'AMD Radeon RX 7800 XT', priceModifier: -150 },
     ],
     ram: [
         { name: '32GB DDR5', priceModifier: 0 },
