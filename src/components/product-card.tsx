@@ -30,7 +30,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   if (product.category === 'Logiciel') {
     return (
-      <Link href={product.id === 2 ? "/subscribe" : `/store/${product.id}`} className="block h-full group/link">
+      <Link href={`/store/${product.id}`} className="block h-full group/link">
          <motion.div
           className="h-full"
           whileHover={{ y: -5 }}

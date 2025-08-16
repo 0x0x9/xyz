@@ -105,10 +105,11 @@ export const products: Product[] = [
   {
     id: 9,
     name: "(X)-oméga",
+    tagline: "Le choix logique pour créer sans se ruiner.",
     description: "Le choix logique des créatifs qui veulent créer vite, bien, et sans se ruiner. Un prix contenu, une vision ambitieuse, des performances solides.",
     price: 1999.00,
     images: [
-        "https://images.unsplash.com/photo-1618384887924-c9b0b4597d95?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=800&q=80",
     ],
     hint: "sleek modern desktop computer",
     category: 'Matériel',
@@ -136,7 +137,7 @@ export const products: Product[] = [
     name: "Abonnement XOS Pro",
     description: "Accès illimité à la suite d'outils IA (X)yzz et 1 To de stockage cloud.",
     price: 299.00,
-    images: ["https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80"],
+    images: ["https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80"],
     hint: "software box interface",
     category: 'Logiciel',
     isFeatured: true,
@@ -183,7 +184,7 @@ export const products: Product[] = [
   {
     id: 6,
     name: "Plugin (X)flux pour FCPX",
-    description: "Intégrez la puissance de l'orchestration IA directement dans Final Cut Pro X.",
+    description: "Intégrez la puissance de l'orchestration IA directement dans Final Cut Pro X pour transformer vos idées en plans de montage structurés en quelques secondes.",
     price: 99.00,
     images: ["https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80"],
     hint: "software plugin interface",
@@ -191,7 +192,7 @@ export const products: Product[] = [
     isFeatured: false,
     configurable: false,
     tagline: "Votre chef de projet IA dans FCPX.",
-    features: ["Analyse de brief", "Génération de plans", "Idées de montage", "Intégration transparente"],
+    features: ["Analyse de brief de projet", "Génération de plans de montage", "Suggestions de séquences et de rythmes", "Intégration transparente à FCPX"],
   },
    {
     id: 7,

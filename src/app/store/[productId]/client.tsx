@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft, Cpu, Zap, Layers, MemoryStick, CircuitBoard } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft, Cpu, Zap, Layers, MemoryStick, CircuitBoard, Sparkles } from 'lucide-react';
 import { useCart } from "@/hooks/use-cart-store";
 import { useToast } from "@/hooks/use-toast";
 import { type Product } from '@/lib/products';
@@ -58,6 +58,88 @@ function AnimatedFeature({ icon: Icon, title, description }: { icon: React.Eleme
     );
 }
 
+function SoftwareProductPage({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
+    const { addItem } = useCart();
+    const { toast } = useToast();
+
+    const handleAddToCart = () => {
+        const productToAdd = { ...product, image: product.images[0] };
+        addItem(productToAdd);
+        toast({
+            title: "Ajouté au panier !",
+            description: `"${product.name}" est maintenant dans votre panier.`,
+        });
+    };
+    
+    return (
+        <div className="pt-16 md:pt-24 space-y-24 md:space-y-36">
+             <section className="container mx-auto px-4 md:px-6">
+                 <div className="max-w-4xl mx-auto">
+                    <div className="text-center space-y-6">
+                        <Link href="/store" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                            <ArrowLeft className="h-4 w-4" /> Retour à la boutique
+                        </Link>
+                         <div className="w-24 h-24 rounded-3xl bg-primary/10 flex items-center justify-center border border-primary/20 mb-6 mx-auto">
+                            <Layers className="h-12 w-12 text-primary" />
+                        </div>
+                        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">{product.name}</h1>
+                        <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">{product.tagline}</p>
+                         <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+                            <Button size="lg" className="rounded-full text-lg" onClick={handleAddToCart}>
+                                Acheter pour {product.price.toFixed(2)}€
+                            </Button>
+                            <Button size="lg" variant="outline" className="rounded-full text-lg">Essai gratuit</Button>
+                        </div>
+                    </div>
+
+                    <div className="relative aspect-video my-16 rounded-2xl glass-card p-2 shadow-2xl">
+                         <Image
+                            src={product.images[0]}
+                            alt={`Interface de ${product.name}`}
+                            fill
+                            className="object-cover rounded-xl"
+                            data-ai-hint={product.hint}
+                        />
+                    </div>
+                    
+                    <div className="space-y-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center">Une nouvelle dimension pour votre créativité.</h2>
+                         <div className="grid md:grid-cols-2 gap-x-12 gap-y-8">
+                            {(product.features ?? []).map((feature, i) => (
+                                <div key={i} className="flex items-start gap-3">
+                                    <CheckCircle className="h-5 w-5 text-primary mt-1 shrink-0" />
+                                    <p className="text-muted-foreground">{feature}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                 </div>
+            </section>
+            
+             {relatedProducts.length > 0 && (
+                <section className="container mx-auto px-4 md:px-6">
+                    <div className="text-center">
+                        <h2 className="text-3xl md:text-4xl font-bold">Vous pourriez aussi aimer</h2>
+                    </div>
+                    <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {relatedProducts.map((related, i) => (
+                            <motion.div
+                                key={related.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, amount: 0.5 }}
+                                transition={{ duration: 0.5, delay: i * 0.1 }}
+                            >
+                                <ProductCard product={related} />
+                            </motion.div>
+                        ))}
+                    </div>
+                </section>
+            )}
+        </div>
+    )
+}
+
 
 export default function ProductClient({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
     const { addItem } = useCart();
@@ -97,6 +179,10 @@ export default function ProductClient({ product, relatedProducts }: { product: P
         setTotalPrice(newPrice);
     }
 
+    if (product.category === 'Logiciel') {
+        return <SoftwareProductPage product={product} relatedProducts={relatedProducts} />;
+    }
+
     return (
         <div className="pt-16">
             <div ref={targetRef} className="h-[200vh]">
@@ -109,11 +195,14 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                          style={{ opacity: contentOpacity, y: contentY }}
                          className="relative z-10 px-4 space-y-6 container mx-auto"
                     >
+                         <Link href="/store" className="inline-flex items-center gap-2 text-sm text-foreground/80 hover:text-foreground mb-4">
+                            <ArrowLeft className="h-4 w-4" /> Retour à la boutique
+                        </Link>
                         <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight [text-shadow:0_4px_20px_rgba(0,0,0,0.3)]">
                             {product.name}
                         </h1>
                         <p className="text-xl md:text-2xl lg:text-3xl text-muted-foreground max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
-                           {product.description}
+                           {product.tagline}
                         </p>
                     </motion.div>
                 </div>
@@ -124,9 +213,14 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div className="space-y-8">
                             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Puissance et Élégance. Redéfinies.</h2>
-                            <p className="text-lg text-muted-foreground">Chaque composant a été sélectionné pour sa performance brute et sa parfaite intégration avec (X)OS, créant une synergie qui décuple votre potentiel créatif.</p>
-                            <div className="space-y-6 pt-4">
-                                {features.map((feature, i) => <AnimatedFeature key={i} {...feature} />)}
+                            <p className="text-lg text-muted-foreground">{product.description}</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {reassuranceItems.map((item, i) => (
+                                    <div key={i} className="flex items-center gap-3 text-sm">
+                                        <item.icon className="h-5 w-5 text-primary" />
+                                        <span>{item.text}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                         <div className="relative aspect-square">
@@ -161,7 +255,7 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                  <section className="container mx-auto px-4 md:px-6 text-center">
                     <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Des performances qui parlent d'elles-mêmes.</h2>
                      <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                       La (X)-φ (fi) surpasse les configurations les plus puissantes du marché sur les tâches créatives les plus exigeantes.
+                       La {product.name} surpasse les configurations les plus puissantes du marché sur les tâches créatives les plus exigeantes.
                     </p>
                     <div className="mt-12">
                         <PerformanceChart data={performanceData} />
