@@ -25,7 +25,7 @@ export default function StoreClient() {
                   transition={{ duration: 0.5 }}
                   className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70"
               >
-                  La Boutique des Créatifs
+                  La Boutique (X)yzz
               </motion.h1>
               <motion.p 
                   initial={{ opacity: 0, y: 20 }}
