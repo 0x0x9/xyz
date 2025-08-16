@@ -90,12 +90,7 @@ export default function HardwareClient() {
                          <div className="pt-4 flex flex-wrap justify-center gap-4">
                             <Button size="lg" asChild className="rounded-full text-lg">
                                 <Link href="/store/1">
-                                    Acheter maintenant <ArrowRight className="ml-2 h-5 w-5" />
-                                </Link>
-                            </Button>
-                             <Button size="lg" asChild className="rounded-full text-lg" variant="outline">
-                                <Link href="/store/1">
-                                    Configurer votre (X)-φ
+                                    Découvrir la (X)-φ <ArrowRight className="ml-2 h-5 w-5" />
                                 </Link>
                             </Button>
                         </div>
@@ -199,12 +194,12 @@ export default function HardwareClient() {
              <Section className="text-center mt-16">
                 <AnimatedSection>
                     <h2 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
-                        Passez à la vitesse supérieure.
+                        Explorez toute la gamme.
                     </h2>
                      <div className="mt-8 flex flex-wrap justify-center gap-4">
                         <Button size="lg" asChild className="rounded-full text-lg">
-                            <Link href="/store/1">
-                                Acheter la (X)-φ (fi) <ArrowRight className="ml-2 h-5 w-5" />
+                            <Link href="/store">
+                                Voir la boutique <ArrowRight className="ml-2 h-5 w-5" />
                             </Link>
                         </Button>
                     </div>

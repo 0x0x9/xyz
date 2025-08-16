@@ -1,47 +1,81 @@
 
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft, Info, Calendar, Video } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft, Cpu, Zap, Layers, MemoryStick, CircuitBoard } from 'lucide-react';
 import { useCart } from "@/hooks/use-cart-store";
 import { useToast } from "@/hooks/use-toast";
 import { type Product } from '@/lib/products';
 import { PCConfigurator, type Configuration } from '@/components/ui/pc-configurator';
-import { useState, useEffect } from 'react';
 import { ProductCard } from '@/components/product-card';
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
-import React from 'react';
-import Link from 'next/link';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import PerformanceChart from '@/components/ui/performance-chart';
 
 const reassuranceItems = [
     { icon: Truck, text: "Livraison gratuite et rapide" },
     { icon: Shield, text: "Garantie constructeur 2 ans" },
     { icon: CheckCircle, text: "Retours faciles sous 30 jours" },
-]
+];
+
+const performanceData = [
+    { name: '(X)-φ (fi)', 'Rendu 3D': 95, 'Compilation de code': 98, 'Simulation IA': 92 },
+    { name: 'Mac Pro (équivalent)', 'Rendu 3D': 75, 'Compilation de code': 80, 'Simulation IA': 70 },
+    { name: 'PC Haut de Gamme', 'Rendu 3D': 85, 'Compilation de code': 88, 'Simulation IA': 78 },
+];
+
+const features = [
+    { icon: Cpu, title: "Processeur Neural X-Core", description: "Une architecture révolutionnaire qui fusionne CPU, GPU et NPU pour une puissance de calcul inégalée, optimisée pour (X)OS." },
+    { icon: Layers, title: "Alliance Multi-GPU", description: "Combinez la puissance brute des cartes graphiques NVIDIA et AMD. Accélérez vos rendus 3D et vos calculs IA." },
+    { icon: MemoryStick, title: "Mémoire Unifiée Adaptative", description: "Jusqu'à 256 Go de RAM ultra-rapide, allouée dynamiquement là où vous en avez besoin." },
+    { icon: CircuitBoard, title: "Connectivité Quantique (simulée)", description: "Ports Thunderbolt 5 et Wi-Fi 7 pour des transferts de données à la vitesse de la lumière." },
+];
+
+function AnimatedFeature({ icon: Icon, title, description }: { icon: React.ElementType, title: string, description: string }) {
+     const ref = useRef(null);
+     const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ["start 0.8", "start 0.5"]
+    });
+
+    return (
+        <motion.div
+            ref={ref}
+            style={{ opacity: scrollYProgress, y: useTransform(scrollYProgress, [0, 1], [30, 0])}}
+            className="flex items-start gap-4"
+        >
+             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20 shrink-0">
+                <Icon className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+                <h3 className="font-semibold text-lg">{title}</h3>
+                <p className="text-muted-foreground mt-1">{description}</p>
+            </div>
+        </motion.div>
+    );
+}
+
 
 export default function ProductClient({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
     const { addItem } = useCart();
     const { toast } = useToast();
     const [configuration, setConfiguration] = useState<Configuration | null>(null);
     const [totalPrice, setTotalPrice] = useState(product.price);
-    const [api, setApi] = React.useState<CarouselApi>()
-    const [current, setCurrent] = React.useState(0)
-    const [count, setCount] = React.useState(0)
 
-    React.useEffect(() => {
-        if (!api) return;
-    
-        setCount(api.scrollSnapList().length)
-        setCurrent(api.selectedScrollSnap() + 1)
-    
-        api.on("select", () => {
-          setCurrent(api.selectedScrollSnap() + 1)
-        })
-    }, [api])
+    const targetRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: targetRef,
+        offset: ["start start", "end start"],
+    });
+
+    const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1.8]);
+    const imageOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 1, 0]);
+    const contentOpacity = useTransform(scrollYProgress, [0, 0.2, 0.7, 1], [1, 1, 1, 0]);
+    const contentY = useTransform(scrollYProgress, [0, 0.7, 1], ['0%', '0%', '-100%']);
+
 
     const handleAddToCart = () => {
         const productToAdd = {
@@ -64,155 +98,97 @@ export default function ProductClient({ product, relatedProducts }: { product: P
     }
 
     return (
-        <div className="space-y-24 md:space-y-36">
-            <section className="container mx-auto px-4 md:px-6 pt-16 md:pt-24">
-                <div className="mb-8 md:mb-12 text-left">
-                    <Button asChild variant="ghost" className="text-muted-foreground">
-                        <Link href="/store">
-                            <ArrowLeft className="mr-2 h-4 w-4" />
-                            Retour à la boutique
-                        </Link>
-                    </Button>
+        <div className="pt-16">
+            <div ref={targetRef} className="h-[200vh]">
+                <div className="sticky top-0 h-screen flex flex-col items-center justify-center text-center overflow-hidden">
+                    <motion.div style={{ scale: imageScale, opacity: imageOpacity }} className="absolute inset-0">
+                        <Image src={product.images[0]} alt={product.name} fill className="object-contain" data-ai-hint={product.hint} priority />
+                        <div className="absolute inset-0 bg-background/30"></div>
+                    </motion.div>
+                    <motion.div 
+                         style={{ opacity: contentOpacity, y: contentY }}
+                         className="relative z-10 px-4 space-y-6 container mx-auto"
+                    >
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight [text-shadow:0_4px_20px_rgba(0,0,0,0.3)]">
+                            {product.name}
+                        </h1>
+                        <p className="text-xl md:text-2xl lg:text-3xl text-muted-foreground max-w-4xl mx-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
+                           {product.description}
+                        </p>
+                    </motion.div>
                 </div>
-                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
-                    {/* Image Carousel */}
-                    <div className="lg:sticky top-28">
-                         <Carousel setApi={setApi} className="w-full group">
-                            <CarouselContent>
-                                {product.images.map((img, index) => (
-                                    <CarouselItem key={index}>
-                                        <div className="aspect-square relative glass-card rounded-2xl overflow-hidden">
-                                            <Image
-                                                src={img}
-                                                alt={`${product.name} - vue ${index + 1}`}
-                                                fill
-                                                className="object-contain p-4 md:p-8"
-                                                data-ai-hint={product.hint}
-                                                priority={index === 0}
-                                            />
-                                        </div>
-                                    </CarouselItem>
-                                ))}
-                            </CarouselContent>
-                             <CarouselPrevious className="left-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                             <CarouselNext className="right-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </Carousel>
-                        <div className="py-2 text-center text-sm text-muted-foreground">
-                            {product.images.length > 1 ? `${current} / ${count}` : ''}
-                        </div>
-                    </div>
-                    
-                    {/* Product Info */}
-                    <div className="space-y-8">
-                        <div>
-                            {product.tagline && <p className="text-primary font-semibold mb-2">{product.tagline}</p>}
-                            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mt-2">{product.name}</h1>
-                            <p className="text-md md:text-lg text-muted-foreground mt-4">{product.description}</p>
-                        </div>
-
-                         <div className="space-y-4">
-                            {product.features && (
-                                <ul className="space-y-3">
-                                    {product.features.map((feature, i) => (
-                                        <li key={i} className="flex items-center gap-3 text-foreground/90">
-                                            <CheckCircle className="h-5 w-5 text-primary shrink-0" />
-                                            <span>{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-
-                        <div className="space-y-4">
-                            <p className="text-3xl md:text-4xl font-bold">{totalPrice.toFixed(2)}€</p>
-                            <Button size="lg" className="w-full text-lg h-12 md:h-14" onClick={handleAddToCart}>
-                                <ShoppingCart className="mr-3 h-5 md:h-6 w-5 md:w-6" />
-                                Ajouter au panier
-                            </Button>
-                        </div>
-                         <div className="flex flex-wrap justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground pt-4 border-t border-border">
-                            {reassuranceItems.map((item, i) => (
-                                <div key={i} className="flex items-center gap-2">
-                                    <item.icon className="h-4 w-4" />
-                                    <span>{item.text}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                 </div>
-            </section>
-
-             <section className="container mx-auto px-4 md:px-6">
-                <div className="aspect-video w-full glass-card rounded-2xl p-2 overflow-hidden">
-                     <iframe
-                        src="https://www.youtube.com/embed/ozGQ2q4l4ys?autoplay=1&mute=1&loop=1&playlist=ozGQ2q4l4ys&controls=0&showinfo=0&autohide=1"
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full rounded-lg"
-                    ></iframe>
-                </div>
-            </section>
+            </div>
             
-            {product.configurable && (
-                <section className="container mx-auto px-4 md:px-6">
-                    <PCConfigurator 
-                        product={product}
-                        basePrice={product.price} 
-                        onConfigChange={handleConfigChange} 
-                    />
-                     <div className="mt-16 flex flex-col items-center gap-6 text-center">
-                        <div>
-                            <p className="text-sm text-muted-foreground">Total pour votre configuration</p>
-                            <p className="text-3xl md:text-4xl font-bold">{totalPrice.toFixed(2)}€</p>
+            <div className="bg-background relative z-10 pt-24 md:pt-36 space-y-24 md:space-y-36">
+                 <section className="container mx-auto px-4 md:px-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div className="space-y-8">
+                            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Puissance et Élégance. Redéfinies.</h2>
+                            <p className="text-lg text-muted-foreground">Chaque composant a été sélectionné pour sa performance brute et sa parfaite intégration avec (X)OS, créant une synergie qui décuple votre potentiel créatif.</p>
+                            <div className="space-y-6 pt-4">
+                                {features.map((feature, i) => <AnimatedFeature key={i} {...feature} />)}
+                            </div>
                         </div>
-                        <Button size="lg" className="rounded-full text-lg" onClick={handleAddToCart}>
-                            <ShoppingCart className="mr-2 h-5 w-5" />
+                        <div className="relative aspect-square">
+                            <Image src={product.images[1]} alt="Vue intérieure du produit" fill className="object-contain" data-ai-hint="computer internals components" />
+                        </div>
+                    </div>
+                </section>
+                
+                {product.configurable && (
+                    <section id="configurator" className="container mx-auto px-4 md:px-6">
+                        <PCConfigurator 
+                            product={product}
+                            basePrice={product.price} 
+                            onConfigChange={handleConfigChange} 
+                        />
+                    </section>
+                )}
+
+                 <section className="container mx-auto px-4 md:px-6">
+                     <div className="glass-card p-8 md:p-12 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div className="text-center md:text-left">
+                            <p className="text-muted-foreground">Total pour votre configuration</p>
+                            <p className="text-4xl md:text-5xl font-bold">{totalPrice.toFixed(2)}€</p>
+                        </div>
+                         <Button size="lg" className="rounded-full text-lg w-full md:w-auto h-16 px-10" onClick={handleAddToCart}>
+                            <ShoppingCart className="mr-3 h-6 w-6" />
                             Ajouter au panier
                         </Button>
                     </div>
                 </section>
-            )}
 
-            {product.specs && (
-                 <section className="container mx-auto px-4 md:px-6">
-                    <div className="text-center">
-                        <h2 className="text-3xl md:text-4xl font-bold">Caractéristiques techniques</h2>
+                 <section className="container mx-auto px-4 md:px-6 text-center">
+                    <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Des performances qui parlent d'elles-mêmes.</h2>
+                     <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+                       La (X)-φ (fi) surpasse les configurations les plus puissantes du marché sur les tâches créatives les plus exigeantes.
+                    </p>
+                    <div className="mt-12">
+                        <PerformanceChart data={performanceData} />
                     </div>
-                    <div className="mt-12 max-w-2xl mx-auto glass-card p-6 md:p-8">
-                        <ul className="space-y-4">
-                            {Object.entries(product.specs).map(([key, value]) => (
-                                <li key={key} className="flex flex-col sm:flex-row justify-between sm:items-start text-sm specs-list pb-4">
-                                    <span className="font-semibold text-muted-foreground">{key}</span>
-                                    <span className="sm:text-right text-foreground max-w-xs">{value}</span>
-                                </li>
+                </section>
+
+                {relatedProducts.length > 0 && (
+                    <section className="container mx-auto px-4 md:px-6">
+                        <div className="text-center">
+                            <h2 className="text-3xl md:text-4xl font-bold">Vous pourriez aussi aimer</h2>
+                        </div>
+                        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {relatedProducts.map((related, i) => (
+                                <motion.div
+                                    key={related.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, amount: 0.5 }}
+                                    transition={{ duration: 0.5, delay: i * 0.1 }}
+                                >
+                                    <ProductCard product={related} />
+                                </motion.div>
                             ))}
-                        </ul>
-                    </div>
-                </section>
-            )}
-
-            {relatedProducts.length > 0 && (
-                <section className="container mx-auto px-4 md:px-6">
-                    <div className="text-center">
-                        <h2 className="text-3xl md:text-4xl font-bold">Vous pourriez aussi aimer</h2>
-                    </div>
-                    <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {relatedProducts.map((related, i) => (
-                            <motion.div
-                                key={related.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, amount: 0.5 }}
-                                transition={{ duration: 0.5, delay: i * 0.1 }}
-                            >
-                                <ProductCard product={related} />
-                            </motion.div>
-                        ))}
-                    </div>
-                </section>
-            )}
+                        </div>
+                    </section>
+                )}
+            </div>
         </div>
     );
 }
