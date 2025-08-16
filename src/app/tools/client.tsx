@@ -19,7 +19,7 @@ const environments = [
     description: "L'environnement unifié qui connecte tous vos outils, fichiers et idées. La base de votre créativité.",
     href: '/xos',
     icon: Layers,
-    videoSrc: "https://www.youtube.com/embed/e2_bX1bB3i8?si=9w2j9L3z5K3y0-fS&autoplay=1&mute=1&loop=1&playlist=e2_bX1bB3i8&controls=0&showinfo=0&autohide=1"
+    videoSrc: "https://www.youtube.com/embed/SqJGQ25sc8Q?autoplay=1&mute=1&loop=1&playlist=SqJGQ25sc8Q&controls=0&showinfo=0&autohide=1"
   },
   {
     title: '(X)cloud',
