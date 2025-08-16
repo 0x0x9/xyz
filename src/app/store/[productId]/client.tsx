@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft, Info } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft, Info, Calendar, Video } from 'lucide-react';
 import { useCart } from "@/hooks/use-cart-store";
 import { useToast } from "@/hooks/use-toast";
 import { type Product } from '@/lib/products';
@@ -140,6 +140,19 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                         </div>
                     </div>
                  </div>
+            </section>
+
+             <section className="container mx-auto px-4 md:px-6">
+                <div className="aspect-video w-full glass-card rounded-2xl p-2 overflow-hidden">
+                     <iframe
+                        src="https://www.youtube.com/embed/ozGQ2q4l4ys?autoplay=1&mute=1&loop=1&playlist=ozGQ2q4l4ys&controls=0&showinfo=0&autohide=1"
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full rounded-lg"
+                    ></iframe>
+                </div>
             </section>
             
             {product.configurable && (

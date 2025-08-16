@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Cpu, HardDrive, MemoryStick, CircuitBoard, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 type Option = {
     name: string;
@@ -15,13 +16,13 @@ type ComponentType = 'cpu' | 'gpu' | 'ram' | 'storage';
 const options: Record<ComponentType, Option[]> = {
     cpu: [
         { name: 'Intel Core i7-14700K', priceModifier: 0 },
-        { name: 'AMD Ryzen 7 7800X3D', priceModifier: 50 },
+        { name: 'AMD Ryzen 9 7900', priceModifier: 150 },
         { name: 'Intel Core i9-14900K', priceModifier: 200 },
         { name: 'AMD Ryzen 9 7950X3D', priceModifier: 350 },
     ],
     gpu: [
         { name: 'NVIDIA RTX 4070 Ti Super', priceModifier: 0 },
-        { name: 'AMD Radeon RX 7900 XT', priceModifier: -100 },
+        { name: 'AMD Radeon RX 7800 XT', priceModifier: -50 },
         { name: 'NVIDIA RTX 4080 Super FE', priceModifier: 400 },
     ],
     ram: [
@@ -65,8 +66,14 @@ const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSel
     onSelect: (type: ComponentType, value: string) => void
 }) => {
     return (
-        <div className="space-y-4">
-            <h3 className="text-2xl font-semibold">{title}</h3>
+        <motion.div 
+            className="space-y-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5 }}
+        >
+            <h3 className="text-2xl font-semibold flex items-center gap-3"><Icon className="h-6 w-6 text-primary" /> {title}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {options.map((option) => (
                     <button
@@ -82,14 +89,14 @@ const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSel
                         <div>
                             <p className="font-semibold">{option.name}</p>
                             <p className="text-sm text-muted-foreground">
-                                {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : option.priceModifier < 0 ? `${option.priceModifier.toFixed(2)}€` : 'Configuration de base'}
+                                {option.priceModifier > 0 ? `+${option.priceModifier.toFixed(2)}€` : option.priceModifier < 0 ? `${option.priceModifier.toFixed(2)}€` : 'Inclus'}
                             </p>
                         </div>
                         {selected === option.name && <CheckCircle className="h-6 w-6 text-primary shrink-0" />}
                     </button>
                 ))}
             </div>
-        </div>
+        </motion.div>
     );
 };
 
@@ -120,10 +127,15 @@ export function PCConfigurator({ basePrice, onConfigChange }: PCConfiguratorProp
 
     return (
         <div className="space-y-16">
-            <div className="text-center">
+            <motion.div 
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+            >
                 <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Configurez votre Workstation</h2>
                 <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">Personnalisez chaque composant pour créer la machine qui correspond parfaitement à vos ambitions créatives.</p>
-            </div>
+            </motion.div>
             {(Object.keys(options) as ComponentType[]).map((type) => (
                 <ConfiguratorSection 
                     key={type}
