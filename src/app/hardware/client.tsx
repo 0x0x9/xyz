@@ -58,8 +58,8 @@ export default function HardwareClient() {
     }, []);
 
     const { scrollYProgress } = useScroll({
-        target: isRefReady ? targetRef : undefined,
-        offset: ["start start", "end end"],
+        target: targetRef,
+        offset: ["start start", "end start"],
     });
 
     const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1.5]);
@@ -149,7 +149,7 @@ export default function HardwareClient() {
                     <motion.div
                         className="absolute inset-0"
                         style={{
-                            scale: useTransform(useScroll({ target: targetRef, offset: ["start end", "end start"] }).scrollYProgress, [0, 1], [1, 1.2])
+                            scale: useTransform(scrollYProgress, [0.3, 0.6], [1, 1.2])
                         }}
                     >
                          <Image
@@ -175,7 +175,7 @@ export default function HardwareClient() {
                     <motion.div
                         className="absolute inset-0"
                          style={{
-                            scale: useTransform(useScroll({ target: targetRef, offset: ["start end", "end start"] }).scrollYProgress, [0, 1], [1.2, 1])
+                            scale: useTransform(scrollYProgress, [0.6, 0.9], [1, 1.2])
                         }}
                     >
                         <Image
