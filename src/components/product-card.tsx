@@ -11,7 +11,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/use-cart-store';
 import { useToast } from '@/hooks/use-toast';
-import { ShoppingCart, Check } from 'lucide-react';
+import { ShoppingCart, Check, ArrowRight } from 'lucide-react';
 
 export function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
@@ -37,7 +37,7 @@ export function ProductCard({ product }: { product: Product }) {
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
            <Card className={cn(
-            "group/card flex h-full flex-col overflow-hidden transition-all duration-300 p-6 text-left",
+            "group/card flex h-full flex-col overflow-hidden transition-all duration-300 p-8 text-left",
             "glass-card hover:bg-white/5 dark:hover:bg-black/10 hover:border-primary/30"
           )}>
             <div className="flex-grow">
@@ -52,11 +52,11 @@ export function ProductCard({ product }: { product: Product }) {
                 ))}
               </ul>
             </div>
-            <div className="mt-8 text-center">
+            <div className="mt-8 text-left">
               <p className="text-2xl font-bold text-foreground mb-4">{product.price.toFixed(2)}€</p>
                <Button variant="secondary" className="w-full rounded-full" onClick={handleAddToCart}>
                   <ShoppingCart className="mr-2 h-4 w-4" />
-                  Acheter
+                  Ajouter au panier
                 </Button>
             </div>
            </Card>
@@ -89,16 +89,9 @@ export function ProductCard({ product }: { product: Product }) {
             <h3 className="text-lg font-semibold text-foreground flex-grow">{product.name}</h3>
             <p className="mt-4 text-xl font-medium text-foreground">{product.price.toFixed(2)}€</p>
             <div className="mt-4">
-              {product.configurable ? (
-                <Button variant="secondary" className="rounded-full">
-                  Configurer
+                <Button variant="outline" className="rounded-full w-full">
+                  Découvrir <ArrowRight className="ml-2 h-4 w-4"/>
                 </Button>
-              ) : (
-                <Button variant="secondary" className="rounded-full" onClick={handleAddToCart}>
-                  <ShoppingCart className="mr-2 h-4 w-4" />
-                  Acheter
-                </Button>
-              )}
             </div>
           </CardContent>
         </Card>
