@@ -85,8 +85,7 @@ export const useCart = create<CartState>()(
                     set(calculateState(updatedItems));
                 } else {
                     // If quantity is 1 or less, remove it
-                    const updatedItems = currentItems.filter((item) => item.cartItemId !== cartItemId);
-                    set(calculateState(updatedItems));
+                    get().removeItem(cartItemId);
                 }
             },
             removeItem: (cartItemId: string) => {
