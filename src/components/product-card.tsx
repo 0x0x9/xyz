@@ -30,7 +30,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   if (product.category === 'Logiciel') {
     return (
-      <Link href={`/store/${product.id}`} className="block h-full group/link">
+      <Link href={product.id === 2 ? "/subscribe" : `/store/${product.id}`} className="block h-full group/link">
          <motion.div
           className="h-full"
           whileHover={{ y: -5 }}
@@ -42,7 +42,7 @@ export function ProductCard({ product }: { product: Product }) {
           )}>
             <div className="flex-grow">
               <h3 className="text-xl font-bold text-foreground">{product.name}</h3>
-              <p className="text-sm text-muted-foreground mt-1">{product.description}</p>
+              <p className="text-sm text-muted-foreground mt-1 h-10">{product.description}</p>
               <ul className="space-y-3 mt-6 text-sm">
                 {(product.features ?? []).map((feature, i) => (
                   <li key={i} className="flex items-center gap-3">
