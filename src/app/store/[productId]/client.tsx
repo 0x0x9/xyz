@@ -65,8 +65,8 @@ export default function ProductClient({ product, relatedProducts }: { product: P
 
     return (
         <div className="space-y-24 md:space-y-36">
-            <section className="container mx-auto px-4 md:px-6 text-center pt-16 md:pt-24">
-                <div className="mb-12 text-left">
+            <section className="container mx-auto px-4 md:px-6 pt-16 md:pt-24">
+                <div className="mb-8 md:mb-12 text-left">
                     <Button asChild variant="ghost" className="text-muted-foreground">
                         <Link href="/store">
                             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -74,9 +74,9 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                         </Link>
                     </Button>
                 </div>
-                 <div className="grid md:grid-cols-2 gap-12 items-start text-left">
+                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
                     {/* Image Carousel */}
-                    <div className="md:sticky top-28">
+                    <div className="lg:sticky top-28">
                          <Carousel setApi={setApi} className="w-full group">
                             <CarouselContent>
                                 {product.images.map((img, index) => (
@@ -86,7 +86,7 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                                                 src={img}
                                                 alt={`${product.name} - vue ${index + 1}`}
                                                 fill
-                                                className="object-contain p-8"
+                                                className="object-contain p-4 md:p-8"
                                                 data-ai-hint={product.hint}
                                                 priority={index === 0}
                                             />
@@ -106,8 +106,8 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                     <div className="space-y-8">
                         <div>
                             {product.tagline && <p className="text-primary font-semibold mb-2">{product.tagline}</p>}
-                            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mt-2">{product.name}</h1>
-                            <p className="text-lg text-muted-foreground mt-4">{product.description}</p>
+                            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mt-2">{product.name}</h1>
+                            <p className="text-md md:text-lg text-muted-foreground mt-4">{product.description}</p>
                         </div>
 
                          <div className="space-y-4">
@@ -124,9 +124,9 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                         </div>
 
                         <div className="space-y-4">
-                            <p className="text-4xl font-bold">{totalPrice.toFixed(2)}€</p>
-                            <Button size="lg" className="w-full text-lg h-14" onClick={handleAddToCart}>
-                                <ShoppingCart className="mr-3 h-6 w-6" />
+                            <p className="text-3xl md:text-4xl font-bold">{totalPrice.toFixed(2)}€</p>
+                            <Button size="lg" className="w-full text-lg h-12 md:h-14" onClick={handleAddToCart}>
+                                <ShoppingCart className="mr-3 h-5 md:h-6 w-5 md:w-6" />
                                 Ajouter au panier
                             </Button>
                         </div>
@@ -158,13 +158,14 @@ export default function ProductClient({ product, relatedProducts }: { product: P
             {product.configurable && (
                 <section className="container mx-auto px-4 md:px-6">
                     <PCConfigurator 
+                        product={product}
                         basePrice={product.price} 
                         onConfigChange={handleConfigChange} 
                     />
                      <div className="mt-16 flex flex-col items-center gap-6 text-center">
                         <div>
                             <p className="text-sm text-muted-foreground">Total pour votre configuration</p>
-                            <p className="text-4xl font-bold">{totalPrice.toFixed(2)}€</p>
+                            <p className="text-3xl md:text-4xl font-bold">{totalPrice.toFixed(2)}€</p>
                         </div>
                         <Button size="lg" className="rounded-full text-lg" onClick={handleAddToCart}>
                             <ShoppingCart className="mr-2 h-5 w-5" />
@@ -179,12 +180,12 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                     <div className="text-center">
                         <h2 className="text-3xl md:text-4xl font-bold">Caractéristiques techniques</h2>
                     </div>
-                    <div className="mt-12 max-w-2xl mx-auto glass-card p-8">
+                    <div className="mt-12 max-w-2xl mx-auto glass-card p-6 md:p-8">
                         <ul className="space-y-4">
                             {Object.entries(product.specs).map(([key, value]) => (
-                                <li key={key} className="flex justify-between items-start text-sm specs-list pb-4">
+                                <li key={key} className="flex flex-col sm:flex-row justify-between sm:items-start text-sm specs-list pb-4">
                                     <span className="font-semibold text-muted-foreground">{key}</span>
-                                    <span className="text-right text-foreground max-w-xs">{value}</span>
+                                    <span className="sm:text-right text-foreground max-w-xs">{value}</span>
                                 </li>
                             ))}
                         </ul>
