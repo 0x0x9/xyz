@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -21,8 +21,16 @@ const hardwareProducts = products.filter(p => p.category === 'Matériel' && p.na
 
 function StickyScrollSection() {
     const targetRef = useRef<HTMLDivElement>(null);
+    const [isRefReady, setIsRefReady] = useState(false);
+
+    useEffect(() => {
+        if (targetRef.current) {
+            setIsRefReady(true);
+        }
+    }, []);
+
     const { scrollYProgress } = useScroll({
-        target: targetRef,
+        target: isRefReady ? targetRef : undefined,
         offset: ['start start', 'end end'],
     });
 

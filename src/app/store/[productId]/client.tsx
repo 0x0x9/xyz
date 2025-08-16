@@ -146,10 +146,18 @@ export default function ProductClient({ product, relatedProducts }: { product: P
     const { toast } = useToast();
     const [configuration, setConfiguration] = useState<Configuration | null>(null);
     const [totalPrice, setTotalPrice] = useState(product.price);
-
+    
     const targetRef = useRef<HTMLDivElement>(null);
+    const [isRefReady, setIsRefReady] = useState(false);
+
+    useEffect(() => {
+        if (targetRef.current) {
+            setIsRefReady(true);
+        }
+    }, []);
+
     const { scrollYProgress } = useScroll({
-        target: targetRef,
+        target: isRefReady ? targetRef : undefined,
         offset: ["start start", "end start"],
     });
 

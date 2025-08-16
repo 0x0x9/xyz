@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Cpu, Zap, Layers } from 'lucide-react';
 import Image from 'next/image';
@@ -49,8 +49,16 @@ const features = [
 
 export default function HardwareClient() {
     const targetRef = useRef<HTMLDivElement>(null);
+    const [isRefReady, setIsRefReady] = useState(false);
+
+    useEffect(() => {
+        if (targetRef.current) {
+            setIsRefReady(true);
+        }
+    }, []);
+
     const { scrollYProgress } = useScroll({
-        target: targetRef,
+        target: isRefReady ? targetRef : undefined,
         offset: ["start start", "end end"],
     });
 
