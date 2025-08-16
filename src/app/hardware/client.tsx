@@ -3,13 +3,12 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Cpu, Zap, Layers } from 'lucide-react';
+import { ArrowRight, Cpu, Zap, Layers, MemoryStick, CircuitBoard } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import PerformanceChart from '@/components/ui/performance-chart';
-import { MemoryStick } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 function Section({ children, className }: { children: React.ReactNode, className?: string }) {
