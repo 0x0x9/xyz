@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, ShoppingCart, ArrowLeft, Lock, CreditCard, Plus, Minus } from "lucide-react";
+import { Trash2, ShoppingCart, ArrowLeft, Lock, CreditCard, Plus, Minus, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
@@ -49,18 +49,36 @@ export default function CheckoutClient() {
                                 <Label htmlFor="email">Adresse e-mail</Label>
                                 <Input id="email" type="email" placeholder="email@exemple.com" required />
                             </div>
-                            <div className="space-y-2">
-                                <Label>Adresse de livraison</Label>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <Input placeholder="Prénom" required />
-                                    <Input placeholder="Nom" required />
+                             <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="firstname">Prénom</Label>
+                                    <Input id="firstname" placeholder="Jean" required />
                                 </div>
-                                <Input placeholder="Adresse" required />
-                                <Input placeholder="Appartement, suite, etc. (optionnel)" />
+                                <div className="space-y-2">
+                                    <Label htmlFor="lastname">Nom</Label>
+                                    <Input id="lastname" placeholder="Dupont" required />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="address">Adresse</Label>
+                                <Input id="address" placeholder="123 rue de la République" required />
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                      <Input placeholder="Ville" required />
                                      <Input placeholder="Code Postal" required />
                                      <Input placeholder="Pays" value="France" readOnly />
+                                </div>
+                            </div>
+                             <div className="space-y-4 pt-4">
+                                <Label>Vérifiez sur la carte</Label>
+                                <div className="relative aspect-video w-full rounded-2xl overflow-hidden glass-card p-1">
+                                    <Image src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?q=80&w=1931&auto=format&fit=crop" alt="Carte de livraison" fill className="object-cover" />
+                                    <div className="absolute inset-0 bg-black/30" />
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                        <MapPin className="h-10 w-10 text-primary drop-shadow-lg" />
+                                    </div>
+                                    <div className="absolute top-3 left-3 right-3">
+                                        <Input placeholder="Rechercher une adresse..." className="bg-background/80 backdrop-blur-md" />
+                                    </div>
                                 </div>
                             </div>
                         </CardContent>
