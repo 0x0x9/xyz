@@ -200,18 +200,24 @@
     @apply rounded-2xl;
   }
   
-  /* Oria Orb Animation */
-  .oria-orb {
+  /* Header Logo & Oria Orb Animation */
+  .header-logo-orb, .oria-orb {
     @apply absolute inset-0 rounded-full;
+  }
+  .header-logo-orb {
+    filter: blur(4px);
+  }
+  .oria-orb {
     filter: blur(12px);
   }
 
-  .oria-orb .blob {
+  .header-logo-orb .blob, .oria-orb .blob {
     @apply absolute rounded-full;
     mix-blend-mode: screen;
+    opacity: 0.8;
   }
 
-  .oria-orb .blob.one {
+  .header-logo-orb .blob.one, .oria-orb .blob.one {
     width: 70%;
     height: 70%;
     top: 0;
@@ -219,7 +225,7 @@
     animation: blob-one 10s infinite ease-in-out, color-shift 15s infinite linear;
   }
 
-  .oria-orb .blob.two {
+  .header-logo-orb .blob.two, .oria-orb .blob.two {
     width: 60%;
     height: 60%;
     top: 0;
@@ -227,7 +233,7 @@
     animation: blob-two 12s infinite ease-in-out, color-shift 15s infinite linear reverse;
   }
 
-  .oria-orb .blob.three {
+  .header-logo-orb .blob.three, .oria-orb .blob.three {
     width: 65%;
     height: 65%;
     bottom: 0;
@@ -254,10 +260,10 @@
   }
   
   @keyframes color-shift {
-    0% { background: #00A9FF; } /* Cyan */
-    33% { background: #8e44ad; } /* Violet */
+    0% { background: hsl(var(--primary)); }
+    33% { background: hsl(var(--accent)); }
     66% { background: #E84F8E; } /* Pink */
-    100% { background: #00A9FF; } /* Back to Cyan */
+    100% { background: hsl(var(--primary)); }
   }
   
   /* Oria Dock Animation */
