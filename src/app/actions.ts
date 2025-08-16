@@ -81,8 +81,8 @@ function createAction<TInput, TOutput>(
 
     const parseResult = schema.safeParse(rawData);
     if (!parseResult.success) {
-        console.error("Zod validation failed for:", actionName, parseResult.error.errors);
-        const error = parseResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
+        console.error("Zod validation failed for:", actionName, parseResult.error.issues);
+        const error = parseResult.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
         return { id: prevState.id + 1, result: null, error };
     }
     try {
@@ -215,3 +215,5 @@ export async function getActionResult(resultId: string): Promise<{ result: any; 
     }
     return null;
 }
+
+    
