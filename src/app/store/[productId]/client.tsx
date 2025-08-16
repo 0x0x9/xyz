@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft, Info } from 'lucide-react';
 import { useCart } from "@/hooks/use-cart-store";
 import { useToast } from "@/hooks/use-toast";
 import { type Product } from '@/lib/products';
@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import React from 'react';
 import Link from 'next/link';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const reassuranceItems = [
     { icon: Truck, text: "Livraison gratuite et rapide" },
@@ -104,7 +105,7 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                     {/* Product Info */}
                     <div className="space-y-8">
                         <div>
-                            <span className="text-primary font-semibold">{product.category}</span>
+                            {product.tagline && <p className="text-primary font-semibold mb-2">{product.tagline}</p>}
                             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mt-2">{product.name}</h1>
                             <p className="text-lg text-muted-foreground mt-4">{product.description}</p>
                         </div>
@@ -156,6 +157,24 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                             <ShoppingCart className="mr-2 h-5 w-5" />
                             Ajouter au panier
                         </Button>
+                    </div>
+                </section>
+            )}
+
+            {product.specs && (
+                 <section className="container mx-auto px-4 md:px-6">
+                    <div className="text-center">
+                        <h2 className="text-3xl md:text-4xl font-bold">Caractéristiques techniques</h2>
+                    </div>
+                    <div className="mt-12 max-w-2xl mx-auto glass-card p-8">
+                        <ul className="space-y-4">
+                            {Object.entries(product.specs).map(([key, value]) => (
+                                <li key={key} className="flex justify-between items-start text-sm specs-list pb-4">
+                                    <span className="font-semibold text-muted-foreground">{key}</span>
+                                    <span className="text-right text-foreground max-w-xs">{value}</span>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </section>
             )}

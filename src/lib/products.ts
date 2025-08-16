@@ -11,6 +11,7 @@ export type Product = {
   configurable?: boolean;
   features?: string[];
   specs?: Record<string, string>;
+  tagline?: string;
 };
 
 export const products: Product[] = [
@@ -45,13 +46,46 @@ export const products: Product[] = [
       "Boîtier": "Moyen-tour compact en alliage d’aluminium noir satiné, éclairage sobre configurable.",
       "Connectique": "4×USB-C, 4×USB 3.2, 2×DisplayPort 2.1, HDMI 2.1, Ethernet 2.5 GbE, SD Express, Wi-Fi 6E.",
       "Audio": "DAC intégré 32 bits haute fidélité, prises audio jack pro isolées.",
-      "Abonnement Inclus": "1 an d'abonnement (X) SYNC pour la synchronisation multi-plateforme.",
+      "Inclus": "1 an d'abonnement (X) SYNC et accès (X)OS Bêta",
       "Garantie": "2 ans (extensible) + support prioritaire pour les créatifs pro."
     }
   },
   {
+    id: 10,
+    name: "(X)-alpha",
+    tagline: "Un petit format pour les grands projets.",
+    description: "α (alpha), c’est la réponse à celles et ceux qui veulent tout : performance, design et la mobilité d’un studio transportable.",
+    price: 2499.00,
+    images: [
+        "https://images.unsplash.com/photo-1618384887924-c9b0b4597d95?auto=format&fit=crop&w=800&q=80",
+    ],
+    hint: "compact powerful desktop",
+    category: 'Matériel',
+    isFeatured: true,
+    configurable: true,
+    features: [
+      "Processeur haute fréquence pour les charges créatives lourdes.",
+      "GPU puissant pour le rendu 3D et le montage 8K.",
+      "64 Go de RAM DDR5 pour une productivité sans faille.",
+      "Châssis compact en aluminium avec option de portabilité."
+    ],
+    specs: {
+        "Processeur": "AMD Ryzen 9 7950X3D ou Intel Core i9-14900K",
+        "Carte graphique": "NVIDIA RTX 4080 Super FE (compacte) ou AMD Radeon RX 7900 XT",
+        "Mémoire vive": "64 Go DDR5 (extensible à 128 Go)",
+        "Stockage": "SSD M.2 NVMe Gen4 – 2 To, + baie secondaire libre",
+        "Refroidissement": "Watercooling compact et airflow intelligent optimisé pour le silence",
+        "Carte mère": "Micro-ATX haut de gamme (PCIe 5.0, Wi-Fi 6E, Bluetooth 5.3)",
+        "Boîtier": "Châssis aluminium, sobre et modulaire (option poignées)",
+        "Alimentation": "850W modulaire 80+ Platinum, silencieuse",
+        "OS Inclus": "(X)OS avec compatibilité Windows/macOS via (X)SYNC",
+        "Accès": "(X) Bêta pour tester les futures versions de (X)OS"
+    }
+  },
+   {
     id: 8,
     name: "(X)-book",
+    tagline: "La puissance d'une station de travail, l'élégance en plus.",
     description: "La puissance d'une station de travail dans un format portable et élégant, pour créer n'importe où.",
     price: 2899.00,
     images: ["https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80"],

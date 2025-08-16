@@ -1,16 +1,14 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Cpu, Sparkles, ChevronRight, ShoppingCart } from "lucide-react";
+import { ArrowRight, Cpu, Sparkles } from "lucide-react";
 import { products } from '@/lib/products';
 import { motion } from 'framer-motion';
 import { ProductCard } from '@/components/product-card';
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
 
 export default function StoreClient() {
     const hardwareProducts = products.filter(p => p.category === 'Matériel');
@@ -76,15 +74,13 @@ export default function StoreClient() {
                    animate={{ opacity: 1, y: 0 }}
                    transition={{ duration: 0.5, delay: 0.3 }}
               >
-                  <Link href="/features">
-                      <Card className="glass-card h-full p-8 md:p-12 flex flex-col justify-center text-center relative overflow-hidden group transition-all duration-300 hover:border-primary/30 hover:-translate-y-2">
+                  <Link href="/features" className="block h-full">
+                      <div className="glass-card h-full p-8 md:p-12 flex flex-col justify-center text-center relative overflow-hidden group transition-all duration-300 hover:border-primary/30 hover:-translate-y-2">
                           <div className="absolute -top-1/4 -right-1/4 w-1/2 h-1/2 bg-primary/20 rounded-full blur-3xl transition-all duration-500 group-hover:scale-150" />
                           <Sparkles className="h-12 w-12 text-primary mx-auto mb-4" />
-                          <CardTitle className="text-3xl font-bold">L'Écosystème Logiciel</CardTitle>
-                          <CardContent className="p-0 mt-4">
-                              <p className="text-muted-foreground text-lg">Découvrez (X)OS, l'environnement qui connecte tous vos outils et idées.</p>
-                          </CardContent>
-                      </Card>
+                          <h3 className="text-3xl font-bold">L'Écosystème Logiciel</h3>
+                          <p className="p-0 mt-4 text-muted-foreground text-lg">Découvrez (X)OS, l'environnement qui connecte tous vos outils et idées.</p>
+                      </div>
                   </Link>
               </motion.div>
               <motion.div 
@@ -92,15 +88,13 @@ export default function StoreClient() {
                    animate={{ opacity: 1, y: 0 }}
                    transition={{ duration: 0.5, delay: 0.4 }}
               >
-                   <Link href="/hardware">
-                      <Card className="glass-card h-full p-8 md:p-12 flex flex-col justify-center text-center relative overflow-hidden group transition-all duration-300 hover:border-primary/30 hover:-translate-y-2">
+                   <Link href="/hardware" className="block h-full">
+                      <div className="glass-card h-full p-8 md:p-12 flex flex-col justify-center text-center relative overflow-hidden group transition-all duration-300 hover:border-primary/30 hover:-translate-y-2">
                           <div className="absolute -bottom-1/4 -left-1/4 w-1/2 h-1/2 bg-blue-500/20 rounded-full blur-3xl transition-all duration-500 group-hover:scale-150" />
                           <Cpu className="h-12 w-12 text-blue-400 mx-auto mb-4" />
-                          <CardTitle className="text-3xl font-bold">La Puissance Matérielle</CardTitle>
-                          <CardContent className="p-0 mt-4">
-                              <p className="text-muted-foreground text-lg">Explorez notre gamme de matériel, conçue pour exceller avec (X)OS.</p>
-                          </CardContent>
-                      </Card>
+                          <h3 className="text-3xl font-bold">La Puissance Matérielle</h3>
+                          <p className="p-0 mt-4 text-muted-foreground text-lg">Explorez notre gamme de matériel, conçue pour exceller avec (X)OS.</p>
+                      </div>
                   </Link>
               </motion.div>
           </div>
@@ -109,7 +103,7 @@ export default function StoreClient() {
       <section className="container mx-auto px-4 md:px-6 space-y-16 py-24 md:py-32">
            <div className="space-y-12">
                 <h2 className="text-3xl font-bold text-center">Matériel</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {hardwareProducts.map((product, i) => (
                         <ProductCard key={product.id} product={product} />
                     ))}
@@ -118,7 +112,7 @@ export default function StoreClient() {
 
             <div className="space-y-12">
                 <h2 className="text-3xl font-bold text-center">Logiciels & Abonnements</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {softwareProducts.map((product, i) => (
                         <ProductCard key={product.id} product={product} />
                     ))}
@@ -127,7 +121,7 @@ export default function StoreClient() {
 
              <div className="space-y-12">
                 <h2 className="text-3xl font-bold text-center">Accessoires</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {accessoryProducts.map((product, i) => (
                         <ProductCard key={product.id} product={product} />
                     ))}

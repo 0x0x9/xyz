@@ -15,11 +15,14 @@ type ComponentType = 'cpu' | 'gpu' | 'ram' | 'storage';
 const options: Record<ComponentType, Option[]> = {
     cpu: [
         { name: 'Intel Core i7-14700K', priceModifier: 0 },
-        { name: 'AMD Ryzen 9 7900', priceModifier: 150 },
+        { name: 'AMD Ryzen 7 7800X3D', priceModifier: 50 },
+        { name: 'Intel Core i9-14900K', priceModifier: 200 },
+        { name: 'AMD Ryzen 9 7950X3D', priceModifier: 350 },
     ],
     gpu: [
         { name: 'NVIDIA RTX 4070 Ti Super', priceModifier: 0 },
-        { name: 'AMD Radeon RX 7800 XT', priceModifier: -100 },
+        { name: 'AMD Radeon RX 7900 XT', priceModifier: -100 },
+        { name: 'NVIDIA RTX 4080 Super FE', priceModifier: 400 },
     ],
     ram: [
         { name: '32GB DDR5', priceModifier: 0 },
@@ -27,8 +30,10 @@ const options: Record<ComponentType, Option[]> = {
         { name: '128GB DDR5', priceModifier: 550 },
     ],
     storage: [
-        { name: '2TB NVMe SSD + 8TB HDD', priceModifier: 0 },
-        { name: '4TB NVMe SSD + 12TB HDD', priceModifier: 300 },
+        { name: '2TB NVMe SSD', priceModifier: 0 },
+        { name: '2TB NVMe SSD + 8TB HDD', priceModifier: 150 },
+        { name: '4TB NVMe SSD', priceModifier: 200 },
+        { name: '4TB NVMe SSD + 12TB HDD', priceModifier: 450 },
     ],
 };
 
