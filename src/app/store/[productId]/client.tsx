@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft, Cpu } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Shield, Truck, ArrowLeft } from 'lucide-react';
 import { useCart } from "@/hooks/use-cart-store";
 import { useToast } from "@/hooks/use-toast";
 import { type Product } from '@/lib/products';
@@ -15,7 +15,6 @@ import { cn } from '@/lib/utils';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import React from 'react';
 import Link from 'next/link';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const reassuranceItems = [
     { icon: Truck, text: "Livraison gratuite et rapide" },
@@ -142,43 +141,6 @@ export default function ProductClient({ product, relatedProducts }: { product: P
                  </div>
             </section>
             
-             {product.id === 1 && (
-                <section className="container mx-auto px-4 md:px-6">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold">En mouvement</h2>
-                        <p className="text-muted-foreground mt-2 max-w-xl mx-auto">Découvrez la (X)-φ (fi) sous tous ses angles.</p>
-                    </div>
-                    <div className="aspect-video w-full max-w-5xl mx-auto rounded-2xl overflow-hidden glass-card p-2">
-                        <iframe
-                            src="https://www.youtube.com/embed/ozGQ2q4l4ys?autoplay=0&loop=1&playlist=ozGQ2q4l4ys&controls=1&showinfo=0&autohide=1"
-                            title="(X)-φ (fi) Product Video"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="w-full h-full rounded-lg"
-                        ></iframe>
-                    </div>
-                </section>
-            )}
-            
-            {product.specs && (
-                 <section className="container mx-auto px-4 md:px-6">
-                     <div className="text-center">
-                        <h2 className="text-3xl md:text-4xl font-bold">Caractéristiques Techniques</h2>
-                    </div>
-                    <div className="mt-12 max-w-4xl mx-auto">
-                        <ul className="specs-list space-y-3">
-                            {Object.entries(product.specs).map(([key, value]) => (
-                                <li key={key} className="flex flex-col sm:flex-row justify-between p-4 rounded-lg glass-card bg-background/30">
-                                    <strong className="font-semibold text-foreground/90">{key}</strong>
-                                    <span className="text-muted-foreground sm:text-right">{value}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </section>
-            )}
-
             {product.configurable && (
                 <section className="container mx-auto px-4 md:px-6">
                     <PCConfigurator 
