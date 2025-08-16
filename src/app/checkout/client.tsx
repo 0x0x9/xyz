@@ -7,22 +7,19 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, ShoppingCart, ArrowLeft, Lock, CreditCard, Plus, Minus, Truck } from "lucide-react";
+import { Trash2, ShoppingCart, ArrowLeft, Lock, CreditCard, Plus, Minus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState, useEffect } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIsClient } from "@/hooks/use-is-client";
 
 export default function CheckoutClient() {
     const { items, total, itemCount, removeItem, addItem, decreaseItem } = useCart();
     const { toast } = useToast();
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const isClient = useIsClient();
 
     const shippingCost = 0; // Livraison gratuite
     const finalTotal = total + shippingCost;

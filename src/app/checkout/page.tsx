@@ -1,10 +1,21 @@
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import CheckoutClient from "./client";
 import { Suspense } from 'react';
 
 function CheckoutPageSkeleton() {
-    return <div>Chargement...</div>;
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-7xl mx-auto">
+            <div className="lg:col-span-7 space-y-8">
+                <Skeleton className="h-64 w-full" />
+                <Skeleton className="h-80 w-full" />
+            </div>
+             <div className="lg:col-span-5">
+                 <Skeleton className="h-96 w-full" />
+             </div>
+        </div>
+    )
 }
 
 const CheckoutPage = () => {
