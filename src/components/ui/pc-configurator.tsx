@@ -136,8 +136,13 @@ const ConfiguratorSection = ({ type, title, icon: Icon, options, selected, onSel
 };
 
 export function PCConfigurator({ product, basePrice, onConfigChange }: PCConfiguratorProps) {
-    const productKey = product.name.split(' ')[0].toLowerCase().replace('(','').replace(')','');
+    const productKey = product.name.split(' ')[0].toLowerCase().replace(/\(x\)\-/, 'x-').replace('oméga', 'omega').replace('φ','fi');
     const options = optionsMap[productKey];
+
+    // If no options are found for the product, don't render the configurator
+    if (!options) {
+        return null;
+    }
 
     const [config, setConfig] = useState<Configuration>({
         cpu: options.cpu[0].name,
