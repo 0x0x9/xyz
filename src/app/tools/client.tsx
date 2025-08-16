@@ -33,7 +33,7 @@ const environments = [
     description: "Le centre névralgique de vos projets. Suivez vos tâches, gérez vos fichiers et collaborez avec votre équipe et l'IA.",
     href: '/chat',
     icon: Heart,
-    videoSrc: "https://www.youtube.com/embed/g0LWcWP2x8w?autoplay=1&mute=1&loop=1&playlist=g0LWcWP2x8w&controls=0&showinfo=0&autohide=1&wmode=transparent"
+    videoSrc: "https://www.youtube.com/embed/Qjr954NE46c?autoplay=1&mute=1&loop=1&playlist=Qjr954NE46c&controls=0&showinfo=0&autohide=1&wmode=transparent"
   }
 ];
 
